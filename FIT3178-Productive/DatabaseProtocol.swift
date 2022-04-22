@@ -24,7 +24,7 @@ enum ListenerType {
 
 protocol DatabaseListener: AnyObject {
     var listenerType: ListenerType {get set}
-    
+    func onTaskChange(change: DatabaseChange, tasks: [Task])
 }
 
 protocol DatabaseProtocol: AnyObject {
@@ -33,6 +33,9 @@ protocol DatabaseProtocol: AnyObject {
     func addListener(listener: DatabaseListener)
     func removeListener(listener: DatabaseListener)
     
+    func addTask(taskTitle: String, taskDescription: String) -> Task
+    func deleteTask(task : Task)
     
+    func getTaskById(_ id: String) -> Task?
     
 }

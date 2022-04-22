@@ -21,6 +21,7 @@
 		F51A638C2812B68100023BDC /* FirebaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A638B2812B68100023BDC /* FirebaseController.swift */; };
 		F51A638E2812B6B700023BDC /* DatabaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A638D2812B6B700023BDC /* DatabaseProtocol.swift */; };
 		F51A63902812B71200023BDC /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A638F2812B71200023BDC /* MulticastDelegate.swift */; };
+		F51A63922812D19F00023BDC /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A63912812D19F00023BDC /* CreateTaskViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		F51A638B2812B68100023BDC /* FirebaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseController.swift; sourceTree = "<group>"; };
 		F51A638D2812B6B700023BDC /* DatabaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseProtocol.swift; sourceTree = "<group>"; };
 		F51A638F2812B71200023BDC /* MulticastDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
+		F51A63912812D19F00023BDC /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 				F51A634A280AF69B00023BDC /* AppDelegate.swift */,
 				F51A638B2812B68100023BDC /* FirebaseController.swift */,
 				F51A638D2812B6B700023BDC /* DatabaseProtocol.swift */,
+				F51A63912812D19F00023BDC /* CreateTaskViewController.swift */,
 				F51A634C280AF69B00023BDC /* SceneDelegate.swift */,
 				F51A63872812B40400023BDC /* Task.swift */,
 				F51A637E2812A88100023BDC /* HomePageViewController.swift */,
@@ -175,6 +178,7 @@
 				F51A637F2812A88100023BDC /* HomePageViewController.swift in Sources */,
 				F51A634B280AF69B00023BDC /* AppDelegate.swift in Sources */,
 				F51A634D280AF69B00023BDC /* SceneDelegate.swift in Sources */,
+				F51A63922812D19F00023BDC /* CreateTaskViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
