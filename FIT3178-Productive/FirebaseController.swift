@@ -16,29 +16,24 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var listeners = MulticastDelegate<DatabaseListener>()
     var taskList: [ToDoTask]
     
-    var authController: Auth
+    lazy var authController: Auth = {
+        return Auth.auth()
+    }()
     var database: Firestore
     var taskRef: CollectionReference?
+    var usersRef: CollectionReference?
     var currentUser: FirebaseAuth.User?
+    
+    var currentEmail: String = ""
+    var currentPassword: String = ""
+    var userID = ""
 
     
     override init() {
         FirebaseApp.configure()
-        authController = Auth.auth()
         database = Firestore.firestore()
         taskList = [ToDoTask]()
         super.init()
-        Task {
-            do {
-                let authDataResult = try await authController.signInAnonymously()
-                currentUser = authDataResult.user
-            }
-            catch {
-                fatalError("Firebase Authentication Failed with Error \(String(describing: error))")
-               }
-            self.setupTaskListener()
-        
-           }
     }
     
     func addTask(taskTitle: String, taskDescription: String) -> ToDoTask {
@@ -135,5 +130,57 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     func removeListener(listener: DatabaseListener) {
         listeners.removeDelegate(listener)
+    }
+    
+    func createNewSignIn( email: String, password: String) {
+        Task {
+            do {
+                let authDataResult = try await authController.createUser(withEmail: email ,password: password )
+                // The user was logged in, so do something!
+                currentUser = authDataResult.user
+                guard let userID = Auth.auth().currentUser?.uid else { return }
+                self.userID = userID
+                self.usersRef = self.database.collection("Users")
+                let _ = try await self.usersRef?.addDocument(data: ["name": self.userID, "currentTasks": []])
+                self.currentPassword = password
+                self.currentEmail = email
+                if self.taskRef == nil {
+                    self.setupTaskListener()
+                }
+                listeners.invoke{ (listener) in
+                    if listener.listenerType == ListenerType.auth || listener.listenerType == ListenerType.all {
+                        listener.onAuthChange(change: .update, currentUser: self.currentUser!)
+                    }
+                }
+            }
+            catch {
+                print("User creation failed with error \(String(describing: error))")
+            }
+        }
+    }
+    
+    func signIn( email: String, password: String) {
+        Task {
+            do {
+                let authDataResult = try await authController.signIn(withEmail: email,password: password)
+                // User is now logged in, so do something!
+                currentUser = authDataResult.user
+                guard let userID = Auth.auth().currentUser?.uid else { return }
+                self.userID = userID
+                self.currentPassword = password
+                self.currentEmail = email
+                if self.taskRef == nil {
+                    self.setupTaskListener()
+                }
+                listeners.invoke{ (listener) in
+                    if listener.listenerType == ListenerType.auth || listener.listenerType == ListenerType.all {
+                        listener.onAuthChange(change: .update, currentUser: self.currentUser!)
+                    }
+                }
+            }
+            catch {
+                print("Authentication failed with error \(String(describing: error))")
+            }
+        }
     }
 }

@@ -8,6 +8,8 @@
 import UIKit
 
 class HomePageViewController: UITableViewController, DatabaseListener {
+    
+    
 
     
     var listenerType = ListenerType.currentTask
@@ -86,6 +88,10 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     func onTaskChange(change: DatabaseChange, tasks: [ToDoTask]) {
         allTasks = tasks
         tableView.reloadData()
+    }
+    
+    func onAuthChange(change: DatabaseChange, currentUser: User) {
+        //
     }
     
 

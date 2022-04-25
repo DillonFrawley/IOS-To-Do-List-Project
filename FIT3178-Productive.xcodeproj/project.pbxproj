@@ -21,6 +21,7 @@
 		F51A63902812B71200023BDC /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A638F2812B71200023BDC /* MulticastDelegate.swift */; };
 		F51A63922812D19F00023BDC /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A63912812D19F00023BDC /* CreateTaskViewController.swift */; };
 		F51A63942816BC8500023BDC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F51A63932816BC8500023BDC /* GoogleService-Info.plist */; };
+		F53921FD2816E5F700300D7C /* LogInSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */; };
 		F56520152816CDD400D7D4FA /* ToDoTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56520142816CDD300D7D4FA /* ToDoTask.swift */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +39,7 @@
 		F51A638F2812B71200023BDC /* MulticastDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
 		F51A63912812D19F00023BDC /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
 		F51A63932816BC8500023BDC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInSignUpViewController.swift; sourceTree = "<group>"; };
 		F56520142816CDD300D7D4FA /* ToDoTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTask.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -77,6 +79,7 @@
 				F51A634A280AF69B00023BDC /* AppDelegate.swift */,
 				F51A638B2812B68100023BDC /* FirebaseController.swift */,
 				F51A638D2812B6B700023BDC /* DatabaseProtocol.swift */,
+				F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */,
 				F51A63932816BC8500023BDC /* GoogleService-Info.plist */,
 				F51A63912812D19F00023BDC /* CreateTaskViewController.swift */,
 				F56520142816CDD300D7D4FA /* ToDoTask.swift */,
@@ -179,6 +182,7 @@
 				F51A634B280AF69B00023BDC /* AppDelegate.swift in Sources */,
 				F51A634D280AF69B00023BDC /* SceneDelegate.swift in Sources */,
 				F51A63922812D19F00023BDC /* CreateTaskViewController.swift in Sources */,
+				F53921FD2816E5F700300D7C /* LogInSignUpViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
