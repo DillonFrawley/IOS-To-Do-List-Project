@@ -15,12 +15,12 @@ class HomePageViewController: UITableViewController, DatabaseListener {
 
     let CELL_CURRENT_TASK = "currentTaskCell"
     let SECTION_CURRENT_TASK = 0
-    var allTasks: [Task] = []
+    var allTasks: [ToDoTask] = []
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
-        super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
@@ -83,8 +83,9 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         databaseController?.removeListener(listener: self)
     }
     
-    func onTaskChange(change: DatabaseChange, tasks: [Task]) {
+    func onTaskChange(change: DatabaseChange, tasks: [ToDoTask]) {
         allTasks = tasks
+        tableView.reloadData()
     }
     
 

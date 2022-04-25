@@ -14,49 +14,35 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     
     var listeners = MulticastDelegate<DatabaseListener>()
-    var taskList: [Task]
+    var taskList: [ToDoTask]
     
     var authController: Auth
     var database: Firestore
     var taskRef: CollectionReference?
-//    var currentUser: FirebaseAuth.User?
-    
-    
-    func cleanup() {
-        //
-    }
-    
-    func addListener(listener: DatabaseListener) {
-        listeners.addDelegate(listener)
-        if listener.listenerType == .currentTask || listener.listenerType == .all {
-            listener.onTaskChange(change: .update, tasks: taskList )
-        }
-    }
-    
-    func removeListener(listener: DatabaseListener) {
-        listeners.removeDelegate(listener)
-    }
+    var currentUser: FirebaseAuth.User?
+
     
     override init() {
         FirebaseApp.configure()
         authController = Auth.auth()
         database = Firestore.firestore()
-        taskList = [Task]()
+        taskList = [ToDoTask]()
         super.init()
         Task {
             do {
                 let authDataResult = try await authController.signInAnonymously()
+                currentUser = authDataResult.user
             }
             catch {
                 fatalError("Firebase Authentication Failed with Error \(String(describing: error))")
                }
-           self.setupTaskListener()
+            self.setupTaskListener()
+        
            }
-
     }
     
-    func addTask(taskTitle: String, taskDescription: String) -> Task {
-        let task = Task()
+    func addTask(taskTitle: String, taskDescription: String) -> ToDoTask {
+        let task = ToDoTask()
         task.taskTitle = taskTitle
         task.taskDescription = taskDescription
 
@@ -71,13 +57,13 @@ class FirebaseController: NSObject, DatabaseProtocol {
         return task
     }
     
-    func deleteTask(task: Task) {
+    func deleteTask(task: ToDoTask) {
         if let taskID = task.id {
             taskRef?.document(taskID).delete()
         }
     }
     
-    func getTaskById(_ id: String) -> Task? {
+    func getTaskById(_ id: String) -> ToDoTask? {
         for task in taskList {
             if task.id == id {
                 return task
@@ -102,10 +88,10 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     func parseTaskSnapshot(snapshot: QuerySnapshot) {
         snapshot.documentChanges.forEach { (change) in
-            var parsedTask: Task?
+            var parsedTask: ToDoTask?
     
             do {
-                parsedTask = try change.document.data(as: Task.self)
+                parsedTask = try change.document.data(as: ToDoTask.self)
             } catch {
                 print("Unable to decode task")
                 return
@@ -125,7 +111,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
             else if change.type == .removed {
                 taskList.remove(at: Int(change.oldIndex))
             }
-            
             // need to invoke listener to make change appear
             listeners.invoke { (listener) in
                 if listener.listenerType == ListenerType.currentTask || listener.listenerType == ListenerType.all {
@@ -135,5 +120,20 @@ class FirebaseController: NSObject, DatabaseProtocol {
             
         }
     
+    }
+    
+    func cleanup() {
+        //
+    }
+    
+    func addListener(listener: DatabaseListener) {
+        listeners.addDelegate(listener)
+        if listener.listenerType == .currentTask || listener.listenerType == .all {
+            listener.onTaskChange(change: .update, tasks: taskList )
+        }
+    }
+    
+    func removeListener(listener: DatabaseListener) {
+        listeners.removeDelegate(listener)
     }
 }

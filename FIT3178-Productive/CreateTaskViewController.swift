@@ -11,7 +11,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
   
     var listenerType = ListenerType.currentTask
     weak var databaseController: DatabaseProtocol?
-    var allTasks:[Task] = []
+    var allTasks:[ToDoTask] = []
 
     
     @IBOutlet weak var taskTitleTextField: UITextField!
@@ -71,7 +71,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         return string != whitespaceString
     }
     
-    func onTaskChange(change: DatabaseChange, tasks: [Task]) {
+    func onTaskChange(change: DatabaseChange, tasks: [ToDoTask]) {
         allTasks = tasks
     }
     

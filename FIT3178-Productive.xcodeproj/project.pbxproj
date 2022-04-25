@@ -16,12 +16,12 @@
 		F51A63822812ADCC00023BDC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F51A63812812ADCC00023BDC /* FirebaseAuth */; };
 		F51A63842812ADCC00023BDC /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F51A63832812ADCC00023BDC /* FirebaseFirestore */; };
 		F51A63862812ADCC00023BDC /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = F51A63852812ADCC00023BDC /* FirebaseFirestoreSwift-Beta */; };
-		F51A63882812B40400023BDC /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A63872812B40400023BDC /* Task.swift */; };
 		F51A638C2812B68100023BDC /* FirebaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A638B2812B68100023BDC /* FirebaseController.swift */; };
 		F51A638E2812B6B700023BDC /* DatabaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A638D2812B6B700023BDC /* DatabaseProtocol.swift */; };
 		F51A63902812B71200023BDC /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A638F2812B71200023BDC /* MulticastDelegate.swift */; };
 		F51A63922812D19F00023BDC /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A63912812D19F00023BDC /* CreateTaskViewController.swift */; };
 		F51A63942816BC8500023BDC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F51A63932816BC8500023BDC /* GoogleService-Info.plist */; };
+		F56520152816CDD400D7D4FA /* ToDoTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56520142816CDD300D7D4FA /* ToDoTask.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,12 +33,12 @@
 		F51A6356280AF69E00023BDC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F51A6358280AF69E00023BDC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F51A637E2812A88100023BDC /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
-		F51A63872812B40400023BDC /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		F51A638B2812B68100023BDC /* FirebaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseController.swift; sourceTree = "<group>"; };
 		F51A638D2812B6B700023BDC /* DatabaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseProtocol.swift; sourceTree = "<group>"; };
 		F51A638F2812B71200023BDC /* MulticastDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
 		F51A63912812D19F00023BDC /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
 		F51A63932816BC8500023BDC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F56520142816CDD300D7D4FA /* ToDoTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTask.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,8 +79,8 @@
 				F51A638D2812B6B700023BDC /* DatabaseProtocol.swift */,
 				F51A63932816BC8500023BDC /* GoogleService-Info.plist */,
 				F51A63912812D19F00023BDC /* CreateTaskViewController.swift */,
+				F56520142816CDD300D7D4FA /* ToDoTask.swift */,
 				F51A634C280AF69B00023BDC /* SceneDelegate.swift */,
-				F51A63872812B40400023BDC /* Task.swift */,
 				F51A637E2812A88100023BDC /* HomePageViewController.swift */,
 				F51A638F2812B71200023BDC /* MulticastDelegate.swift */,
 				F51A6350280AF69B00023BDC /* Main.storyboard */,
@@ -172,8 +172,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F51A638C2812B68100023BDC /* FirebaseController.swift in Sources */,
-				F51A63882812B40400023BDC /* Task.swift in Sources */,
 				F51A63902812B71200023BDC /* MulticastDelegate.swift in Sources */,
+				F56520152816CDD400D7D4FA /* ToDoTask.swift in Sources */,
 				F51A638E2812B6B700023BDC /* DatabaseProtocol.swift in Sources */,
 				F51A637F2812A88100023BDC /* HomePageViewController.swift in Sources */,
 				F51A634B280AF69B00023BDC /* AppDelegate.swift in Sources */,
