@@ -9,14 +9,17 @@ import UIKit
 import Firebase
 import FirebaseFirestoreSwift
 
+
 class FirebaseController: NSObject, DatabaseProtocol {
     
+    
     var listeners = MulticastDelegate<DatabaseListener>()
-    var taskList: [Task] = []
+    var taskList: [Task]
     
     var authController: Auth
     var database: Firestore
     var taskRef: CollectionReference?
+//    var currentUser: FirebaseAuth.User?
     
     
     func cleanup() {
@@ -38,14 +41,25 @@ class FirebaseController: NSObject, DatabaseProtocol {
         FirebaseApp.configure()
         authController = Auth.auth()
         database = Firestore.firestore()
+        taskList = [Task]()
         super.init()
+        Task {
+            do {
+                let authDataResult = try await authController.signInAnonymously()
+            }
+            catch {
+                fatalError("Firebase Authentication Failed with Error \(String(describing: error))")
+               }
+           self.setupTaskListener()
+           }
+
     }
     
     func addTask(taskTitle: String, taskDescription: String) -> Task {
         let task = Task()
         task.taskTitle = taskTitle
         task.taskDescription = taskDescription
-        
+
         do {
             if let taskRef = try taskRef?.addDocument(from: task) {
                 task.id = taskRef.documentID
@@ -53,7 +67,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         } catch {
             print("Failed to serialize task")
         }
-        
+
         return task
     }
     
@@ -81,9 +95,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 print("Failed to fetch documents with error: \(String(describing: error))")
                 return
             }
-            
             self.parseTaskSnapshot(snapshot: querySnapshot)
-            
         }
     }
     
@@ -115,8 +127,13 @@ class FirebaseController: NSObject, DatabaseProtocol {
             }
             
             // need to invoke listener to make change appear
+            listeners.invoke { (listener) in
+                if listener.listenerType == ListenerType.currentTask || listener.listenerType == ListenerType.all {
+                    listener.onTaskChange(change: .update, tasks: taskList)
+                }
             }
             
         }
     
+    }
 }

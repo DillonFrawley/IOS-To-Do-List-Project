@@ -31,7 +31,12 @@ class HomePageViewController: UITableViewController, DatabaseListener {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return allTasks.count
+        switch section {
+        case 0:
+            return allTasks.count
+        default:
+            return 0
+        }
     }
 
     
