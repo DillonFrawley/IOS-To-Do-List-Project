@@ -11,11 +11,12 @@ import FirebaseFirestoreSwift
 
 class LogInSignUpViewController: UIViewController, DatabaseListener {
     
-    var listenerType = ListenerType.currentTask
+    var listenerType = ListenerType.auth
     weak var databaseController: DatabaseProtocol?
     
     var currentEmail:String?
     var currentPassword: String?
+    var currentUser: FirebaseAuth.User?
 
     @IBOutlet weak var emailTextField: UITextField!
     
@@ -113,6 +114,9 @@ class LogInSignUpViewController: UIViewController, DatabaseListener {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
+        if self.databaseController?.currentUser != nil {
+            self.onAuthChange(change: .update, currentUser: (self.databaseController?.currentUser)!)
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -130,8 +134,8 @@ class LogInSignUpViewController: UIViewController, DatabaseListener {
         //
     }
     
-    func onAuthChange(change: DatabaseChange, currentUser: User) {
-        self.databaseController.currentUser = User
+    func onAuthChange(change: DatabaseChange, currentUser: FirebaseAuth.User) {
+        self.currentUser = currentUser
         DispatchQueue.main.async {
             self.performSegue(withIdentifier: "authSegue", sender: self)
         }

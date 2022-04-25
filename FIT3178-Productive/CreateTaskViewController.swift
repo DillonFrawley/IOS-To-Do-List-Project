@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseFirestoreSwift
 
 class CreateTaskViewController: UIViewController, DatabaseListener {
+
   
     var listenerType = ListenerType.currentTask
     weak var databaseController: DatabaseProtocol?
@@ -87,6 +90,11 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         }
         return false
     }
+    
+    func onAuthChange(change: DatabaseChange, currentUser: User) {
+        //
+    }
+    
     
     
     

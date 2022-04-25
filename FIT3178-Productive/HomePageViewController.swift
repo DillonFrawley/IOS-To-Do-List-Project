@@ -6,11 +6,10 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseFirestoreSwift
 
 class HomePageViewController: UITableViewController, DatabaseListener {
-    
-    
-
     
     var listenerType = ListenerType.currentTask
     weak var databaseController: DatabaseProtocol?

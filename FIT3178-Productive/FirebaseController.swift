@@ -24,9 +24,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var usersRef: CollectionReference?
     var currentUser: FirebaseAuth.User?
     
-    var currentEmail: String = ""
-    var currentPassword: String = ""
-    var userID = ""
+    var userID: String?
 
     
     override init() {
@@ -34,6 +32,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
         database = Firestore.firestore()
         taskList = [ToDoTask]()
         super.init()
+        if authController.currentUser != nil {
+            self.currentUser = authController.currentUser
+            guard let userID = authController.currentUser?.uid else { return }
+            self.userID = userID
+            self.usersRef = self.database.collection("Users")
+            self.setupTaskListener()
+        }
+        
     }
     
     func addTask(taskTitle: String, taskDescription: String) -> ToDoTask {
@@ -142,8 +148,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 self.userID = userID
                 self.usersRef = self.database.collection("Users")
                 let _ = try await self.usersRef?.addDocument(data: ["name": self.userID, "currentTasks": []])
-                self.currentPassword = password
-                self.currentEmail = email
                 if self.taskRef == nil {
                     self.setupTaskListener()
                 }
@@ -167,8 +171,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 currentUser = authDataResult.user
                 guard let userID = Auth.auth().currentUser?.uid else { return }
                 self.userID = userID
-                self.currentPassword = password
-                self.currentEmail = email
                 if self.taskRef == nil {
                     self.setupTaskListener()
                 }
