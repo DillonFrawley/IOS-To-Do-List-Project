@@ -30,8 +30,6 @@ protocol DatabaseListener: AnyObject {
 }
 
 protocol DatabaseProtocol: AnyObject {
-    func cleanup()
-    
     func addListener(listener: DatabaseListener)
     func removeListener(listener: DatabaseListener)
     

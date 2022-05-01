@@ -123,9 +123,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     }
     
-    func cleanup() {
-        //
-    }
     
     func addListener(listener: DatabaseListener) {
         listeners.addDelegate(listener)
@@ -153,7 +150,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 }
                 listeners.invoke{ (listener) in
                     if listener.listenerType == ListenerType.auth || listener.listenerType == ListenerType.all {
-                        listener.onAuthChange(change: .update, currentUser: self.currentUser!)
+                        listener.onAuthChange(change: .update, currentUser: (self.currentUser)!)
                     }
                 }
             }
@@ -176,7 +173,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 }
                 listeners.invoke{ (listener) in
                     if listener.listenerType == ListenerType.auth || listener.listenerType == ListenerType.all {
-                        listener.onAuthChange(change: .update, currentUser: self.currentUser!)
+                        listener.onAuthChange(change: .update, currentUser: (self.currentUser)!)
                     }
                 }
             }
