@@ -14,14 +14,19 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     
     var listeners = MulticastDelegate<DatabaseListener>()
-    var taskList: [ToDoTask]
+    var allTaskList: [ToDoTask]
+    var currentTasks: [ToDoTask]
+    var completedTasks: [ToDoTask]
     
     lazy var authController: Auth = {
         return Auth.auth()
     }()
     var database: Firestore
-    var taskRef: CollectionReference?
     var usersRef: CollectionReference?
+    var allTasksRef: CollectionReference?
+    var currentTaskRef: CollectionReference?
+    var completedTaskRef: CollectionReference?
+    var taskRef: CollectionReference?
     var currentUser: FirebaseAuth.User?
     
     var userID: String?
@@ -42,83 +47,187 @@ class FirebaseController: NSObject, DatabaseProtocol {
         
     }
     
-    func addTask(taskTitle: String, taskDescription: String) -> ToDoTask {
+    func addTask(taskTitle: String, taskDescription: String, taskType: String) -> ToDoTask {
         let task = ToDoTask()
         task.taskTitle = taskTitle
         task.taskDescription = taskDescription
-
-        do {
-            if let taskRef = try taskRef?.addDocument(from: task) {
-                task.id = taskRef.documentID
+        if taskType == "allTasks" {
+            do {
+                if let taskRef = try self.allTasksRef?.addDocument(from: task) {
+                    task.id = taskRef.documentID
+                }
+            } catch {
+                print("Failed to serialize task")
             }
-        } catch {
-            print("Failed to serialize task")
         }
-
+        else if taskType == "current" {
+            do {
+                if let taskRef = try self.currentTaskRef?.addDocument(from: task) {
+                    task.id = taskRef.documentID
+                }
+            } catch {
+                print("Failed to serialize task")
+            }
+        }
+        else if taskType == "completed" {
+            do {
+                if let taskRef = try self.completedTaskRef?.addDocument(from: task) {
+                    task.id = taskRef.documentID
+                }
+            } catch {
+                print("Failed to serialize task")
+            }
+        }
         return task
     }
     
-    func deleteTask(task: ToDoTask) {
-        if let taskID = task.id {
-            taskRef?.document(taskID).delete()
-        }
-    }
-    
-    func getTaskById(_ id: String) -> ToDoTask? {
-        for task in taskList {
-            if task.id == id {
-                return task
+    func deleteTask(task: ToDoTask, taskType: String) {
+        if taskType == "allTasks" {
+            if let taskID = task.id {
+                self.allTasksRef?.document(taskID).delete()
             }
         }
-
-        return nil
+        else if taskType == "current" {
+            if let taskID = task.id {
+                self.currentTaskRef?.document(taskID).delete()
+            }
+        }
+        else if taskType == "completed" {
+            if let taskID = task.id {
+                self.completedTaskRef?.document(taskID).delete()
+            }
+        }
+        
     }
+    
+//    func getTaskById(_ id: String) -> ToDoTask? {
+//        for task in taskList {
+//            if task.id == id {
+//                return task
+//            }
+//        }
+//
+//        return nil
+//    }
     
     
     func setupTaskListener() {
-        self.taskRef = database.collection("Task")
-        taskRef?.addSnapshotListener() { (querySnapshot, error) in
+        self.allTasksRef = self.usersRef?.document((self.userID)!).collection("allTasks")
+        self.currentTaskRef = self.usersRef?.document((self.userID)!).collection("currentTasks")
+        self.completedTaskRef = self.usersRef?.document((self.userID)!).collection("completedTasks")
+        
+        allTasksRef?.addSnapshotListener() { (querySnapshot, error) in
             guard let querySnapshot = querySnapshot else {
                 print("Failed to fetch documents with error: \(String(describing: error))")
                 return
             }
-            self.parseTaskSnapshot(snapshot: querySnapshot)
+            self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "allTasks")
         }
     }
+
     
     
-    func parseTaskSnapshot(snapshot: QuerySnapshot) {
-        snapshot.documentChanges.forEach { (change) in
-            var parsedTask: ToDoTask?
-    
-            do {
-                parsedTask = try change.document.data(as: ToDoTask.self)
-            } catch {
-                print("Unable to decode task")
-                return
+    func parseTaskSnapshot(snapshot: QuerySnapshot, taskType: String) {
+        if taskType == "allTasks" {
+            snapshot.documentChanges.forEach { (change) in
+                var parsedTask: ToDoTask?
+        
+                do {
+                    parsedTask = try change.document.data(as: ToDoTask.self)
+                } catch {
+                    print("Unable to decode task")
+                    return
+                }
+                
+                guard let task = parsedTask else {
+                    print("Document doesn't exist")
+                    return
+                }
+                
+                if change.type == .added {
+                    allTaskList.insert(task, at: Int(change.newIndex))
+                }
+                else if change.type == .modified {
+                    allTaskList[Int(change.oldIndex)] = task
+                }
+                else if change.type == .removed {
+                    allTaskList.remove(at: Int(change.oldIndex))
+                }
+                // need to invoke listener to make change appear
+                listeners.invoke { (listener) in
+                    if listener.listenerType == ListenerType.allTasks || listener.listenerType == ListenerType.all {
+                        listener.onTaskChange(change: .update, tasks: allTaskList)
+                    }
+                }
+                
             }
-            
-            guard let task = parsedTask else {
-                print("Document doesn't exist")
-                return
-            }
-            
-            if change.type == .added {
-                taskList.insert(task, at: Int(change.newIndex))
-            }
-            else if change.type == .modified {
-                taskList[Int(change.oldIndex)] = task
-            }
-            else if change.type == .removed {
-                taskList.remove(at: Int(change.oldIndex))
-            }
+        }
+        else if taskType == "current" {
+            snapshot.documentChanges.forEach { (change) in
+                var parsedTask: ToDoTask?
+        
+                do {
+                    parsedTask = try change.document.data(as: ToDoTask.self)
+                } catch {
+                    print("Unable to decode task")
+                    return
+                }
+                
+                guard let task = parsedTask else {
+                    print("Document doesn't exist")
+                    return
+                }
+                
+                if change.type == .added {
+                    currentTasks.insert(task, at: Int(change.newIndex))
+                }
+                else if change.type == .modified {
+                    currentTasks[Int(change.oldIndex)] = task
+                }
+                else if change.type == .removed {
+                    currentTasks.remove(at: Int(change.oldIndex))
+                    }
+                }
             // need to invoke listener to make change appear
             listeners.invoke { (listener) in
                 if listener.listenerType == ListenerType.currentTask || listener.listenerType == ListenerType.all {
-                    listener.onTaskChange(change: .update, tasks: taskList)
+                    listener.onTaskChange(change: .update, tasks: currentTasks)
+                }
+            
+            }
+        }
+        else if taskType == "completed" {
+            snapshot.documentChanges.forEach { (change) in
+                var parsedTask: ToDoTask?
+        
+                do {
+                    parsedTask = try change.document.data(as: ToDoTask.self)
+                } catch {
+                    print("Unable to decode task")
+                    return
+                }
+                
+                guard let task = parsedTask else {
+                    print("Document doesn't exist")
+                    return
+                }
+                
+                if change.type == .added {
+                    completedTasks.insert(task, at: Int(change.newIndex))
+                }
+                else if change.type == .modified {
+                    completedTasks[Int(change.oldIndex)] = task
+                }
+                else if change.type == .removed {
+                    completedTasks.remove(at: Int(change.oldIndex))
+                    }
+                }
+            // need to invoke listener to make change appear
+            listeners.invoke { (listener) in
+                if listener.listenerType == ListenerType.currentTask || listener.listenerType == ListenerType.all {
+                    listener.onTaskChange(change: .update, tasks: completedTasks)
                 }
             }
-            
         }
     
     }
@@ -127,7 +236,16 @@ class FirebaseController: NSObject, DatabaseProtocol {
     func addListener(listener: DatabaseListener) {
         listeners.addDelegate(listener)
         if listener.listenerType == .currentTask || listener.listenerType == .all {
-            listener.onTaskChange(change: .update, tasks: taskList )
+            listener.onTaskChange(change: .update, tasks: currentTasks )
+        }
+        else if listener.listenerType == .allTasks || listener.listenerType == .all {
+            listener.onTaskChange(change: .update, tasks: allTaskList )
+        }
+        else if listener.listenerType == .completedTask || listener.listenerType == .all {
+            listener.onTaskChange(change: .update, tasks: completedTasks )
+        }
+        else if listener.listenerType == .auth {
+            listener.onAuthChange(change: .update, currentUser: self.currentUser)
         }
     }
     
@@ -144,12 +262,10 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 guard let userID = Auth.auth().currentUser?.uid else { return }
                 self.userID = userID
                 self.usersRef = self.database.collection("Users")
-                let _ = try await self.usersRef?.addDocument(data: ["name": self.userID, "currentTasks": []])
-                if self.taskRef == nil {
-                    self.setupTaskListener()
-                }
+                let _ = try await self.usersRef?.document((self.userID)!).setData(["name": (self.userID)!])
+                self.setupTaskListener()
                 listeners.invoke{ (listener) in
-                    if listener.listenerType == ListenerType.auth || listener.listenerType == ListenerType.all {
+                    if listener.listenerType == ListenerType.auth {
                         listener.onAuthChange(change: .update, currentUser: (self.currentUser)!)
                     }
                 }
@@ -168,11 +284,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 currentUser = authDataResult.user
                 guard let userID = Auth.auth().currentUser?.uid else { return }
                 self.userID = userID
-                if self.taskRef == nil {
-                    self.setupTaskListener()
-                }
+                self.setupTaskListener()
                 listeners.invoke{ (listener) in
-                    if listener.listenerType == ListenerType.auth || listener.listenerType == ListenerType.all {
+                    if listener.listenerType == ListenerType.auth {
                         listener.onAuthChange(change: .update, currentUser: (self.currentUser)!)
                     }
                 }

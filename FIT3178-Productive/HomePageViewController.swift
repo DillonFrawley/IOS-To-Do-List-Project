@@ -15,19 +15,26 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     weak var databaseController: DatabaseProtocol?
 
     let CELL_CURRENT_TASK = "currentTaskCell"
+    let CELL_COMPLETED_TASK_LABEL = "completedTaskLabelCell"
+    let CELL_COMPLETED_TASK = "completedTaskCell"
+    
     let SECTION_CURRENT_TASK = 0
+    let SECTION_COMPLETED_TASK_LABEL = 1
+    let SECTION_COMPLETED_TASK = 2
     var allTasks: [ToDoTask] = []
+    var completedTasks: [ToDoTask] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
+        self.tableView.separatorColor = UIColor.clear
 
         // Do any additional setup after loading the view.
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -35,6 +42,15 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         switch section {
         case 0:
             return allTasks.count
+        case 1:
+            if completedTasks.count == 0 {
+                return 0
+            }
+            else {
+                return 1
+            }
+        case 2:
+            return completedTasks.count
         default:
             return 0
         }
@@ -43,14 +59,30 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Configure and return a task cell
-        let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
-        var content = taskCell.defaultContentConfiguration()
-        let task = allTasks[indexPath.row]
-        content.text = task.taskTitle
-        content.secondaryText = task.taskDescription
-        taskCell.contentConfiguration = content
-        
-        return taskCell
+        if indexPath.section == SECTION_CURRENT_TASK {
+            let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
+            var content = taskCell.defaultContentConfiguration()
+            let task = allTasks[indexPath.row]
+            content.text = task.taskTitle
+//            content.secondaryText = task.taskDescription
+            taskCell.contentConfiguration = content
+            return taskCell
+        }
+            else if indexPath.section == SECTION_COMPLETED_TASK_LABEL {
+                let labelCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
+                var content = labelCell.defaultContentConfiguration()
+                content.text = "Completed Tasks: " + String(completedTasks.count)
+                labelCell.contentConfiguration = content
+                return labelCell
+        }
+        else {
+            let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
+            var content = taskCell.defaultContentConfiguration()
+            let task = completedTasks[indexPath.row]
+            content.text = task.taskTitle
+            taskCell.contentConfiguration = content
+            return taskCell
+        }
     }
     
 

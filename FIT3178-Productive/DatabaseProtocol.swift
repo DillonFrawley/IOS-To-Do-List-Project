@@ -16,9 +16,9 @@ enum DatabaseChange {
 }
 
 enum ListenerType {
-    case task
     case currentTask
     case completedTask
+    case allTasks
     case auth
     case all
 }
