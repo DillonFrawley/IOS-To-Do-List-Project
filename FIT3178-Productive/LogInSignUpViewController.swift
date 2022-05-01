@@ -114,9 +114,9 @@ class LogInSignUpViewController: UIViewController, DatabaseListener {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
-        if self.databaseController?.currentUser != nil {
-            self.onAuthChange(change: .update, currentUser: (self.databaseController?.currentUser)!)
-        }
+//        if self.databaseController?.currentUser != nil {
+//            self.onAuthChange(change: .update, currentUser: (self.databaseController?.currentUser)!)
+//        }
         // Do any additional setup after loading the view.
     }
     
@@ -130,14 +130,16 @@ class LogInSignUpViewController: UIViewController, DatabaseListener {
         databaseController?.removeListener(listener: self)
     }
     
-    func onTaskChange(change: DatabaseChange, tasks: [ToDoTask]) {
+    func onTaskChange(change: DatabaseChange, tasks: [ToDoTask], taskType: String) {
         //
     }
     
-    func onAuthChange(change: DatabaseChange, currentUser: FirebaseAuth.User) {
-        self.currentUser = currentUser
-        DispatchQueue.main.async {
-            self.performSegue(withIdentifier: "authSegue", sender: self)
+    func onAuthChange(change: DatabaseChange, currentUser: FirebaseAuth.User?) {
+        if currentUser != nil {
+            self.currentUser = currentUser
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "authSegue", sender: self)
+            }
         }
     }
     

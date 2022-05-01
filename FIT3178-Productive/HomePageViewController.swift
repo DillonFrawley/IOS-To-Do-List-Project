@@ -101,7 +101,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete && indexPath.section == SECTION_CURRENT_TASK {
             let task = allTasks[indexPath.row]
-            databaseController?.deleteTask(task: task)
+            databaseController?.deleteTask(task: task, taskType:"current")
         }
     }
 
@@ -116,12 +116,12 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         databaseController?.removeListener(listener: self)
     }
     
-    func onTaskChange(change: DatabaseChange, tasks: [ToDoTask]) {
+    func onTaskChange(change: DatabaseChange, tasks: [ToDoTask], taskType: String) {
         allTasks = tasks
         tableView.reloadData()
     }
     
-    func onAuthChange(change: DatabaseChange, currentUser: User) {
+    func onAuthChange(change: DatabaseChange, currentUser: User?) {
         //
     }
     

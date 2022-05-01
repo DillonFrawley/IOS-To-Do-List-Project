@@ -25,18 +25,18 @@ enum ListenerType {
 
 protocol DatabaseListener: AnyObject {
     var listenerType: ListenerType {get set}
-    func onTaskChange(change: DatabaseChange, tasks: [ToDoTask])
-    func onAuthChange(change: DatabaseChange, currentUser: FirebaseAuth.User)
+    func onTaskChange(change: DatabaseChange, tasks: [ToDoTask], taskType: String)
+    func onAuthChange(change: DatabaseChange, currentUser: FirebaseAuth.User?)
 }
 
 protocol DatabaseProtocol: AnyObject {
     func addListener(listener: DatabaseListener)
     func removeListener(listener: DatabaseListener)
     
-    func addTask(taskTitle: String, taskDescription: String) -> ToDoTask
-    func deleteTask(task : ToDoTask)
+    func addTask(taskTitle: String, taskDescription: String, taskType: String) -> ToDoTask
+    func deleteTask(task : ToDoTask, taskType: String)
     
-    func getTaskById(_ id: String) -> ToDoTask?
+//    func getTaskById(_ id: String) -> ToDoTask?
     func signIn( email: String, password: String)
     func createNewSignIn( email: String, password: String)
     var currentUser: FirebaseAuth.User? {get set}

@@ -11,8 +11,7 @@ import FirebaseFirestoreSwift
 
 
 class FirebaseController: NSObject, DatabaseProtocol {
-    
-    
+
     var listeners = MulticastDelegate<DatabaseListener>()
     var allTaskList: [ToDoTask]
     var currentTasks: [ToDoTask]
@@ -35,7 +34,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
     override init() {
         FirebaseApp.configure()
         database = Firestore.firestore()
-        taskList = [ToDoTask]()
+        allTaskList = [ToDoTask]()
+        currentTasks = [ToDoTask]()
+        completedTasks = [ToDoTask]()
         super.init()
         if authController.currentUser != nil {
             self.currentUser = authController.currentUser
@@ -123,6 +124,20 @@ class FirebaseController: NSObject, DatabaseProtocol {
             }
             self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "allTasks")
         }
+        currentTaskRef?.addSnapshotListener() { (querySnapshot, error) in
+            guard let querySnapshot = querySnapshot else {
+                print("Failed to fetch documents with error: \(String(describing: error))")
+                return
+            }
+            self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "current")
+        }
+        completedTaskRef?.addSnapshotListener() { (querySnapshot, error) in
+            guard let querySnapshot = querySnapshot else {
+                print("Failed to fetch documents with error: \(String(describing: error))")
+                return
+            }
+            self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "completed")
+        }
     }
 
     
@@ -156,7 +171,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 // need to invoke listener to make change appear
                 listeners.invoke { (listener) in
                     if listener.listenerType == ListenerType.allTasks || listener.listenerType == ListenerType.all {
-                        listener.onTaskChange(change: .update, tasks: allTaskList)
+                        listener.onTaskChange(change: .update, tasks: allTaskList, taskType: "allTasks")
                     }
                 }
                 
@@ -191,7 +206,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
             // need to invoke listener to make change appear
             listeners.invoke { (listener) in
                 if listener.listenerType == ListenerType.currentTask || listener.listenerType == ListenerType.all {
-                    listener.onTaskChange(change: .update, tasks: currentTasks)
+                    listener.onTaskChange(change: .update, tasks: currentTasks, taskType: "current")
                 }
             
             }
@@ -224,8 +239,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 }
             // need to invoke listener to make change appear
             listeners.invoke { (listener) in
-                if listener.listenerType == ListenerType.currentTask || listener.listenerType == ListenerType.all {
-                    listener.onTaskChange(change: .update, tasks: completedTasks)
+                if listener.listenerType == ListenerType.completedTask || listener.listenerType == ListenerType.all {
+                    listener.onTaskChange(change: .update, tasks: completedTasks, taskType: "completed")
                 }
             }
         }
@@ -236,13 +251,13 @@ class FirebaseController: NSObject, DatabaseProtocol {
     func addListener(listener: DatabaseListener) {
         listeners.addDelegate(listener)
         if listener.listenerType == .currentTask || listener.listenerType == .all {
-            listener.onTaskChange(change: .update, tasks: currentTasks )
+            listener.onTaskChange(change: .update, tasks: currentTasks, taskType: "current" )
         }
         else if listener.listenerType == .allTasks || listener.listenerType == .all {
-            listener.onTaskChange(change: .update, tasks: allTaskList )
+            listener.onTaskChange(change: .update, tasks: allTaskList, taskType: "allTasks")
         }
         else if listener.listenerType == .completedTask || listener.listenerType == .all {
-            listener.onTaskChange(change: .update, tasks: completedTasks )
+            listener.onTaskChange(change: .update, tasks: completedTasks, taskType: "completed" )
         }
         else if listener.listenerType == .auth {
             listener.onAuthChange(change: .update, currentUser: self.currentUser)
@@ -266,7 +281,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 self.setupTaskListener()
                 listeners.invoke{ (listener) in
                     if listener.listenerType == ListenerType.auth {
-                        listener.onAuthChange(change: .update, currentUser: (self.currentUser)!)
+                        listener.onAuthChange(change: .update, currentUser: self.currentUser)
                     }
                 }
             }
@@ -287,7 +302,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 self.setupTaskListener()
                 listeners.invoke{ (listener) in
                     if listener.listenerType == ListenerType.auth {
-                        listener.onAuthChange(change: .update, currentUser: (self.currentUser)!)
+                        listener.onAuthChange(change: .update, currentUser: self.currentUser)
                     }
                 }
             }
