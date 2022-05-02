@@ -94,6 +94,11 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         //
     }
     
+    func onDateChange(change: DatabaseChange, allDates: [String]) {
+        //
+    }
+    
+    
     
     
     

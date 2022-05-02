@@ -161,6 +161,11 @@ class LogInSignUpViewController: UIViewController, DatabaseListener {
         return string != whitespaceString
     }
     
+    func onDateChange(change: DatabaseChange, allDates: [String]) {
+        //
+    }
+    
+    
     
 
     /*

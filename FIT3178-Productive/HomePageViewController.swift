@@ -125,6 +125,10 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         //
     }
     
+    func onDateChange(change: DatabaseChange, allDates: [String]) {
+        //
+    }
+    
 
     /*
     // MARK: - Navigation
