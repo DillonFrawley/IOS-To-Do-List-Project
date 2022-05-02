@@ -350,6 +350,12 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 currentUser = authDataResult.user
                 guard let userID = Auth.auth().currentUser?.uid else { return }
                 self.userID = userID
+                if self.currentUser != nil {
+                    allTaskList = [ToDoTask]()
+                    currentTasks = [ToDoTask]()
+                    completedTasks = [ToDoTask]()
+                    allDates = [String]()
+                }
                 self.setupTaskListener()
                 listeners.invoke{ (listener) in
                     if listener.listenerType == ListenerType.auth {

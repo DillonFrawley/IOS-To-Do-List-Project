@@ -136,10 +136,12 @@ class LogInSignUpViewController: UIViewController, DatabaseListener {
     
     func onAuthChange(change: DatabaseChange, currentUser: FirebaseAuth.User?) {
         if currentUser != nil {
-            self.currentUser = currentUser
-            DispatchQueue.main.async {
-                self.performSegue(withIdentifier: "authSegue", sender: self)
-            }
+            if self.currentUser == nil || self.currentUser != currentUser {
+                DispatchQueue.main.async {
+                    self.performSegue(withIdentifier: "authSegue", sender: self)
+                }
+                self.currentUser = currentUser
+        }
         }
     }
     
@@ -177,6 +179,7 @@ class LogInSignUpViewController: UIViewController, DatabaseListener {
         // Pass the selected object to the new view controller.
     }
     */
+
 
 }
 
