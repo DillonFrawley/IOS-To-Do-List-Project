@@ -120,18 +120,21 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     
     func setupTaskListener() {
-        self.allTasksRef = self.usersRef?.document((self.userID)!).collection("allTasks")
+        
         self.dateRef = self.usersRef?.document((self.userID)!).collection("SelectedDate")
         self.currentTaskRef = self.dateRef?.document((self.currentDate)!).collection("currentTasks")
         self.completedTaskRef = self.dateRef?.document((self.currentDate)!).collection("completedTasks")
-        
-        allTasksRef?.addSnapshotListener() { (querySnapshot, error) in
-            guard let querySnapshot = querySnapshot else {
-                print("Failed to fetch documents with error: \(String(describing: error))")
-                return
+        if self.allTasksRef == nil {
+            self.allTasksRef = self.usersRef?.document((self.userID)!).collection("allTasks")
+            allTasksRef?.addSnapshotListener() { (querySnapshot, error) in
+                guard let querySnapshot = querySnapshot else {
+                    print("Failed to fetch documents with error: \(String(describing: error))")
+                    return
+                }
+                self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "allTasks")
             }
-            self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "allTasks")
         }
+        
         currentTaskRef?.addSnapshotListener() { (querySnapshot, error) in
             guard let querySnapshot = querySnapshot else {
                 print("Failed to fetch documents with error: \(String(describing: error))")
