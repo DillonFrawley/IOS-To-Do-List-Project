@@ -156,16 +156,84 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Current Tasks" id="Reb-wm-1gO">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="D44-1E-WUg">
-                            <connections>
-                                <segue destination="joh-xg-R37" kind="show" identifier="createTaskSegue" id="GYE-1g-yHb"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="D44-1E-WUg">
+                                <connections>
+                                    <segue destination="joh-xg-R37" kind="show" identifier="createTaskSegue" id="GYE-1g-yHb"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="search" id="rly-ha-CIK">
+                                <connections>
+                                    <segue destination="aPA-ir-LxV" kind="show" identifier="changeDateSegue" id="5Q1-WN-Yi8"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aU1-Vk-AN2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1631.8840579710147" y="79.6875"/>
+        </scene>
+        <!--Change Date View Controller-->
+        <scene sceneID="Zyo-cr-meU">
+            <objects>
+                <viewController id="aPA-ir-LxV" customClass="ChangeDateViewController" customModule="FIT3178_Productive" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Mog-qZ-UMv">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Date:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="78d-ha-t0D">
+                                <rect key="frame" x="20" y="108" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a new date" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="40F-zz-4gY">
+                                <rect key="frame" x="20" y="149" width="374" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LsA-7o-336">
+                                <rect key="frame" x="20" y="254" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P2y-PQ-kQ3">
+                                <rect key="frame" x="20" y="203" width="374" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Change Date"/>
+                                <connections>
+                                    <action selector="changeDateButton:" destination="aPA-ir-LxV" eventType="touchUpInside" id="gmX-R3-anD"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="sYi-bF-j07"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="sYi-bF-j07" firstAttribute="trailing" secondItem="78d-ha-t0D" secondAttribute="trailing" constant="20" id="2Es-Hm-SUj"/>
+                            <constraint firstItem="LsA-7o-336" firstAttribute="leading" secondItem="sYi-bF-j07" secondAttribute="leading" constant="20" id="BdN-pj-gdX"/>
+                            <constraint firstItem="LsA-7o-336" firstAttribute="top" secondItem="P2y-PQ-kQ3" secondAttribute="bottom" constant="20" id="ClE-Fr-O3V"/>
+                            <constraint firstItem="P2y-PQ-kQ3" firstAttribute="top" secondItem="40F-zz-4gY" secondAttribute="bottom" constant="20" id="Eg7-Ze-esQ"/>
+                            <constraint firstItem="sYi-bF-j07" firstAttribute="trailing" secondItem="LsA-7o-336" secondAttribute="trailing" constant="20" id="Fqf-wO-w5R"/>
+                            <constraint firstItem="P2y-PQ-kQ3" firstAttribute="leading" secondItem="sYi-bF-j07" secondAttribute="leading" constant="20" id="HSR-Nr-w9X"/>
+                            <constraint firstItem="sYi-bF-j07" firstAttribute="trailing" secondItem="P2y-PQ-kQ3" secondAttribute="trailing" constant="20" id="LhG-6R-aHO"/>
+                            <constraint firstItem="40F-zz-4gY" firstAttribute="top" secondItem="78d-ha-t0D" secondAttribute="bottom" constant="20" id="PVi-JJ-J5p"/>
+                            <constraint firstItem="40F-zz-4gY" firstAttribute="leading" secondItem="sYi-bF-j07" secondAttribute="leading" constant="20" id="Shi-bZ-iFd"/>
+                            <constraint firstItem="78d-ha-t0D" firstAttribute="leading" secondItem="sYi-bF-j07" secondAttribute="leading" constant="20" id="TVB-vR-YDe"/>
+                            <constraint firstItem="78d-ha-t0D" firstAttribute="top" secondItem="sYi-bF-j07" secondAttribute="top" constant="20" id="Z8g-JL-TV2"/>
+                            <constraint firstItem="sYi-bF-j07" firstAttribute="trailing" secondItem="40F-zz-4gY" secondAttribute="trailing" constant="20" id="kGj-EZ-NaD"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="W9h-Gj-p8S"/>
+                    <connections>
+                        <outlet property="currentDateTextLabel" destination="LsA-7o-336" id="HE8-88-XRN"/>
+                        <outlet property="newDateTextField" destination="40F-zz-4gY" id="51q-y1-aix"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9uw-vG-abe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1636" y="746"/>
         </scene>
         <!--Create Task-->
         <scene sceneID="3F2-n6-j9K">

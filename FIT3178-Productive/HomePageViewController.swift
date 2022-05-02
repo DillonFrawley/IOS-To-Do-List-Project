@@ -10,8 +10,8 @@ import Firebase
 import FirebaseFirestoreSwift
 
 class HomePageViewController: UITableViewController, DatabaseListener {
-    
-    var listenerType = ListenerType.currentTask
+        
+    var listenerType = ListenerType.currentAndCompletedTasks
     weak var databaseController: DatabaseProtocol?
 
     let CELL_CURRENT_TASK = "currentTaskCell"
@@ -21,8 +21,9 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     let SECTION_CURRENT_TASK = 0
     let SECTION_COMPLETED_TASK_LABEL = 1
     let SECTION_COMPLETED_TASK = 2
-    var allTasks: [ToDoTask] = []
+    var currentTasks: [ToDoTask] = []
     var completedTasks: [ToDoTask] = []
+    var currentDate: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +42,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         // #warning Incomplete implementation, return the number of rows
         switch section {
         case 0:
-            return allTasks.count
+            return currentTasks.count
         case 1:
             if completedTasks.count == 0 {
                 return 0
@@ -62,7 +63,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         if indexPath.section == SECTION_CURRENT_TASK {
             let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
             var content = taskCell.defaultContentConfiguration()
-            let task = allTasks[indexPath.row]
+            let task = currentTasks[indexPath.row]
             content.text = task.taskTitle
 //            content.secondaryText = task.taskDescription
             taskCell.contentConfiguration = content
@@ -89,7 +90,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == SECTION_CURRENT_TASK {
+        if indexPath.section == SECTION_CURRENT_TASK || indexPath.section == SECTION_COMPLETED_TASK{
             return true
         }
         else {
@@ -100,9 +101,13 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete && indexPath.section == SECTION_CURRENT_TASK {
-            let task = allTasks[indexPath.row]
+            let task = currentTasks[indexPath.row]
             databaseController?.deleteTask(task: task, taskType:"current")
         }
+        else if editingStyle == .delete && indexPath.section == SECTION_COMPLETED_TASK{
+            let task = completedTasks[indexPath.row]
+            databaseController?.deleteTask(task: task, taskType:"completed")
+            }
     }
 
     
@@ -116,8 +121,10 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         databaseController?.removeListener(listener: self)
     }
     
-    func onTaskChange(change: DatabaseChange, tasks: [ToDoTask], taskType: String) {
-        allTasks = tasks
+    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], currentDate: String, taskType: String) {
+        self.currentDate = currentDate
+        self.currentTasks = currentTasks
+        self.completedTasks = completedTasks
         tableView.reloadData()
     }
     
@@ -126,6 +133,10 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     }
     
     func onDateChange(change: DatabaseChange, allDates: [String]) {
+        //
+    }
+    
+    func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
         //
     }
     

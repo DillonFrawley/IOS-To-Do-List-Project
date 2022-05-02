@@ -50,10 +50,35 @@ class FirebaseController: NSObject, DatabaseProtocol {
             guard let userID = authController.currentUser?.uid else { return }
             self.userID = userID
             self.usersRef = self.database.collection("Users")
-            self.setupTaskListener()
         }
         
     }
+    
+    func addListener(listener: DatabaseListener) {
+        listeners.addDelegate(listener)
+        if listener.listenerType == ListenerType.currentAndCompletedTasks{
+            if self.currentUser != nil {
+                currentTasks = [ToDoTask]()
+                completedTasks = [ToDoTask]()
+            }
+            self.setupTaskListener()
+            listener.onTaskChange(change: .update, currentTasks: self.currentTasks, completedTasks: self.completedTasks, currentDate: (self.currentDate)!, taskType: "currentAndCompletedTasks")
+        }
+        else if listener.listenerType == .allTasks {
+            listener.onAllTaskChange(change: .update, allTasks: allTaskList)
+        }
+        else if listener.listenerType == .auth {
+            listener.onAuthChange(change: .update, currentUser: self.currentUser)
+        }
+        else if listener.listenerType == .date {
+            listener.onDateChange(change: .update, allDates: self.allDates)
+        }
+    }
+    
+    func removeListener(listener: DatabaseListener) {
+        listeners.removeDelegate(listener)
+    }
+
     
     func addTask(taskTitle: String, taskDescription: String, taskType: String) -> ToDoTask {
         let task = ToDoTask()
@@ -108,22 +133,11 @@ class FirebaseController: NSObject, DatabaseProtocol {
         
     }
     
-//    func getTaskById(_ id: String) -> ToDoTask? {
-//        for task in taskList {
-//            if task.id == id {
-//                return task
-//            }
-//        }
-//
-//        return nil
-//    }
-    
-    
     func setupTaskListener() {
-        
         self.dateRef = self.usersRef?.document((self.userID)!).collection("SelectedDate")
         self.currentTaskRef = self.dateRef?.document((self.currentDate)!).collection("currentTasks")
         self.completedTaskRef = self.dateRef?.document((self.currentDate)!).collection("completedTasks")
+        
         if self.allTasksRef == nil {
             self.allTasksRef = self.usersRef?.document((self.userID)!).collection("allTasks")
             allTasksRef?.addSnapshotListener() { (querySnapshot, error) in
@@ -154,7 +168,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 print("Failed to fetch documents with error: \(String(describing: error))")
                 return
             }
-            self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "completed")
+            self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "date")
         }
     }
 
@@ -189,7 +203,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 // need to invoke listener to make change appear
                 listeners.invoke { (listener) in
                     if listener.listenerType == ListenerType.allTasks || listener.listenerType == ListenerType.all {
-                        listener.onTaskChange(change: .update, tasks: allTaskList, taskType: "allTasks")
+                        listener.onAllTaskChange(change: .update, allTasks: self.allTaskList)
                     }
                 }
                 
@@ -223,8 +237,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 }
             // need to invoke listener to make change appear
             listeners.invoke { (listener) in
-                if listener.listenerType == ListenerType.currentTask || listener.listenerType == ListenerType.all {
-                    listener.onTaskChange(change: .update, tasks: currentTasks, taskType: "current")
+                if listener.listenerType == ListenerType.currentAndCompletedTasks{
+                    listener.onTaskChange(change: .update, currentTasks: self.currentTasks, completedTasks: self.completedTasks, currentDate: (self.currentDate)!, taskType: "currentAndCompletedTasks")
                 }
             
             }
@@ -257,22 +271,16 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 }
             // need to invoke listener to make change appear
             listeners.invoke { (listener) in
-                if listener.listenerType == ListenerType.completedTask || listener.listenerType == ListenerType.all {
-                    listener.onTaskChange(change: .update, tasks: completedTasks, taskType: "completed")
+                if listener.listenerType == ListenerType.currentAndCompletedTasks{
+                    listener.onTaskChange(change: .update, currentTasks: self.currentTasks, completedTasks: self.completedTasks, currentDate: (self.currentDate)!, taskType: "currentAndCompletedTasks")
                 }
             }
         }
         else if taskType == "date" {
             snapshot.documentChanges.forEach { (change) in
                 var parsedDate: String?
+                parsedDate = change.document.documentID
         
-                do {
-                    parsedDate = try change.document.data(as: String.self)
-                } catch {
-                    print("Unable to decode date")
-                    return
-                }
-                
                 guard let newDate = parsedDate else {
                     print("Document doesn't exist")
                     return
@@ -298,30 +306,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     }
     
-    
-    func addListener(listener: DatabaseListener) {
-        listeners.addDelegate(listener)
-        if listener.listenerType == .currentTask || listener.listenerType == .all {
-            listener.onTaskChange(change: .update, tasks: currentTasks, taskType: "current" )
-        }
-        else if listener.listenerType == .allTasks || listener.listenerType == .all {
-            listener.onTaskChange(change: .update, tasks: allTaskList, taskType: "allTasks")
-        }
-        else if listener.listenerType == .completedTask || listener.listenerType == .all {
-            listener.onTaskChange(change: .update, tasks: completedTasks, taskType: "completed" )
-        }
-        else if listener.listenerType == .auth {
-            listener.onAuthChange(change: .update, currentUser: self.currentUser)
-        }
-        else if listener.listenerType == .date {
-            listener.onDateChange(change: .update, allDates: self.allDates)
-        }
-    }
-    
-    func removeListener(listener: DatabaseListener) {
-        listeners.removeDelegate(listener)
-    }
-    
     func createNewSignIn( email: String, password: String) {
         Task {
             do {
@@ -330,9 +314,15 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 currentUser = authDataResult.user
                 guard let userID = Auth.auth().currentUser?.uid else { return }
                 self.userID = userID
+                if self.currentUser != nil {
+                    allTaskList = [ToDoTask]()
+                    currentTasks = [ToDoTask]()
+                    completedTasks = [ToDoTask]()
+                    allDates = [String]()
+                }
                 self.usersRef = self.database.collection("Users")
                 let _ = try await self.usersRef?.document((self.userID)!).setData(["name": (self.userID)!])
-                self.setupTaskListener()
+//                self.setupTaskListener()
                 listeners.invoke{ (listener) in
                     if listener.listenerType == ListenerType.auth {
                         listener.onAuthChange(change: .update, currentUser: self.currentUser)
@@ -359,7 +349,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                     completedTasks = [ToDoTask]()
                     allDates = [String]()
                 }
-                self.setupTaskListener()
+//                self.setupTaskListener()
                 listeners.invoke{ (listener) in
                     if listener.listenerType == ListenerType.auth {
                         listener.onAuthChange(change: .update, currentUser: self.currentUser)

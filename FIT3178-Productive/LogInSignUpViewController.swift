@@ -10,7 +10,7 @@ import Firebase
 import FirebaseFirestoreSwift
 
 class LogInSignUpViewController: UIViewController, DatabaseListener {
-    
+
     var listenerType = ListenerType.auth
     weak var databaseController: DatabaseProtocol?
     
@@ -130,7 +130,11 @@ class LogInSignUpViewController: UIViewController, DatabaseListener {
         databaseController?.removeListener(listener: self)
     }
     
-    func onTaskChange(change: DatabaseChange, tasks: [ToDoTask], taskType: String) {
+    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], currentDate: String, taskType: String) {
+        //
+    }
+    
+    func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
         //
     }
     
