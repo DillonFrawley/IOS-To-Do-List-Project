@@ -159,7 +159,7 @@
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="D44-1E-WUg">
                                 <connections>
-                                    <segue destination="joh-xg-R37" kind="show" identifier="createTaskSegue" id="GYE-1g-yHb"/>
+                                    <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="uep-xs-eWz"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem systemItem="search" id="rly-ha-CIK">
@@ -234,6 +234,67 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9uw-vG-abe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1636" y="746"/>
+        </scene>
+        <!--All Tasks-->
+        <scene sceneID="xuY-SG-XXr">
+            <objects>
+                <tableViewController id="rty-TX-fVm" customClass="AllTasksViewController" customModule="FIT3178_Productive" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="8RF-x9-KF1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="allTasksCountCell" textLabel="0bC-YK-QwI" style="IBUITableViewCellStyleDefault" id="0cN-HG-FJd">
+                                <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0cN-HG-FJd" id="Mzd-hv-53F">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0bC-YK-QwI">
+                                            <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="allTasksCell" textLabel="VnQ-in-3AH" style="IBUITableViewCellStyleDefault" id="gFR-NE-1jP">
+                                <rect key="frame" x="0.0" y="88" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gFR-NE-1jP" id="Pg9-Vk-0uI">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VnQ-in-3AH">
+                                            <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="rty-TX-fVm" id="Lop-Na-QQl"/>
+                            <outlet property="delegate" destination="rty-TX-fVm" id="by3-6R-rtK"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="All Tasks" id="YYr-5O-6FE">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Dbl-RV-43p">
+                            <connections>
+                                <segue destination="joh-xg-R37" kind="show" id="Y7L-NG-dqm"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wdz-wG-1mC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2556" y="755"/>
         </scene>
         <!--Create Task-->
         <scene sceneID="3F2-n6-j9K">

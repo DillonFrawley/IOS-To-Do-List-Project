@@ -65,16 +65,15 @@ class HomePageViewController: UITableViewController, DatabaseListener {
             var content = taskCell.defaultContentConfiguration()
             let task = currentTasks[indexPath.row]
             content.text = task.taskTitle
-//            content.secondaryText = task.taskDescription
             taskCell.contentConfiguration = content
             return taskCell
         }
-            else if indexPath.section == SECTION_COMPLETED_TASK_LABEL {
-                let labelCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
-                var content = labelCell.defaultContentConfiguration()
-                content.text = "Completed Tasks: " + String(completedTasks.count)
-                labelCell.contentConfiguration = content
-                return labelCell
+        else if indexPath.section == SECTION_COMPLETED_TASK_LABEL {
+            let labelCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
+            var content = labelCell.defaultContentConfiguration()
+            content.text = "Completed Tasks: " + String(completedTasks.count)
+            labelCell.contentConfiguration = content
+            return labelCell
         }
         else {
             let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)

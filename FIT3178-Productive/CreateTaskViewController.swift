@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 
 class CreateTaskViewController: UIViewController, DatabaseListener {
 
-    var listenerType = ListenerType.currentAndCompletedTasks
+    var listenerType = ListenerType.allTasks
     weak var databaseController: DatabaseProtocol?
     var allTasks:[ToDoTask] = []
 
@@ -28,6 +28,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
             if whitespaceBool(string: taskTitle) == true && whitespaceBool(string: taskDescription) == true {
                 if checkTaskDuplicate(taskTitle: taskTitle) == false {
                     let _ = databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "current")
+                    let _ = databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks")
                     navigationController?.popViewController(animated: true)
                 }
             }
@@ -74,7 +75,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     }
     
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], currentDate: String, taskType: String) {
-        allTasks = currentTasks
+        //
     }
     
     func checkTaskDuplicate( taskTitle: String) -> Bool {
@@ -99,7 +100,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     }
     
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
-        //
+        self.allTasks = allTasks
     }
     
     
