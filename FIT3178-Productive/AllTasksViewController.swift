@@ -28,9 +28,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         }
         if recognizer.state == UIGestureRecognizer.State.ended {
             let tapLocation = recognizer.location(in: self.tableView)
-            print(tapLocation)
             if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
-                print(tapIndexPath.row)
                 let isIndexValid = allTasks.indices.contains(tapIndexPath.row)
                 if isIndexValid == true {
                     performSegue(withIdentifier: "previewTaskSegue", sender: self)

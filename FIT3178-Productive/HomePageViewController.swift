@@ -25,6 +25,34 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     var completedTasks: [ToDoTask] = []
     var currentDate: String?
     
+    @IBAction func handleDoubleTap(_ sender: Any) {
+        print("gesture works")
+        guard let recognizer = sender as? UITapGestureRecognizer else {
+            return
+        }
+        if recognizer.state == UIGestureRecognizer.State.ended {
+            let tapLocation = recognizer.location(in: self.tableView)
+            if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
+                switch tapIndexPath.section {
+                case 0:
+                    let isIndexValid = currentTasks.indices.contains(tapIndexPath.row)
+                    if isIndexValid == true {
+                        performSegue(withIdentifier: "previewTaskSegue", sender: self)
+                    }
+                case 2:
+                    let isIndexValid = completedTasks.indices.contains(tapIndexPath.row)
+                    if isIndexValid == true {
+                        performSegue(withIdentifier: "previewTaskSegue", sender: self)
+                    }
+                default:
+                    return
+                }
+                
+            }
+        }
+    }
+   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
