@@ -112,9 +112,6 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="Pwz-t4-zCF" appends="YES" id="qf1-Ie-Ce3"/>
-                                            </connections>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -157,6 +154,7 @@
                         <connections>
                             <outlet property="dataSource" destination="def-j2-WEV" id="RBN-G9-nUW"/>
                             <outlet property="delegate" destination="def-j2-WEV" id="pWQ-5p-jL5"/>
+                            <outletCollection property="gestureRecognizers" destination="k5x-8o-8ZO" appends="YES" id="72i-gV-Wtp"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Current/Completed Tasks" id="Reb-wm-1gO">
@@ -178,9 +176,9 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aU1-Vk-AN2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer numberOfTapsRequired="2" id="Pwz-t4-zCF">
+                <tapGestureRecognizer numberOfTapsRequired="2" id="k5x-8o-8ZO">
                     <connections>
-                        <action selector="handleDoubleTap:" destination="def-j2-WEV" id="xs4-9H-4wN"/>
+                        <action selector="handleDoubleTap:" destination="def-j2-WEV" id="8A3-UN-87t"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -288,9 +286,6 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="8FW-KJ-sfr" appends="YES" id="aP9-nl-YKN"/>
-                                            </connections>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -464,7 +459,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Ehs-84-mhp"/>
+        <segue reference="9Em-fe-SYI"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">

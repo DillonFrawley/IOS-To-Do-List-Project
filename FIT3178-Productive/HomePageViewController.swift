@@ -25,8 +25,8 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     var completedTasks: [ToDoTask] = []
     var currentDate: String?
     
+
     @IBAction func handleDoubleTap(_ sender: Any) {
-        print("gesture works")
         guard let recognizer = sender as? UITapGestureRecognizer else {
             return
         }
@@ -51,7 +51,6 @@ class HomePageViewController: UITableViewController, DatabaseListener {
             }
         }
     }
-   
     
     override func viewDidLoad() {
         super.viewDidLoad()
