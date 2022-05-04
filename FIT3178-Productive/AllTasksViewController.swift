@@ -22,6 +22,24 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     
     var allTasks: [ToDoTask] = []
     
+    @IBAction func handleDoubleTap(_ sender: Any) {
+        guard let recognizer = sender as? UITapGestureRecognizer else {
+            return
+        }
+        if recognizer.state == UIGestureRecognizer.State.ended {
+            let tapLocation = recognizer.location(in: self.tableView)
+            print(tapLocation)
+            if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
+                print(tapIndexPath.row)
+                let isIndexValid = allTasks.indices.contains(tapIndexPath.row)
+                if isIndexValid == true {
+                    performSegue(withIdentifier: "previewTaskSegue", sender: self)
+                }
+            }
+        }
+        
+        
+    }
     override func viewDidLoad() {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
@@ -30,6 +48,8 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
 
         // Do any additional setup after loading the view.
     }
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

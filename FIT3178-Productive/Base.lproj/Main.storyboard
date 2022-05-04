@@ -114,9 +114,6 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="JaT-p4-Sps" kind="show" id="0xL-om-a26"/>
-                                </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="completedTaskLabelCell" textLabel="STd-yN-Rzu" style="IBUITableViewCellStyleDefault" id="6Pz-t3-Joy">
                                 <rect key="frame" x="0.0" y="88" width="414" height="43.5"/>
@@ -151,9 +148,6 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="JaT-p4-Sps" kind="show" id="XBr-Ld-aQp"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -249,6 +243,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="allTasksCountCell" textLabel="0bC-YK-QwI" style="IBUITableViewCellStyleDefault" id="0cN-HG-FJd">
                                 <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
@@ -277,20 +272,22 @@
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VnQ-in-3AH">
                                             <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <connections>
+                                                <outletCollection property="gestureRecognizers" destination="8FW-KJ-sfr" appends="YES" id="aP9-nl-YKN"/>
+                                            </connections>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="JaT-p4-Sps" kind="show" id="RIm-vE-rsI"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="rty-TX-fVm" id="Lop-Na-QQl"/>
                             <outlet property="delegate" destination="rty-TX-fVm" id="by3-6R-rtK"/>
+                            <outletCollection property="gestureRecognizers" destination="8FW-KJ-sfr" appends="YES" id="0DG-Wg-BS7"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="All Tasks" id="YYr-5O-6FE">
@@ -300,8 +297,16 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="JaT-p4-Sps" kind="show" identifier="previewTaskSegue" id="Ehs-84-mhp"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wdz-wG-1mC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="8FW-KJ-sfr">
+                    <connections>
+                        <action selector="handleDoubleTap:" destination="rty-TX-fVm" id="Wdm-xF-LSL"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2545" y="811"/>
         </scene>
@@ -446,9 +451,6 @@
             <point key="canvasLocation" x="-258" y="80"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="RIm-vE-rsI"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
