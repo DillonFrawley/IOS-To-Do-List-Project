@@ -27,7 +27,6 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         if taskTitle.isEmpty == false && taskDescription.isEmpty == false {
             if whitespaceBool(string: taskTitle) == true && whitespaceBool(string: taskDescription) == true {
                 if checkTaskDuplicate(taskTitle: taskTitle) == false {
-                    let _ = databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "current")
                     let _ = databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks")
                     navigationController?.popViewController(animated: true)
                 }

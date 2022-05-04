@@ -15,7 +15,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     weak var databaseController: DatabaseProtocol?
     
     let SECTION_ALL_TASKS_COUNT: Int = 0
-    let SECTION_ALL_TASKS: Int = 0
+    let SECTION_ALL_TASKS: Int = 1
     
     let CELL_ALL_TASKS_COUNT: String = "allTasksCountCell"
     let CELL_ALL_TASKS: String = "allTasksCell"
@@ -23,6 +23,8 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     var allTasks: [ToDoTask] = []
     
     override func viewDidLoad() {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        databaseController = appDelegate?.databaseController
         super.viewDidLoad()
         self.tableView.separatorColor = UIColor.clear
 
@@ -89,14 +91,21 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         }
     }
     
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete && indexPath.section == SECTION_ALL_TASKS {
-            let task = allTasks[indexPath.row]
-            databaseController?.deleteTask(task: task, taskType:"allTasks")
-        }
+    
+    override func tableView(_ tableView: UITableView,
+                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
     }
-
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .normal, title: "Add") { (action, view, completionHandler) in
+            let task = self.allTasks[indexPath.row]
+            let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current")
+            completionHandler(true)
+        }
+        action.backgroundColor = .systemBlue
+        return UISwipeActionsConfiguration(actions: [action])
+    }
     
 
     
@@ -128,3 +137,4 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     */
 
 }
+

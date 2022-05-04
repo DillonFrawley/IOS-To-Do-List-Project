@@ -58,8 +58,10 @@ class FirebaseController: NSObject, DatabaseProtocol {
         listeners.addDelegate(listener)
         if listener.listenerType == ListenerType.currentAndCompletedTasks{
             if self.currentUser != nil {
+                allTaskList = [ToDoTask]()
                 currentTasks = [ToDoTask]()
                 completedTasks = [ToDoTask]()
+                allDates = [String]()
             }
             self.setupTaskListener()
             listener.onTaskChange(change: .update, currentTasks: self.currentTasks, completedTasks: self.completedTasks, currentDate: (self.currentDate)!, taskType: "currentAndCompletedTasks")
@@ -137,17 +139,16 @@ class FirebaseController: NSObject, DatabaseProtocol {
         self.dateRef = self.usersRef?.document((self.userID)!).collection("SelectedDate")
         self.currentTaskRef = self.dateRef?.document((self.currentDate)!).collection("currentTasks")
         self.completedTaskRef = self.dateRef?.document((self.currentDate)!).collection("completedTasks")
+        self.allTasksRef = self.usersRef?.document((self.userID)!).collection("allTasks")
         
-        if self.allTasksRef == nil {
-            self.allTasksRef = self.usersRef?.document((self.userID)!).collection("allTasks")
-            allTasksRef?.addSnapshotListener() { (querySnapshot, error) in
-                guard let querySnapshot = querySnapshot else {
-                    print("Failed to fetch documents with error: \(String(describing: error))")
-                    return
-                }
-                self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "allTasks")
+        allTasksRef?.addSnapshotListener() { (querySnapshot, error) in
+            guard let querySnapshot = querySnapshot else {
+                print("Failed to fetch documents with error: \(String(describing: error))")
+                return
             }
+            self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "allTasks")
         }
+        
         
         currentTaskRef?.addSnapshotListener() { (querySnapshot, error) in
             guard let querySnapshot = querySnapshot else {

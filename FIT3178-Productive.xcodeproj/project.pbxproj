@@ -24,6 +24,7 @@
 		F53921FD2816E5F700300D7C /* LogInSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */; };
 		F53AE2BB281FDD47009D5E4E /* ChangeDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AE2BA281FDD47009D5E4E /* ChangeDateViewController.swift */; };
 		F53AE2BD281FF923009D5E4E /* AllTasksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */; };
+		F53AE2BF28224DBC009D5E4E /* PreviewTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */; };
 		F56520152816CDD400D7D4FA /* ToDoTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56520142816CDD300D7D4FA /* ToDoTask.swift */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +45,7 @@
 		F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInSignUpViewController.swift; sourceTree = "<group>"; };
 		F53AE2BA281FDD47009D5E4E /* ChangeDateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeDateViewController.swift; sourceTree = "<group>"; };
 		F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTasksViewController.swift; sourceTree = "<group>"; };
+		F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewTaskViewController.swift; sourceTree = "<group>"; };
 		F56520142816CDD300D7D4FA /* ToDoTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTask.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -88,6 +90,7 @@
 				F51A63912812D19F00023BDC /* CreateTaskViewController.swift */,
 				F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */,
 				F53AE2BA281FDD47009D5E4E /* ChangeDateViewController.swift */,
+				F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */,
 				F56520142816CDD300D7D4FA /* ToDoTask.swift */,
 				F51A634C280AF69B00023BDC /* SceneDelegate.swift */,
 				F51A637E2812A88100023BDC /* HomePageViewController.swift */,
@@ -190,6 +193,7 @@
 				F53AE2BD281FF923009D5E4E /* AllTasksViewController.swift in Sources */,
 				F51A634D280AF69B00023BDC /* SceneDelegate.swift in Sources */,
 				F51A63922812D19F00023BDC /* CreateTaskViewController.swift in Sources */,
+				F53AE2BF28224DBC009D5E4E /* PreviewTaskViewController.swift in Sources */,
 				F53921FD2816E5F700300D7C /* LogInSignUpViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
