@@ -22,7 +22,6 @@
 		F51A63922812D19F00023BDC /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A63912812D19F00023BDC /* CreateTaskViewController.swift */; };
 		F51A63942816BC8500023BDC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F51A63932816BC8500023BDC /* GoogleService-Info.plist */; };
 		F53921FD2816E5F700300D7C /* LogInSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */; };
-		F53AE2BB281FDD47009D5E4E /* ChangeDateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AE2BA281FDD47009D5E4E /* ChangeDateViewController.swift */; };
 		F53AE2BD281FF923009D5E4E /* AllTasksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */; };
 		F53AE2BF28224DBC009D5E4E /* PreviewTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */; };
 		F56520152816CDD400D7D4FA /* ToDoTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56520142816CDD300D7D4FA /* ToDoTask.swift */; };
@@ -43,7 +42,6 @@
 		F51A63912812D19F00023BDC /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
 		F51A63932816BC8500023BDC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInSignUpViewController.swift; sourceTree = "<group>"; };
-		F53AE2BA281FDD47009D5E4E /* ChangeDateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeDateViewController.swift; sourceTree = "<group>"; };
 		F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTasksViewController.swift; sourceTree = "<group>"; };
 		F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewTaskViewController.swift; sourceTree = "<group>"; };
 		F56520142816CDD300D7D4FA /* ToDoTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTask.swift; sourceTree = "<group>"; };
@@ -89,7 +87,6 @@
 				F51A63932816BC8500023BDC /* GoogleService-Info.plist */,
 				F51A63912812D19F00023BDC /* CreateTaskViewController.swift */,
 				F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */,
-				F53AE2BA281FDD47009D5E4E /* ChangeDateViewController.swift */,
 				F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */,
 				F56520142816CDD300D7D4FA /* ToDoTask.swift */,
 				F51A634C280AF69B00023BDC /* SceneDelegate.swift */,
@@ -185,7 +182,6 @@
 			files = (
 				F51A638C2812B68100023BDC /* FirebaseController.swift in Sources */,
 				F51A63902812B71200023BDC /* MulticastDelegate.swift in Sources */,
-				F53AE2BB281FDD47009D5E4E /* ChangeDateViewController.swift in Sources */,
 				F56520152816CDD400D7D4FA /* ToDoTask.swift in Sources */,
 				F51A638E2812B6B700023BDC /* DatabaseProtocol.swift in Sources */,
 				F51A637F2812A88100023BDC /* HomePageViewController.swift in Sources */,

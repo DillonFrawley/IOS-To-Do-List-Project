@@ -26,6 +26,19 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     var currentDate: String?
     var task: ToDoTask?
     
+    @IBOutlet weak var datePickerOutlet: UIDatePicker!
+    
+    @IBAction func datePickerChanged(_ sender: Any) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.short
+        dateFormatter.timeStyle = DateFormatter.Style.short
+        
+        let strDate = dateFormatter.string(from: self.datePickerOutlet.date)
+        self.title = strDate
+        self.currentDate = strDate
+        print(strDate)
+    }
+    
     @IBAction func handleDoubleTap(_ sender: Any) {
         guard let recognizer = sender as? UITapGestureRecognizer else {
             return
@@ -59,7 +72,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
         self.tableView.separatorColor = UIColor.clear
-        self.datePickerOutler.isHidden = true
+        self.datePickerOutlet.contentHorizontalAlignment = .left
 
         // Do any additional setup after loading the view.
     }
