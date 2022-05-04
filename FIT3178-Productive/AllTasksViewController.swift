@@ -21,6 +21,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     let CELL_ALL_TASKS: String = "allTasksCell"
     
     var allTasks: [ToDoTask] = []
+    var task: ToDoTask?
     
     @IBAction func handleDoubleTap(_ sender: Any) {
         guard let recognizer = sender as? UITapGestureRecognizer else {
@@ -31,6 +32,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
             if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
                 let isIndexValid = allTasks.indices.contains(tapIndexPath.row)
                 if isIndexValid == true {
+                    self.task = self.allTasks[tapIndexPath.row]
                     performSegue(withIdentifier: "previewTaskSegue", sender: self)
                 }
             }
@@ -142,6 +144,13 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     
     func onAuthChange(change: DatabaseChange, currentUser: User?) {
         //
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "previewTaskSegue"{
+            let destination = segue.destination as! PreviewTaskViewController
+            destination.task = self.task
+        }
     }
 
     /*

@@ -24,8 +24,8 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     var currentTasks: [ToDoTask] = []
     var completedTasks: [ToDoTask] = []
     var currentDate: String?
+    var task: ToDoTask?
     
-
     @IBAction func handleDoubleTap(_ sender: Any) {
         guard let recognizer = sender as? UITapGestureRecognizer else {
             return
@@ -37,11 +37,13 @@ class HomePageViewController: UITableViewController, DatabaseListener {
                 case 0:
                     let isIndexValid = currentTasks.indices.contains(tapIndexPath.row)
                     if isIndexValid == true {
+                        self.task = currentTasks[tapIndexPath.row]
                         performSegue(withIdentifier: "previewTaskSegue", sender: self)
                     }
                 case 2:
                     let isIndexValid = completedTasks.indices.contains(tapIndexPath.row)
                     if isIndexValid == true {
+                        self.task = completedTasks[tapIndexPath.row]
                         performSegue(withIdentifier: "previewTaskSegue", sender: self)
                     }
                 default:
@@ -57,6 +59,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
         self.tableView.separatorColor = UIColor.clear
+        self.datePickerOutler.isHidden = true
 
         // Do any additional setup after loading the view.
     }
@@ -164,6 +167,13 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
         //
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "previewTaskSegue"{
+            let destination = segue.destination as! PreviewTaskViewController
+            destination.task = self.task
+        }
     }
     
 

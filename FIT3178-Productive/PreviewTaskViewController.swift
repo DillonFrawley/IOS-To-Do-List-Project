@@ -9,47 +9,23 @@ import UIKit
 import Firebase
 import FirebaseFirestoreSwift
 
-class PreviewTaskViewController: UIViewController, DatabaseListener {
+class PreviewTaskViewController: UIViewController{
 
-    var listenerType = ListenerType.allTasks
-    weak var databaseController: DatabaseProtocol?
+    @IBOutlet weak var realTaskTitleLabel: UILabel!
+    @IBOutlet weak var realTaskDescriptionLabel: UILabel!
     
-    var allTasks: [ToDoTask] = []
+    var task: ToDoTask?
     
     override func viewDidLoad() {
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        databaseController = appDelegate?.databaseController
+
         super.viewDidLoad()
+        self.realTaskTitleLabel.text = self.task?.taskTitle
+        self.realTaskDescriptionLabel.text = self.task?.taskDescription
 
         // Do any additional setup after loading the view.
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        databaseController?.addListener(listener: self)
-    }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        databaseController?.removeListener(listener: self)
-    }
-    
-    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], currentDate: String, taskType: String) {
-        //
-    }
-    
-    func onDateChange(change: DatabaseChange, allDates: [String]) {
-        //
-    }
-    
-    func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
-        self.allTasks = allTasks
-    }
-    
-    func onAuthChange(change: DatabaseChange, currentUser: User?) {
-        //
-    }
-
     /*
     // MARK: - Navigation
 
