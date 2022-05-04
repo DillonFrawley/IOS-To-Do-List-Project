@@ -42,8 +42,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
         allDates = [String]()
         let date = Date()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy"
-        self.currentDate = dateFormatter.string(from: date)
+        dateFormatter.dateStyle = DateFormatter.Style.short
+        let strDate = dateFormatter.string(from: date)
+        self.currentDate = strDate.replacingOccurrences(of: "/", with: "-")
         super.init()
         if authController.currentUser != nil {
             self.currentUser = authController.currentUser
@@ -139,6 +140,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         self.dateRef = self.usersRef?.document((self.userID)!).collection("SelectedDate")
         self.currentTaskRef = self.dateRef?.document((self.currentDate)!).collection("currentTasks")
         self.completedTaskRef = self.dateRef?.document((self.currentDate)!).collection("completedTasks")
+        print(self.currentDate)
         self.allTasksRef = self.usersRef?.document((self.userID)!).collection("allTasks")
         
         allTasksRef?.addSnapshotListener() { (querySnapshot, error) in

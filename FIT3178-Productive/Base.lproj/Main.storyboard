@@ -89,7 +89,7 @@
             </objects>
             <point key="canvasLocation" x="752.17391304347836" y="79.6875"/>
         </scene>
-        <!--Current/Completed Tasks-->
+        <!--Home-->
         <scene sceneID="SY7-Ws-tZB">
             <objects>
                 <tableViewController id="def-j2-WEV" customClass="HomePageViewController" customModule="FIT3178_Productive" customModuleProvider="target" sceneMemberID="viewController">
@@ -164,15 +164,12 @@
                             <outletCollection property="gestureRecognizers" destination="k5x-8o-8ZO" appends="YES" id="72i-gV-Wtp"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Current/Completed Tasks" id="Reb-wm-1gO">
-                        <rightBarButtonItems>
-                            <barButtonItem title="Add New Task" id="D44-1E-WUg">
-                                <connections>
-                                    <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="uep-xs-eWz"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Calendar" id="rly-ha-CIK"/>
-                        </rightBarButtonItems>
+                    <navigationItem key="navigationItem" title="Home" id="Reb-wm-1gO">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="D44-1E-WUg">
+                            <connections>
+                                <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="uep-xs-eWz"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="datePickerOutlet" destination="Xr0-Ed-lvs" id="QtW-Oq-ie4"/>

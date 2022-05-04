@@ -31,12 +31,13 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     @IBAction func datePickerChanged(_ sender: Any) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.short
-        dateFormatter.timeStyle = DateFormatter.Style.short
         
         let strDate = dateFormatter.string(from: self.datePickerOutlet.date)
-        self.title = strDate
-        self.currentDate = strDate
-        print(strDate)
+        self.currentDate = strDate.replacingOccurrences(of: "/", with: "-")
+        self.databaseController?.currentDate = self.currentDate
+        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.pushViewController(self, animated: true)
+        
     }
     
     @IBAction func handleDoubleTap(_ sender: Any) {
