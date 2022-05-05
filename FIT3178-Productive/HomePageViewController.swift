@@ -85,13 +85,6 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         case 0:
             return currentTasks.count
         case 1:
-            if completedTasks.count == 0 {
-                return 0
-            }
-            else {
-                return 1
-            }
-        case 2:
             return completedTasks.count
         default:
             return 0

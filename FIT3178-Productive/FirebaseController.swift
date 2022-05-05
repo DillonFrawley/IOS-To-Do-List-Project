@@ -43,13 +43,13 @@ class FirebaseController: NSObject, DatabaseProtocol {
         dateFormatter.dateStyle = DateFormatter.Style.short
         let strDate = dateFormatter.string(from: date)
         self.currentDate = strDate.replacingOccurrences(of: "/", with: "-")
-//        print(self.currentDate)
         super.init()
         if authController.currentUser != nil {
             self.currentUser = authController.currentUser
             guard let userID = authController.currentUser?.uid else { return }
             self.userID = userID
             self.usersRef = self.database.collection("Users")
+            self.setupTaskListener()
         }
         
     }
@@ -57,12 +57,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
     func addListener(listener: DatabaseListener) {
         listeners.addDelegate(listener)
         if listener.listenerType == ListenerType.currentAndCompletedTasks{
-            if self.currentUser != nil {
-                allTaskList = [ToDoTask]()
-                currentTasks = [ToDoTask]()
-                completedTasks = [ToDoTask]()
-            }
-            self.setupTaskListener()
             listener.onTaskChange(change: .update, currentTasks: self.currentTasks, completedTasks: self.completedTasks, currentDate: (self.currentDate)!, taskType: "currentAndCompletedTasks")
         }
         else if listener.listenerType == .allTasks {
@@ -201,6 +195,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
             }
         }
         else if taskType == "current" {
+            print(self.currentTasks.count)
             snapshot.documentChanges.forEach { (change) in
                 var parsedTask: ToDoTask?
         
