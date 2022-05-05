@@ -139,7 +139,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 print("Failed to fetch documents with error: \(String(describing: error))")
                 return
             }
-            self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "allTasks")
+            self.parseAllTaskSnapshot(snapshot: querySnapshot)
         }
     }
     
@@ -205,7 +205,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
     
     func parseTaskSnapshot(snapshot: QuerySnapshot, taskType: String) {
         if taskType == "current" {
-            print(self.currentTasks.count)
             snapshot.documentChanges.forEach { (change) in
                 var parsedTask: ToDoTask?
         
