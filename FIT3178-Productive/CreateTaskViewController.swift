@@ -16,6 +16,9 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     var allTasks:[ToDoTask] = []
 
     
+    @IBAction func handleSwipeRight(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
     @IBOutlet weak var taskTitleTextField: UITextField!
     
     @IBOutlet weak var taskDescriptionTextField: UITextField!

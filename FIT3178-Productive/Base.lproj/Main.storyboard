@@ -219,6 +219,11 @@
                         <action selector="handleDoubleTap:" destination="rty-TX-fVm" id="Wdm-xF-LSL"/>
                     </connections>
                 </tapGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="fnC-iG-824">
+                    <connections>
+                        <action selector="handleSwipeRight:" destination="rty-TX-fVm" id="fcp-Ke-eas"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2545" y="811"/>
         </scene>
@@ -263,6 +268,7 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="tQ0-qg-gbb"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="dFf-aJ-xwg" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="2OA-LG-Xyd"/>
                             <constraint firstItem="yJc-90-RTJ" firstAttribute="top" secondItem="dFf-aJ-xwg" secondAttribute="bottom" constant="20" id="AeW-uI-UGW"/>
@@ -280,6 +286,9 @@
                             <constraint firstItem="gJc-sI-h50" firstAttribute="top" secondItem="m3n-Yk-8wu" secondAttribute="bottom" constant="20" id="xIx-Yv-7GD"/>
                             <constraint firstItem="yJc-90-RTJ" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="z9o-rK-WSk"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="avv-hp-2Mg" appends="YES" id="ROO-N0-gtE"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Create Task" id="8uz-rM-5q3"/>
                     <connections>
@@ -288,6 +297,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hdu-Pp-e5y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="avv-hp-2Mg">
+                    <connections>
+                        <action selector="handleSwipeRight:" destination="joh-xg-R37" id="FBW-Cc-WQV"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3814" y="800"/>
         </scene>
@@ -326,6 +340,7 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="CuM-rv-6FU"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="cYN-Vp-03k" firstAttribute="top" secondItem="PIt-LS-eHV" secondAttribute="bottom" constant="20" id="AYZ-Gy-DaR"/>
                             <constraint firstItem="RYp-W0-saB" firstAttribute="leading" secondItem="CuM-rv-6FU" secondAttribute="leading" constant="20" id="C1H-vO-W5c"/>
@@ -340,6 +355,9 @@
                             <constraint firstItem="CuM-rv-6FU" firstAttribute="trailing" secondItem="cYN-Vp-03k" secondAttribute="trailing" constant="20" id="lhk-as-1cT"/>
                             <constraint firstItem="CuM-rv-6FU" firstAttribute="trailing" secondItem="RYp-W0-saB" secondAttribute="trailing" constant="20" id="v4Q-DQ-sqV"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="RXy-ls-Pop" appends="YES" id="l8E-ZI-lHN"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Task Preview" id="nTh-rT-bP9"/>
                     <connections>
@@ -348,6 +366,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fgS-eb-gHM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="RXy-ls-Pop">
+                    <connections>
+                        <action selector="handleSwipeRight:" destination="JaT-p4-Sps" id="4k0-Ox-Pgi"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2639" y="80"/>
         </scene>
@@ -371,7 +394,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Ehs-84-mhp"/>
+        <segue reference="9Em-fe-SYI"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
