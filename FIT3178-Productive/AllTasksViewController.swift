@@ -14,10 +14,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     var listenerType = ListenerType.allTasks
     weak var databaseController: DatabaseProtocol?
     
-    let SECTION_ALL_TASKS_COUNT: Int = 0
-    let SECTION_ALL_TASKS: Int = 1
-    
-    let CELL_ALL_TASKS_COUNT: String = "allTasksCountCell"
+    let SECTION_ALL_TASKS: Int = 0
     let CELL_ALL_TASKS: String = "allTasksCell"
     
     var allTasks: [ToDoTask] = []
@@ -64,15 +61,13 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 2
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         switch section {
         case 0:
-            return 1
-        case 1:
             return self.allTasks.count
         default:
             return 0
@@ -82,21 +77,12 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Configure and return a task cell
-        if indexPath.section == SECTION_ALL_TASKS_COUNT {
-            let labelCell = tableView.dequeueReusableCell(withIdentifier: CELL_ALL_TASKS_COUNT, for: indexPath)
-            var content = labelCell.defaultContentConfiguration()
-            content.text = "Number Of Tasks Stored: " + String(allTasks.count)
-            labelCell.contentConfiguration = content
-            return labelCell
-        }
-        else {
-            let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ALL_TASKS, for: indexPath)
-            var content = taskCell.defaultContentConfiguration()
-            let task = allTasks[indexPath.row]
-            content.text = task.taskTitle
-            taskCell.contentConfiguration = content
-            return taskCell
-        }
+        let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ALL_TASKS, for: indexPath)
+        var content = taskCell.defaultContentConfiguration()
+        let task = allTasks[indexPath.row]
+        content.text = task.taskTitle
+        taskCell.contentConfiguration = content
+        return taskCell
     }
     
 
@@ -125,6 +111,21 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         }
         action.backgroundColor = .systemBlue
         return UISwipeActionsConfiguration(actions: [action])
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection
+                                section: Int) -> String? {
+        switch section {
+        case 0:
+            if self.allTasks.count > 0 {
+                return "Number of Tasks Saved:" + String(self.allTasks.count)
+            } else {
+                return ""
+            }
+        default:
+            return ""
+        }
+
     }
     
 

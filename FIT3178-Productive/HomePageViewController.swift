@@ -15,12 +15,10 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     weak var databaseController: DatabaseProtocol?
 
     let CELL_CURRENT_TASK = "currentTaskCell"
-    let CELL_COMPLETED_TASK_LABEL = "completedTaskLabelCell"
     let CELL_COMPLETED_TASK = "completedTaskCell"
     
     let SECTION_CURRENT_TASK = 0
-    let SECTION_COMPLETED_TASK_LABEL = 1
-    let SECTION_COMPLETED_TASK = 2
+    let SECTION_COMPLETED_TASK = 1
     var currentTasks: [ToDoTask] = []
     var completedTasks: [ToDoTask] = []
     var currentDate: String?
@@ -78,7 +76,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 3
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -111,13 +109,6 @@ class HomePageViewController: UITableViewController, DatabaseListener {
             taskCell.contentConfiguration = content
             return taskCell
         }
-        else if indexPath.section == SECTION_COMPLETED_TASK_LABEL {
-            let labelCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
-            var content = labelCell.defaultContentConfiguration()
-            content.text = "Completed Tasks: " + String(completedTasks.count)
-            labelCell.contentConfiguration = content
-            return labelCell
-        }
         else {
             let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
             var content = taskCell.defaultContentConfiguration()
@@ -132,7 +123,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == SECTION_CURRENT_TASK || indexPath.section == SECTION_COMPLETED_TASK{
+        if indexPath.section == SECTION_CURRENT_TASK {
             return true
         }
         else {
@@ -165,6 +156,27 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         }
         action.backgroundColor = .systemRed
         return UISwipeActionsConfiguration(actions: [action])
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection
+                                section: Int) -> String? {
+        switch section {
+        case 0:
+            if self.currentTasks.count > 0 {
+                return "Current Tasks:" + String(self.currentTasks.count)
+            } else {
+                return ""
+            }
+        case 1:
+            if self.completedTasks.count > 0 {
+                return "Completed Tasks:" + String(self.completedTasks.count)
+            } else {
+                return ""
+            }
+        default:
+            return ""
+        }
+
     }
 
     
