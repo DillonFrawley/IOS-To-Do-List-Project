@@ -115,7 +115,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == SECTION_CURRENT_TASK {
+        if indexPath.section == SECTION_CURRENT_TASK || indexPath.section == SECTION_COMPLETED_TASK {
             return true
         }
         else {
@@ -130,14 +130,20 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .normal, title: "Complete") { (action, view, completionHandler) in
-            let task = self.currentTasks[indexPath.row]
-            let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "completed")
-            self.databaseController?.deleteTask(task: task, taskType: "current")
-            completionHandler(true)
+        if indexPath.section == SECTION_CURRENT_TASK {
+            let action = UIContextualAction(style: .normal, title: "Complete") { (action, view, completionHandler) in
+                let task = self.currentTasks[indexPath.row]
+                let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "completed")
+                self.databaseController?.deleteTask(task: task, taskType: "current")
+                completionHandler(true)
+            }
+            action.backgroundColor = .systemGreen
+            return UISwipeActionsConfiguration(actions: [action])
         }
-        action.backgroundColor = .systemGreen
-        return UISwipeActionsConfiguration(actions: [action])
+        else {
+            return nil
+        }
+       
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
