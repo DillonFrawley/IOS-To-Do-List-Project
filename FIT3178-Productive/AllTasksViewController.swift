@@ -117,7 +117,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         return .none
     }
     
-    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .normal, title: "Add") { (action, view, completionHandler) in
             let task = self.allTasks[indexPath.row]
             let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current")
@@ -130,10 +130,6 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
 
     
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], currentDate: String, taskType: String) {
-        //
-    }
-    
-    func onDateChange(change: DatabaseChange, allDates: [String]) {
         //
     }
     

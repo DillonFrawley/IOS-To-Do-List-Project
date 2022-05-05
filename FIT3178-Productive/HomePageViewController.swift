@@ -72,7 +72,6 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
-        self.tableView.separatorColor = UIColor.clear
         self.datePickerOutlet.contentHorizontalAlignment = .left
 
         // Do any additional setup after loading the view.
@@ -142,15 +141,30 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     }
     
     // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete && indexPath.section == SECTION_CURRENT_TASK {
-            let task = currentTasks[indexPath.row]
-            databaseController?.deleteTask(task: task, taskType:"current")
+    override func tableView(_ tableView: UITableView,
+                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .normal, title: "Complete") { (action, view, completionHandler) in
+            let task = self.currentTasks[indexPath.row]
+            let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "completed")
+            self.databaseController?.deleteTask(task: task, taskType: "current")
+            completionHandler(true)
         }
-        else if editingStyle == .delete && indexPath.section == SECTION_COMPLETED_TASK{
-            let task = completedTasks[indexPath.row]
-            databaseController?.deleteTask(task: task, taskType:"completed")
-            }
+        action.backgroundColor = .systemGreen
+        return UISwipeActionsConfiguration(actions: [action])
+    }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+            let task = self.currentTasks[indexPath.row]
+            self.databaseController?.deleteTask(task: task, taskType: "current")
+            completionHandler(true)
+        }
+        action.backgroundColor = .systemRed
+        return UISwipeActionsConfiguration(actions: [action])
     }
 
     
@@ -175,9 +189,6 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         //
     }
     
-    func onDateChange(change: DatabaseChange, allDates: [String]) {
-        //
-    }
     
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
         //

@@ -16,7 +16,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var allTaskList: [ToDoTask]
     var currentTasks: [ToDoTask]
     var completedTasks: [ToDoTask]
-    var allDates: [String]
     
     lazy var authController: Auth = {
         return Auth.auth()
@@ -39,12 +38,12 @@ class FirebaseController: NSObject, DatabaseProtocol {
         allTaskList = [ToDoTask]()
         currentTasks = [ToDoTask]()
         completedTasks = [ToDoTask]()
-        allDates = [String]()
         let date = Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.short
         let strDate = dateFormatter.string(from: date)
         self.currentDate = strDate.replacingOccurrences(of: "/", with: "-")
+//        print(self.currentDate)
         super.init()
         if authController.currentUser != nil {
             self.currentUser = authController.currentUser
@@ -62,7 +61,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 allTaskList = [ToDoTask]()
                 currentTasks = [ToDoTask]()
                 completedTasks = [ToDoTask]()
-                allDates = [String]()
             }
             self.setupTaskListener()
             listener.onTaskChange(change: .update, currentTasks: self.currentTasks, completedTasks: self.completedTasks, currentDate: (self.currentDate)!, taskType: "currentAndCompletedTasks")
@@ -73,9 +71,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         else if listener.listenerType == .auth {
             listener.onAuthChange(change: .update, currentUser: self.currentUser)
         }
-        else if listener.listenerType == .date {
-            listener.onDateChange(change: .update, allDates: self.allDates)
-        }
+        
     }
     
     func removeListener(listener: DatabaseListener) {
@@ -140,7 +136,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
         self.dateRef = self.usersRef?.document((self.userID)!).collection("SelectedDate")
         self.currentTaskRef = self.dateRef?.document((self.currentDate)!).collection("currentTasks")
         self.completedTaskRef = self.dateRef?.document((self.currentDate)!).collection("completedTasks")
-        print(self.currentDate)
         self.allTasksRef = self.usersRef?.document((self.userID)!).collection("allTasks")
         
         allTasksRef?.addSnapshotListener() { (querySnapshot, error) in
@@ -165,13 +160,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 return
             }
             self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "completed")
-        }
-        self.dateRef?.addSnapshotListener() { (querySnapshot, error) in
-            guard let querySnapshot = querySnapshot else {
-                print("Failed to fetch documents with error: \(String(describing: error))")
-                return
-            }
-            self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "date")
         }
     }
 
@@ -279,33 +267,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 }
             }
         }
-        else if taskType == "date" {
-            snapshot.documentChanges.forEach { (change) in
-                var parsedDate: String?
-                parsedDate = change.document.documentID
-        
-                guard let newDate = parsedDate else {
-                    print("Document doesn't exist")
-                    return
-                }
-                
-                if change.type == .added {
-                    allDates.insert(newDate, at: Int(change.newIndex))
-                }
-                else if change.type == .modified {
-                    allDates[Int(change.oldIndex)] = newDate
-                }
-                else if change.type == .removed {
-                    allDates.remove(at: Int(change.oldIndex))
-                    }
-                }
-            // need to invoke listener to make change appear
-            listeners.invoke { (listener) in
-                if listener.listenerType == ListenerType.date {
-                    listener.onDateChange(change: .update, allDates: self.allDates)
-                }
-            }
-        }
     
     }
     
@@ -321,11 +282,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
                     allTaskList = [ToDoTask]()
                     currentTasks = [ToDoTask]()
                     completedTasks = [ToDoTask]()
-                    allDates = [String]()
                 }
                 self.usersRef = self.database.collection("Users")
                 let _ = try await self.usersRef?.document((self.userID)!).setData(["name": (self.userID)!])
-//                self.setupTaskListener()
                 listeners.invoke{ (listener) in
                     if listener.listenerType == ListenerType.auth {
                         listener.onAuthChange(change: .update, currentUser: self.currentUser)
@@ -350,9 +309,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                     allTaskList = [ToDoTask]()
                     currentTasks = [ToDoTask]()
                     completedTasks = [ToDoTask]()
-                    allDates = [String]()
                 }
-//                self.setupTaskListener()
                 listeners.invoke{ (listener) in
                     if listener.listenerType == ListenerType.auth {
                         listener.onAuthChange(change: .update, currentUser: self.currentUser)

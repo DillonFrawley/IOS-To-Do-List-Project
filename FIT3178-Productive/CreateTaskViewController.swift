@@ -94,9 +94,6 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         //
     }
     
-    func onDateChange(change: DatabaseChange, allDates: [String]) {
-        //
-    }
     
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
         self.allTasks = allTasks

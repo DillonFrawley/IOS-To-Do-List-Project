@@ -19,7 +19,6 @@ enum ListenerType {
     case currentAndCompletedTasks
     case allTasks
     case auth
-    case date
     case all
 }
 
@@ -27,7 +26,6 @@ protocol DatabaseListener: AnyObject {
     var listenerType: ListenerType {get set}
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], currentDate: String, taskType: String)
     func onAuthChange(change: DatabaseChange, currentUser: FirebaseAuth.User?)
-    func onDateChange(change: DatabaseChange, allDates: [String])
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask])
 }
 
