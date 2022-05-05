@@ -113,6 +113,16 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         return UISwipeActionsConfiguration(actions: [action])
     }
     
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+            let task = self.allTasks[indexPath.row]
+            self.databaseController?.deleteTask(task: task, taskType: "allTasks")
+            completionHandler(true)
+        }
+        action.backgroundColor = .systemRed
+        return UISwipeActionsConfiguration(actions: [action])
+    }
+    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection
                                 section: Int) -> String? {
         switch section {
@@ -130,7 +140,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     
 
     
-    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], currentDate: String, taskType: String) {
+    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
         //
     }
     

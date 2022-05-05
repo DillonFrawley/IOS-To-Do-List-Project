@@ -24,7 +24,7 @@ enum ListenerType {
 
 protocol DatabaseListener: AnyObject {
     var listenerType: ListenerType {get set}
-    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], currentDate: String, taskType: String)
+    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask])
     func onAuthChange(change: DatabaseChange, currentUser: FirebaseAuth.User?)
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask])
 }
@@ -41,5 +41,7 @@ protocol DatabaseProtocol: AnyObject {
     func createNewSignIn( email: String, password: String)
     var currentUser: FirebaseAuth.User? {get set}
     var currentDate: String? {get set}
+    
+    func setupTaskListener()
     
 }

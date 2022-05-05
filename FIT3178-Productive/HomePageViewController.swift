@@ -33,8 +33,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         let strDate = dateFormatter.string(from: self.datePickerOutlet.date)
         self.currentDate = strDate.replacingOccurrences(of: "/", with: "-")
         self.databaseController?.currentDate = self.currentDate
-        self.navigationController?.popViewController(animated: true)
-        self.navigationController?.pushViewController(self, animated: true)
+        self.databaseController?.setupTaskListener()
         
     }
     
@@ -52,7 +51,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
                         self.task = currentTasks[tapIndexPath.row]
                         performSegue(withIdentifier: "previewTaskSegue", sender: self)
                     }
-                case 2:
+                case 1:
                     let isIndexValid = completedTasks.indices.contains(tapIndexPath.row)
                     if isIndexValid == true {
                         self.task = completedTasks[tapIndexPath.row]
@@ -183,8 +182,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         databaseController?.removeListener(listener: self)
     }
     
-    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], currentDate: String, taskType: String) {
-        self.currentDate = currentDate
+    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
         self.currentTasks = currentTasks
         self.completedTasks = completedTasks
         tableView.reloadData()

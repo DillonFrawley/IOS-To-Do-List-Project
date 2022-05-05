@@ -73,7 +73,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         return string != whitespaceString
     }
     
-    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], currentDate: String, taskType: String) {
+    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
         //
     }
     
