@@ -20,6 +20,9 @@ class PreviewTaskViewController: UIViewController{
     @IBAction func handleSwipeRight(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
+    @IBAction func locationButtonAction(_ sender: Any) {
+        performSegue(withIdentifier: "locationSegue", sender: self)
+    }
     override func viewDidLoad() {
 
         super.viewDidLoad()

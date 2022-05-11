@@ -305,6 +305,22 @@
             </objects>
             <point key="canvasLocation" x="3814" y="800"/>
         </scene>
+        <!--Map-->
+        <scene sceneID="G5b-v8-fJV">
+            <objects>
+                <viewController id="xjs-yt-fTT" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0jM-yD-zi2">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="IBf-u0-wxK"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Map" id="sR6-S5-c0F"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wj2-WC-9eE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3919" y="80"/>
+        </scene>
         <!--Task Preview-->
         <scene sceneID="lOk-DW-Izc">
             <objects>
@@ -337,11 +353,21 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lpA-mf-B9v">
+                                <rect key="frame" x="20" y="272" width="374" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Location"/>
+                                <connections>
+                                    <action selector="locationButtonAction:" destination="JaT-p4-Sps" eventType="touchUpInside" id="kcT-t7-qbn"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="CuM-rv-6FU"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="lpA-mf-B9v" firstAttribute="leading" secondItem="CuM-rv-6FU" secondAttribute="leading" constant="20" id="44L-4x-Fmb"/>
+                            <constraint firstItem="lpA-mf-B9v" firstAttribute="top" secondItem="RYp-W0-saB" secondAttribute="bottom" constant="20" id="9JT-hX-VkT"/>
                             <constraint firstItem="cYN-Vp-03k" firstAttribute="top" secondItem="PIt-LS-eHV" secondAttribute="bottom" constant="20" id="AYZ-Gy-DaR"/>
                             <constraint firstItem="RYp-W0-saB" firstAttribute="leading" secondItem="CuM-rv-6FU" secondAttribute="leading" constant="20" id="C1H-vO-W5c"/>
                             <constraint firstItem="CuM-rv-6FU" firstAttribute="trailing" secondItem="PIt-LS-eHV" secondAttribute="trailing" constant="20" id="FBf-j1-Vm1"/>
@@ -352,6 +378,7 @@
                             <constraint firstItem="PIt-LS-eHV" firstAttribute="leading" secondItem="CuM-rv-6FU" secondAttribute="leading" constant="20" id="ZHG-4G-iI9"/>
                             <constraint firstItem="CuM-rv-6FU" firstAttribute="trailing" secondItem="y7d-RT-jQ1" secondAttribute="trailing" constant="20" id="e4W-ux-BiA"/>
                             <constraint firstItem="cYN-Vp-03k" firstAttribute="leading" secondItem="CuM-rv-6FU" secondAttribute="leading" constant="20" id="hu3-3V-cRf"/>
+                            <constraint firstItem="CuM-rv-6FU" firstAttribute="trailing" secondItem="lpA-mf-B9v" secondAttribute="trailing" constant="20" id="kUY-cJ-F7r"/>
                             <constraint firstItem="CuM-rv-6FU" firstAttribute="trailing" secondItem="cYN-Vp-03k" secondAttribute="trailing" constant="20" id="lhk-as-1cT"/>
                             <constraint firstItem="CuM-rv-6FU" firstAttribute="trailing" secondItem="RYp-W0-saB" secondAttribute="trailing" constant="20" id="v4Q-DQ-sqV"/>
                         </constraints>
@@ -363,6 +390,7 @@
                     <connections>
                         <outlet property="realTaskDescriptionLabel" destination="RYp-W0-saB" id="nY1-Rb-ZJT"/>
                         <outlet property="realTaskTitleLabel" destination="PIt-LS-eHV" id="DZF-su-ULL"/>
+                        <segue destination="xjs-yt-fTT" kind="show" identifier="locationSegue" id="FGG-hF-qzp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fgS-eb-gHM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -372,7 +400,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2639" y="80"/>
+            <point key="canvasLocation" x="2637.68115942029" y="79.6875"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="JlF-fB-PIA">

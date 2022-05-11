@@ -167,6 +167,14 @@ class LogInSignUpViewController: UIViewController, DatabaseListener {
         return string != whitespaceString
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "authSegue" {
+            let backItem = UIBarButtonItem()
+            backItem.title = "Log Out"
+            navigationItem.backBarButtonItem = backItem // This will show in the next view controller being pushed
+        }
+    }
+    
     
     
     

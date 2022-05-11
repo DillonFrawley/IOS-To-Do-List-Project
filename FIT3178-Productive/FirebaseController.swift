@@ -274,11 +274,11 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 currentUser = authDataResult.user
                 guard let userID = Auth.auth().currentUser?.uid else { return }
                 self.userID = userID
-                if self.currentUser != nil {
-                    allTaskList = [ToDoTask]()
-                    currentTasks = [ToDoTask]()
-                    completedTasks = [ToDoTask]()
-                }
+//                if self.currentUser != nil {
+//                    allTaskList = [ToDoTask]()
+//                    currentTasks = [ToDoTask]()
+//                    completedTasks = [ToDoTask]()
+//                }
                 self.usersRef = self.database.collection("Users")
                 let _ = try await self.usersRef?.document((self.userID)!).setData(["name": (self.userID)!])
                 self.setupAllTasksListener()
