@@ -21,26 +21,22 @@ final class GooglePlacesManager {
     private init () {
     }
     
-    enum PlacesError {
+    enum PlacesError: Error {
         case failedtoFind
     }
-    
-    public func setUp() {
-        GMSPlacesClient.provideAPIKey("AIzaSyBYNt5TQ3boWobJJoRYulZeI-yRf5WMQcY")
-    }
-    
+        
     public func findPlaces(
         query: String,
         completion: @escaping (Result<[Place], Error> ) -> Void
     ) {
         let filter = GMSAutocompleteFilter()
         filter.type = .geocode
-        self.client.findAutocompletePredictions(
+        client.findAutocompletePredictions(
             fromQuery: query, filter: filter, sessionToken: nil
         ) {
             results, error in
              guard let results = results, error == nil else {
-                 completion(.failure(PlacesError.failedtoFind as! Error))
+                 completion(.failure(PlacesError.failedtoFind))
                 return
             }
             

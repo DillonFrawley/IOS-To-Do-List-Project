@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import GooglePlaces
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var databaseController: DatabaseProtocol?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
             databaseController = FirebaseController()
-            GooglePlacesManager.shared.setUp()
+            GMSPlacesClient.provideAPIKey("AIzaSyDOTwgF28hajMIPhcME5rkYl6CkROPRPro")
         return true
     }
 
