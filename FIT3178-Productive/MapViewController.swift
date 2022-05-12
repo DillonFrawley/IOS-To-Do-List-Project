@@ -18,9 +18,6 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
 
     @IBOutlet var longPressOutlet: UILongPressGestureRecognizer!
     
-
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Maps"
