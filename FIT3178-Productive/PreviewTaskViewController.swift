@@ -8,11 +8,13 @@
 import UIKit
 import Firebase
 import FirebaseFirestoreSwift
+import CoreLocation
 
 class PreviewTaskViewController: UIViewController{
 
     @IBOutlet weak var realTaskTitleLabel: UILabel!
     @IBOutlet weak var realTaskDescriptionLabel: UILabel!
+    var coordinate: CLLocationCoordinate2D?
     
     var task: ToDoTask?
     
@@ -30,6 +32,14 @@ class PreviewTaskViewController: UIViewController{
         self.realTaskDescriptionLabel.text = self.task?.taskDescription
 
         // Do any additional setup after loading the view.
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "locationSegue" {
+            let destination = segue.destination as! MapViewController
+            destination.coordinate = self.coordinate
+
+        }
     }
     
     

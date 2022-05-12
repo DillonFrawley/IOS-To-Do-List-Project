@@ -21,6 +21,7 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     var locationManager: CLLocationManager = CLLocationManager()
     var coordinate: CLLocationCoordinate2D?
     weak var delegate: MapViewControllerDelegate?
+    var presetLocationBool: Bool = false
     
 
 
@@ -50,6 +51,10 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     
     override func viewWillAppear(_ animated: Bool) {
         self.determineCurrentLocation()
+        if self.coordinate != nil {
+            self.didTapPlace(with: (self.coordinate)!)
+            self.presetLocationBool = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -97,13 +102,16 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     
     
     @IBAction func handleLongPress(_ sender: Any) {
-        let annotations = mapView.annotations
-        mapView.removeAnnotations(annotations)
+        if presetLocationBool == false {
+            let annotations = mapView.annotations
+            mapView.removeAnnotations(annotations)
+            
+            let location = self.longPressOutlet.location(in: self.mapView)
+            let coordinate = self.mapView.convert(location, toCoordinateFrom: self.mapView)
+            // Add annotation:
+            self.didTapPlace(with: coordinate)
+        }
         
-        let location = self.longPressOutlet.location(in: self.mapView)
-        let coordinate = self.mapView.convert(location, toCoordinateFrom: self.mapView)
-        // Add annotation:
-        self.didTapPlace(with: coordinate)
         
     }
     

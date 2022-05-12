@@ -161,6 +161,10 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         if segue.identifier == "previewTaskSegue"{
             let destination = segue.destination as! PreviewTaskViewController
             destination.task = self.task
+            if task?.latitude != nil && task?.longitude != nil {
+                destination.coordinate = CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!)
+           
+            }
         }
     }
 
