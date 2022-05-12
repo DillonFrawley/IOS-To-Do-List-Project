@@ -7,6 +7,11 @@
 
 import UIKit
 import MapKit
+import CoreLocation
+
+protocol MapViewControllerDelegate: AnyObject {
+    func saveLocation(coordinate: CLLocationCoordinate2D)
+}
 
 class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationManagerDelegate {
 
@@ -14,17 +19,25 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     let searchVC = UISearchController(searchResultsController: MapResultViewController())
     var currentLocation: CLLocationCoordinate2D?
     var locationManager: CLLocationManager = CLLocationManager()
+    var coordinate: CLLocationCoordinate2D?
+    weak var delegate: MapViewControllerDelegate?
+    
 
 
+    @IBOutlet weak var saveButtonOutlet: UIBarButtonItem!
     @IBOutlet var longPressOutlet: UILongPressGestureRecognizer!
     
+    @IBAction func saveButtonAction(_ sender: Any) {
+        DispatchQueue.main.async {
+            self.delegate?.saveLocation(coordinate: (self.coordinate)!)
+        }
+        navigationController?.popViewController(animated: true)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Maps"
         let currentLocationButtonItem = MKUserTrackingBarButtonItem(mapView: mapView)
-        let saveButtonItem = UIButton(type: .system)
-        saveButtonItem.setTitle("Save", for: .normal)
-        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: saveButtonItem), currentLocationButtonItem]
+        self.navigationItem.rightBarButtonItems = [saveButtonOutlet, currentLocationButtonItem]
         self.mapView.addGestureRecognizer(self.longPressOutlet)
         view.addSubview(mapView)
         searchVC.searchBar.backgroundColor = .secondarySystemBackground
@@ -38,8 +51,6 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     override func viewWillAppear(_ animated: Bool) {
         self.determineCurrentLocation()
     }
-    
-    
     
     override func viewWillDisappear(_ animated: Bool) {
         locationManager.stopUpdatingLocation()
@@ -57,15 +68,6 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let mUserLocation:CLLocation = locations[0] as CLLocation
-
-        let center = CLLocationCoordinate2D(latitude: mUserLocation.coordinate.latitude, longitude: mUserLocation.coordinate.longitude)
-        let mRegion = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-        self.mapView.setRegion(mRegion, animated: true)
-        
-        
-    }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -93,7 +95,7 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     }
     
     
-
+    
     @IBAction func handleLongPress(_ sender: Any) {
         let annotations = mapView.annotations
         mapView.removeAnnotations(annotations)
@@ -101,10 +103,11 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
         let location = self.longPressOutlet.location(in: self.mapView)
         let coordinate = self.mapView.convert(location, toCoordinateFrom: self.mapView)
         // Add annotation:
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        self.mapView.addAnnotation(annotation)
+        self.didTapPlace(with: coordinate)
+        
     }
+    
+
     
     /*
     // MARK: - Navigation
@@ -132,5 +135,8 @@ extension MapViewController: MapResultViewControllerDelegate {
         pin.coordinate = coordinate
         mapView.addAnnotation(pin)
         mapView.setRegion(MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)), animated: true)
+        self.coordinate = coordinate
+        
     }
 }
+

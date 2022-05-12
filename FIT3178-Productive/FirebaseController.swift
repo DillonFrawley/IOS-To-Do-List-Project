@@ -13,6 +13,8 @@ import CoreLocation
 
 class FirebaseController: NSObject, DatabaseProtocol {
 
+    
+
     var listeners = MulticastDelegate<DatabaseListener>()
     var allTaskList: [ToDoTask]
     var currentTasks: [ToDoTask]

@@ -332,10 +332,15 @@
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Map" id="sR6-S5-c0F">
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="U0r-D3-qur"/>
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="U0r-D3-qur">
+                            <connections>
+                                <action selector="saveButtonAction:" destination="xjs-yt-fTT" id="YOW-vr-kV2"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="longPressOutlet" destination="mJq-Ii-09g" id="PTK-Re-vmo"/>
+                        <outlet property="saveButtonOutlet" destination="U0r-D3-qur" id="hfB-OC-YdR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wj2-WC-9eE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

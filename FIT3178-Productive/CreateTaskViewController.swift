@@ -10,6 +10,8 @@ import Firebase
 import FirebaseFirestoreSwift
 import CoreLocation
 
+
+
 class CreateTaskViewController: UIViewController, DatabaseListener {
 
     var listenerType = ListenerType.allTasks
@@ -27,6 +29,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     var latitude: Double?
     var longitude: Double?
     
+    
     @IBAction func createTaskButtonAction(_ sender: Any) {
         guard let taskTitle = taskTitleTextField.text, let taskDescription = taskDescriptionTextField.text else {
             return
@@ -34,7 +37,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         if taskTitle.isEmpty == false && taskDescription.isEmpty == false {
             if whitespaceBool(string: taskTitle) == true && whitespaceBool(string: taskDescription) == true {
                 if checkTaskDuplicate(taskTitle: taskTitle) == false {
-                    let _ = self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!))
+                    let _ = self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!))
                     navigationController?.popViewController(animated: true)
                 }
             }
@@ -111,16 +114,19 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         performSegue(withIdentifier: "locationSegue", sender: self)
     }
     
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "locationSegue"{
+            let destination = segue.destination as! MapViewController
+            destination.delegate = self
+        }
     }
-    */
 
+}
+
+extension CreateTaskViewController: MapViewControllerDelegate {
+    func saveLocation(coordinate: CLLocationCoordinate2D) {
+        self.longitude = coordinate.longitude
+        self.latitude = coordinate.latitude
+    }
+    
 }
