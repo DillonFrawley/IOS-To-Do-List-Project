@@ -8,6 +8,7 @@
 import Foundation
 import Firebase
 import FirebaseFirestoreSwift
+import CoreLocation
 
 enum DatabaseChange {
     case add
@@ -33,7 +34,7 @@ protocol DatabaseProtocol: AnyObject {
     func addListener(listener: DatabaseListener)
     func removeListener(listener: DatabaseListener)
     
-    func addTask(taskTitle: String, taskDescription: String, taskType: String) -> ToDoTask
+    func addTask(taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D) -> ToDoTask
     func deleteTask(task : ToDoTask, taskType: String)
     
 //    func getTaskById(_ id: String) -> ToDoTask?

@@ -8,6 +8,7 @@
 import UIKit
 import Firebase
 import FirebaseFirestoreSwift
+import CoreLocation
 
 class CreateTaskViewController: UIViewController, DatabaseListener {
 
@@ -23,6 +24,9 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     
     @IBOutlet weak var taskDescriptionTextField: UITextField!
     
+    var latitude: Double?
+    var longitude: Double?
+    
     @IBAction func createTaskButtonAction(_ sender: Any) {
         guard let taskTitle = taskTitleTextField.text, let taskDescription = taskDescriptionTextField.text else {
             return
@@ -30,7 +34,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         if taskTitle.isEmpty == false && taskDescription.isEmpty == false {
             if whitespaceBool(string: taskTitle) == true && whitespaceBool(string: taskDescription) == true {
                 if checkTaskDuplicate(taskTitle: taskTitle) == false {
-                    let _ = databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks")
+                    let _ = self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!))
                     navigationController?.popViewController(animated: true)
                 }
             }

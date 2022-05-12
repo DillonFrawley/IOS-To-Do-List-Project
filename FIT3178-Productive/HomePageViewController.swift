@@ -8,6 +8,7 @@
 import UIKit
 import Firebase
 import FirebaseFirestoreSwift
+import CoreLocation
 
 class HomePageViewController: UITableViewController, DatabaseListener {
         
@@ -133,7 +134,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         if indexPath.section == SECTION_CURRENT_TASK {
             let action = UIContextualAction(style: .normal, title: "Complete") { (action, view, completionHandler) in
                 let task = self.currentTasks[indexPath.row]
-                let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "completed")
+                let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
                 self.databaseController?.deleteTask(task: task, taskType: "current")
                 completionHandler(true)
             }

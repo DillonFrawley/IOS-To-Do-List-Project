@@ -14,11 +14,15 @@ class ToDoTask: NSObject, Codable {
     @DocumentID var id: String?
     var taskTitle: String?
     var taskDescription: String?
+    var longitude: Double?
+    var latitude: Double?
     
     enum CodingKeys : String, CodingKey {
         case id
         case taskTitle
         case taskDescription
+        case longitude
+        case latitude
     }
 
 }

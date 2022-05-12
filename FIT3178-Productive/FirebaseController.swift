@@ -8,6 +8,7 @@
 import UIKit
 import Firebase
 import FirebaseFirestoreSwift
+import CoreLocation
 
 
 class FirebaseController: NSObject, DatabaseProtocol {
@@ -77,10 +78,14 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
 
     
-    func addTask(taskTitle: String, taskDescription: String, taskType: String) -> ToDoTask {
+    func addTask(taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?) -> ToDoTask {
         let task = ToDoTask()
         task.taskTitle = taskTitle
         task.taskDescription = taskDescription
+        if coordinate != nil {
+            task.longitude = coordinate?.longitude
+            task.latitude = coordinate?.latitude
+        }
         if taskType == "allTasks" {
             do {
                 if let taskRef = try self.allTasksRef?.addDocument(from: task) {

@@ -8,6 +8,7 @@
 import UIKit
 import Firebase
 import FirebaseFirestoreSwift
+import CoreLocation
 
 class AllTasksViewController: UITableViewController, DatabaseListener {
     
@@ -109,7 +110,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .normal, title: "Add") { (action, view, completionHandler) in
             let task = self.allTasks[indexPath.row]
-            let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current")
+            let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
             completionHandler(true)
         }
         action.backgroundColor = .systemBlue
