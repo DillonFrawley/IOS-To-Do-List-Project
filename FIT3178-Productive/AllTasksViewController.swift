@@ -21,9 +21,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     var allTasks: [ToDoTask] = []
     var task: ToDoTask?
     
-    @IBAction func handleSwipeRight(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
-    }
+
     @IBAction func handleDoubleTap(_ sender: Any) {
         guard let recognizer = sender as? UITapGestureRecognizer else {
             return

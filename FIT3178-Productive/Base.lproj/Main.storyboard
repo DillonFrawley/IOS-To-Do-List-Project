@@ -219,11 +219,6 @@
                         <action selector="handleDoubleTap:" destination="rty-TX-fVm" id="Wdm-xF-LSL"/>
                     </connections>
                 </tapGestureRecognizer>
-                <swipeGestureRecognizer direction="right" id="fnC-iG-824">
-                    <connections>
-                        <action selector="handleSwipeRight:" destination="rty-TX-fVm" id="fcp-Ke-eas"/>
-                    </connections>
-                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2545" y="811"/>
         </scene>
@@ -453,7 +448,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="9Em-fe-SYI"/>
+        <segue reference="Ehs-84-mhp"/>
         <segue reference="DWb-rG-Isu"/>
     </inferredMetricsTieBreakers>
     <resources>
