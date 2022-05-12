@@ -103,6 +103,9 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     }
     
     
+    @IBAction func locationButtonAction(_ sender: Any) {
+        performSegue(withIdentifier: "locationSegue", sender: self)
+    }
     
     
     

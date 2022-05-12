@@ -18,11 +18,16 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
 
     @IBOutlet var longPressOutlet: UILongPressGestureRecognizer!
     
+
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Maps"
-        let buttonItem = MKUserTrackingBarButtonItem(mapView: mapView)
-        self.navigationItem.rightBarButtonItem = buttonItem
+        let currentLocationButtonItem = MKUserTrackingBarButtonItem(mapView: mapView)
+        let saveButtonItem = UIButton(type: .system)
+        saveButtonItem.setTitle("Save", for: .normal)
+        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: saveButtonItem), currentLocationButtonItem]
         self.mapView.addGestureRecognizer(self.longPressOutlet)
         view.addSubview(mapView)
         searchVC.searchBar.backgroundColor = .secondarySystemBackground

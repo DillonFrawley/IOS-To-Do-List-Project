@@ -265,6 +265,14 @@
                                     <action selector="createTaskButtonAction:" destination="joh-xg-R37" eventType="touchUpInside" id="Mvv-ou-9nP"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m5n-LH-omW">
+                                <rect key="frame" x="20" y="349" width="374" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Location"/>
+                                <connections>
+                                    <action selector="locationButtonAction:" destination="joh-xg-R37" eventType="touchUpInside" id="VlF-Tp-mnf"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="tQ0-qg-gbb"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -272,17 +280,20 @@
                         <constraints>
                             <constraint firstItem="dFf-aJ-xwg" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="2OA-LG-Xyd"/>
                             <constraint firstItem="yJc-90-RTJ" firstAttribute="top" secondItem="dFf-aJ-xwg" secondAttribute="bottom" constant="20" id="AeW-uI-UGW"/>
+                            <constraint firstItem="m5n-LH-omW" firstAttribute="top" secondItem="aML-Ti-JtZ" secondAttribute="bottom" constant="20" id="Ekd-Z3-TWL"/>
                             <constraint firstItem="tQ0-qg-gbb" firstAttribute="trailing" secondItem="m3n-Yk-8wu" secondAttribute="trailing" constant="20" id="H2q-If-A9q"/>
                             <constraint firstItem="tQ0-qg-gbb" firstAttribute="trailing" secondItem="aML-Ti-JtZ" secondAttribute="trailing" constant="20" id="Hzi-Mz-TJm"/>
                             <constraint firstItem="aML-Ti-JtZ" firstAttribute="top" secondItem="gJc-sI-h50" secondAttribute="bottom" constant="20" id="O3G-4u-Asp"/>
                             <constraint firstItem="tQ0-qg-gbb" firstAttribute="trailing" secondItem="dFf-aJ-xwg" secondAttribute="trailing" constant="20" id="PAj-Ww-PYn"/>
                             <constraint firstItem="tQ0-qg-gbb" firstAttribute="trailing" secondItem="yJc-90-RTJ" secondAttribute="trailing" constant="20" id="PkS-6p-AuR"/>
                             <constraint firstItem="gJc-sI-h50" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="Xvg-LX-83S"/>
+                            <constraint firstItem="tQ0-qg-gbb" firstAttribute="trailing" secondItem="m5n-LH-omW" secondAttribute="trailing" constant="20" id="aFe-Av-3oo"/>
                             <constraint firstItem="m3n-Yk-8wu" firstAttribute="top" secondItem="yJc-90-RTJ" secondAttribute="bottom" constant="20" id="bDq-9R-jLJ"/>
                             <constraint firstItem="aML-Ti-JtZ" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="d7d-rh-beV"/>
                             <constraint firstItem="dFf-aJ-xwg" firstAttribute="top" secondItem="tQ0-qg-gbb" secondAttribute="top" constant="20" id="haX-mg-7U2"/>
                             <constraint firstItem="tQ0-qg-gbb" firstAttribute="trailing" secondItem="gJc-sI-h50" secondAttribute="trailing" constant="20" id="nLJ-xG-C3m"/>
                             <constraint firstItem="m3n-Yk-8wu" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="oMt-te-B1T"/>
+                            <constraint firstItem="m5n-LH-omW" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="vLJ-IT-geI"/>
                             <constraint firstItem="gJc-sI-h50" firstAttribute="top" secondItem="m3n-Yk-8wu" secondAttribute="bottom" constant="20" id="xIx-Yv-7GD"/>
                             <constraint firstItem="yJc-90-RTJ" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="z9o-rK-WSk"/>
                         </constraints>
@@ -294,6 +305,7 @@
                     <connections>
                         <outlet property="taskDescriptionTextField" destination="gJc-sI-h50" id="col-A6-vlh"/>
                         <outlet property="taskTitleTextField" destination="yJc-90-RTJ" id="nYY-pY-kwj"/>
+                        <segue destination="xjs-yt-fTT" kind="show" identifier="locationSegue" id="DWb-rG-Isu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hdu-Pp-e5y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -319,7 +331,9 @@
                             <outletCollection property="gestureRecognizers" destination="mJq-Ii-09g" appends="YES" id="odB-aM-I5v"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Map" id="sR6-S5-c0F"/>
+                    <navigationItem key="navigationItem" title="Map" id="sR6-S5-c0F">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="U0r-D3-qur"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="longPressOutlet" destination="mJq-Ii-09g" id="PTK-Re-vmo"/>
                     </connections>
@@ -331,7 +345,7 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3919" y="80"/>
+            <point key="canvasLocation" x="3918.8405797101454" y="79.6875"/>
         </scene>
         <!--Task Preview-->
         <scene sceneID="lOk-DW-Izc">
@@ -435,6 +449,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="9Em-fe-SYI"/>
+        <segue reference="DWb-rG-Isu"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
