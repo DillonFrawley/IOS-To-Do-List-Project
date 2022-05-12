@@ -314,10 +314,22 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="IBf-u0-wxK"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="mJq-Ii-09g" appends="YES" id="odB-aM-I5v"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Map" id="sR6-S5-c0F"/>
+                    <connections>
+                        <outlet property="longPressOutlet" destination="mJq-Ii-09g" id="PTK-Re-vmo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wj2-WC-9eE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="mJq-Ii-09g">
+                    <connections>
+                        <action selector="handleLongPress:" destination="xjs-yt-fTT" id="Cat-7A-izo"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3919" y="80"/>
         </scene>
