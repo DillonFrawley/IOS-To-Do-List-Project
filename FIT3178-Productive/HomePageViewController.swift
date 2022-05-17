@@ -83,9 +83,19 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         // #warning Incomplete implementation, return the number of rows
         switch section {
         case 0:
-            return currentTasks.count
+            if currentTasks.count == 0 {
+                return 1
+            }
+            else {
+                return currentTasks.count
+            }
         case 1:
-            return completedTasks.count
+            if completedTasks.count == 0 {
+                return 1
+            }
+            else {
+                return completedTasks.count
+            }
         default:
             return 0
         }
@@ -95,20 +105,37 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Configure and return a task cell
         if indexPath.section == SECTION_CURRENT_TASK {
-            let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
-            var content = taskCell.defaultContentConfiguration()
-            let task = currentTasks[indexPath.row]
-            content.text = task.taskTitle
-            taskCell.contentConfiguration = content
-            return taskCell
+            if self.currentTasks.count == 0 {
+                let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
+                var content = taskCell.defaultContentConfiguration()
+                content.text = "No current tasks, tap the + icon to add a task"
+                taskCell.contentConfiguration = content
+                return taskCell
+            } else {
+                let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
+                var content = taskCell.defaultContentConfiguration()
+                let task = currentTasks[indexPath.row]
+                content.text = task.taskTitle
+                taskCell.contentConfiguration = content
+                return taskCell
+            }
         }
         else {
-            let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
-            var content = taskCell.defaultContentConfiguration()
-            let task = completedTasks[indexPath.row]
-            content.text = task.taskTitle
-            taskCell.contentConfiguration = content
-            return taskCell
+            if self.completedTasks.count == 0 {
+                let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
+                var content = taskCell.defaultContentConfiguration()
+                content.text = "No completed tasks, swipe right on a task to complete a task"
+                taskCell.contentConfiguration = content
+                return taskCell
+            }
+            else {
+                let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
+                var content = taskCell.defaultContentConfiguration()
+                let task = completedTasks[indexPath.row]
+                content.text = task.taskTitle
+                taskCell.contentConfiguration = content
+                return taskCell
+            }
         }
     }
     
@@ -116,7 +143,10 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == SECTION_CURRENT_TASK || indexPath.section == SECTION_COMPLETED_TASK {
+        if indexPath.section == SECTION_CURRENT_TASK && currentTasks.count > 0 {
+            return true
+        }
+        if indexPath.section == SECTION_COMPLETED_TASK && completedTasks.count > 0 {
             return true
         }
         else {
@@ -124,59 +154,55 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         }
     }
     
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView,
-                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .none
-    }
+//    // Override to support editing the table view.
+//    override func tableView(_ tableView: UITableView,
+//                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+//        return .none
+//    }
     
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if indexPath.section == SECTION_CURRENT_TASK {
-            let action = UIContextualAction(style: .normal, title: "Complete") { (action, view, completionHandler) in
-                let task = self.currentTasks[indexPath.row]
-                let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "completed", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
-                self.databaseController?.deleteTask(task: task, taskType: "current")
-                completionHandler(true)
-            }
-            action.backgroundColor = .systemGreen
-            return UISwipeActionsConfiguration(actions: [action])
-        }
-        else {
-            return nil
-        }
-       
-    }
     
-    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
-            let task = self.currentTasks[indexPath.row]
-            self.databaseController?.deleteTask(task: task, taskType: "current")
-            completionHandler(true)
-        }
-        action.backgroundColor = .systemRed
-        return UISwipeActionsConfiguration(actions: [action])
-    }
+//    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//        if indexPath.section == SECTION_CURRENT_TASK && currentTasks.count > 0 {
+//            let action = UIContextualAction(style: .normal, title: "Complete") { (action, view, completionHandler) in
+//                let task = self.currentTasks[indexPath.row]
+//                let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "completed", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
+//                self.databaseController?.deleteTask(task: task, taskType: "current")
+//                completionHandler(true)
+//            }
+//            action.backgroundColor = .systemGreen
+//            return UISwipeActionsConfiguration(actions: [action])
+//        }
+//        else {
+//            if indexPath.section == SECTION_COMPLETED_TASK && completedTasks.count > 0{
+//                let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+//                    let task = self.completedTasks[indexPath.row]
+//                    self.databaseController?.deleteTask(task: task, taskType: "current")
+//                    completionHandler(true)
+//                }
+//                action.backgroundColor = .systemRed
+//                return UISwipeActionsConfiguration(actions: [action])
+//            }
+//        }
+//        return nil
+//    }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection
                                 section: Int) -> String? {
         switch section {
         case 0:
-            if self.currentTasks.count > 0 {
-                return "Current Tasks:" + String(self.currentTasks.count)
-            } else {
-                return ""
-            }
+            return "Current Tasks:" + String(self.currentTasks.count)
         case 1:
-            if self.completedTasks.count > 0 {
-                return "Completed Tasks:" + String(self.completedTasks.count)
-            } else {
-                return ""
-            }
+            return "Completed Tasks:" + String(self.completedTasks.count)
         default:
             return ""
         }
 
     }
+    
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        if indexPath.section == SECTION_COMPLETED_TASK {
+//        }
+//    }
 
     
     override func viewWillAppear(_ animated: Bool) {

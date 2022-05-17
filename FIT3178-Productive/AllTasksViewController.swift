@@ -70,7 +70,12 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         // #warning Incomplete implementation, return the number of rows
         switch section {
         case 0:
-            return self.allTasks.count
+            if allTasks.count == 0 {
+                return 1
+            }
+            else {
+                return self.allTasks.count
+            }
         default:
             return 0
         }
@@ -79,12 +84,20 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Configure and return a task cell
-        let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ALL_TASKS, for: indexPath)
-        var content = taskCell.defaultContentConfiguration()
-        let task = allTasks[indexPath.row]
-        content.text = task.taskTitle
-        taskCell.contentConfiguration = content
-        return taskCell
+        if allTasks.count == 0 {
+            let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ALL_TASKS, for: indexPath)
+            var content = taskCell.defaultContentConfiguration()
+            content.text = "No saved tasks, tap + to create a task"
+            taskCell.contentConfiguration = content
+            return taskCell
+        } else {
+            let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ALL_TASKS, for: indexPath)
+            var content = taskCell.defaultContentConfiguration()
+            let task = allTasks[indexPath.row]
+            content.text = task.taskTitle
+            taskCell.contentConfiguration = content
+            return taskCell
+        }
     }
     
 
@@ -105,7 +118,17 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         return .none
     }
     
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//        let action = UIContextualAction(style: .normal, title: "Add") { (action, view, completionHandler) in
+//            let task = self.allTasks[indexPath.row]
+//            let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
+//            completionHandler(true)
+//        }
+//        action.backgroundColor = .systemBlue
+//        return UISwipeActionsConfiguration(actions: [action])
+//    }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .normal, title: "Add") { (action, view, completionHandler) in
             let task = self.allTasks[indexPath.row]
             let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
@@ -113,27 +136,22 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         }
         action.backgroundColor = .systemBlue
         return UISwipeActionsConfiguration(actions: [action])
+//        let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+//            let task = self.allTasks[indexPath.row]
+//            self.databaseController?.deleteTask(task: task, taskType: "allTasks")
+//            completionHandler(true)
+//        }
+//        action.backgroundColor = .systemRed
     }
     
-    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
-            let task = self.allTasks[indexPath.row]
-            self.databaseController?.deleteTask(task: task, taskType: "allTasks")
-            completionHandler(true)
-        }
-        action.backgroundColor = .systemRed
-        return UISwipeActionsConfiguration(actions: [action])
-    }
+
+    
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection
                                 section: Int) -> String? {
         switch section {
         case 0:
-            if self.allTasks.count > 0 {
-                return "Number of Tasks Saved:" + String(self.allTasks.count)
-            } else {
-                return ""
-            }
+            return "Number of Tasks Saved:" + String(self.allTasks.count)
         default:
             return ""
         }
