@@ -20,9 +20,13 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     var seconds: Int? = 0
     var minutes: Int? = 1
     var hours: Int? = 0
+    var latitude: Double?
+    var longitude: Double?
+    var taskId: String?
 
     @IBOutlet weak var timerOutlet: UIDatePicker!
-    
+    @IBOutlet weak var taskTitleTextField: UITextField!
+    @IBOutlet weak var taskDescriptionTextField: UITextField!
     
     @IBAction func timerValueChanged(_ sender: Any) {
         let dateFormatter = DateFormatter()
@@ -39,31 +43,26 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     @IBAction func handleSwipeRight(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
-    @IBOutlet weak var taskTitleTextField: UITextField!
+
+
     
-    @IBOutlet weak var taskDescriptionTextField: UITextField!
-    
-    var latitude: Double?
-    var longitude: Double?
-    
-    
-    @IBAction func createTaskButtonAction(_ sender: Any) {
-        guard let taskTitle = taskTitleTextField.text, let taskDescription = taskDescriptionTextField.text else {
+    @IBAction func saveButtonAction(_ sender: Any) {
+        guard let taskTitle = taskTitleTextField.text, let taskDescription = taskDescriptionTextField.text, taskTitle.trimmingCharacters(in: .whitespaces).isEmpty == false && taskDescription.trimmingCharacters(in: .whitespaces).isEmpty == false else {
             return
         }
-        
-        if taskTitle.isEmpty == false && taskDescription.isEmpty == false {
-            if whitespaceBool(string: taskTitle) == true && whitespaceBool(string: taskDescription) == true {
-                if checkTaskDuplicate(taskTitle: taskTitle) == false {
-                    self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
-                    navigationController?.popViewController(animated: true)
-                }
-            }
+        if self.taskId != nil {
+            self.databaseController?.updateTask(taskId: self.taskId!,taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
+            
         }
-        
-        
-        
+        else {
+            self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
+        }
+        navigationController?.popViewController(animated: true)
     }
+    @IBAction func locationButtonAction(_ sender: Any) {
+        performSegue(withIdentifier: "locationSegue", sender: self)
+    }
+    
     
     override func viewDidLoad() {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
@@ -73,6 +72,11 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.view.frame = view.bounds
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,33 +96,11 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    func whitespaceBool(string: String) -> Bool {
-        var whitespaceString = " "
-        if string.count == 1 {
-            return string != whitespaceString
-        }
-        for _ in 2...string.count {
-            whitespaceString.append(" ")
-        }
-        return string != whitespaceString
-    }
     
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
         //
     }
     
-    func checkTaskDuplicate( taskTitle: String) -> Bool {
-        var duplicateBool = false
-        allTasks.forEach { newTask in
-            if taskTitle == newTask.taskTitle {
-                duplicateBool = true
-            }
-        }
-        if duplicateBool == true {
-            return true
-        }
-        return false
-    }
     
     func onAuthChange(change: DatabaseChange, currentUser: User?) {
         //
@@ -130,10 +112,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     }
     
     
-    @IBAction func locationButtonAction(_ sender: Any) {
-        performSegue(withIdentifier: "locationSegue", sender: self)
-    }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "locationSegue"{
             let destination = segue.destination as! MapViewController

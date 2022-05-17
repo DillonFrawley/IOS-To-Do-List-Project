@@ -35,6 +35,7 @@ protocol DatabaseProtocol: AnyObject {
     func removeListener(listener: DatabaseListener)
     
     func addTask(taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?, seconds: Int, minutes: Int, hours: Int)
+    func updateTask(taskId: String, taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?, seconds: Int, minutes: Int, hours: Int)
     func deleteTask(task : ToDoTask, taskType: String)
     
 //    func getTaskById(_ id: String) -> ToDoTask?

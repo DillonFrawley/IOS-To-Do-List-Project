@@ -24,6 +24,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     var completedTasks: [ToDoTask] = []
     var currentDate: String?
     var task: ToDoTask?
+    var tappedTask: Int?
     
     var locationManager: CLLocationManager = CLLocationManager()
 
@@ -50,12 +51,14 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
             if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
                 switch tapIndexPath.section {
                 case 0:
+                    self.tappedTask = 0
                     let isIndexValid = currentTasks.indices.contains(tapIndexPath.row)
                     if isIndexValid == true {
                         self.task = currentTasks[tapIndexPath.row]
                         performSegue(withIdentifier: "previewTaskSegue", sender: self)
                     }
                 case 1:
+                    self.tappedTask = 1
                     let isIndexValid = completedTasks.indices.contains(tapIndexPath.row)
                     if isIndexValid == true {
                         self.task = completedTasks[tapIndexPath.row]
@@ -256,7 +259,12 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         if segue.identifier == "previewTaskSegue"{
             let destination = segue.destination as! PreviewTaskViewController
             destination.task = self.task
-            destination.buttonType = "complete"
+            if self.tappedTask == 1 {
+                destination.buttonType = "complete"
+            }
+            else {
+                destination.buttonType = "current"
+            }
             if task?.latitude != nil && task?.longitude != nil {
                 destination.coordinate = CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!)
                 

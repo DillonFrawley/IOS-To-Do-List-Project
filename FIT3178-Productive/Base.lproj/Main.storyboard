@@ -263,14 +263,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aML-Ti-JtZ">
-                                <rect key="frame" x="20" y="626" width="374" height="31"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Create Task"/>
-                                <connections>
-                                    <action selector="createTaskButtonAction:" destination="joh-xg-R37" eventType="touchUpInside" id="Mvv-ou-9nP"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m5n-LH-omW">
                                 <rect key="frame" x="20" y="575" width="374" height="31"/>
                                 <state key="normal" title="Button"/>
@@ -312,19 +304,22 @@
                             <constraint firstItem="iz1-s9-oAe" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="auX-E6-N2X"/>
                             <constraint firstItem="tQ0-qg-gbb" firstAttribute="trailing" secondItem="m3n-Yk-8wu" secondAttribute="trailing" constant="20" id="c6D-sJ-7Id"/>
                             <constraint firstItem="yJc-90-RTJ" firstAttribute="top" secondItem="dFf-aJ-xwg" secondAttribute="bottom" constant="20" id="d4C-rO-h2O"/>
-                            <constraint firstItem="aML-Ti-JtZ" firstAttribute="top" secondItem="m5n-LH-omW" secondAttribute="bottom" constant="20" id="fuZ-dp-MBA"/>
                             <constraint firstItem="oLI-qs-E8Q" firstAttribute="leading" secondItem="iz1-s9-oAe" secondAttribute="leading" id="kRL-Jv-Gcw"/>
-                            <constraint firstItem="aML-Ti-JtZ" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="l4I-69-bJ8"/>
                             <constraint firstItem="m5n-LH-omW" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="lkM-Qm-hNH"/>
                             <constraint firstItem="yJc-90-RTJ" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="pFO-6u-i7v"/>
-                            <constraint firstItem="tQ0-qg-gbb" firstAttribute="trailing" secondItem="aML-Ti-JtZ" secondAttribute="trailing" constant="20" id="s5d-r2-1LV"/>
                             <constraint firstItem="m3n-Yk-8wu" firstAttribute="leading" secondItem="tQ0-qg-gbb" secondAttribute="leading" constant="20" id="zye-fv-TOZ"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="avv-hp-2Mg" appends="YES" id="ROO-N0-gtE"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Create Task" id="8uz-rM-5q3"/>
+                    <navigationItem key="navigationItem" title="Create Task" id="8uz-rM-5q3">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="nnk-8m-dxw">
+                            <connections>
+                                <action selector="saveButtonAction:" destination="joh-xg-R37" id="D0v-S7-io7"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="taskDescriptionTextField" destination="gJc-sI-h50" id="col-A6-vlh"/>
                         <outlet property="taskTitleTextField" destination="yJc-90-RTJ" id="nYY-pY-kwj"/>
@@ -500,6 +495,10 @@
                         <outlet property="completeAddButtonOutlet" destination="Det-6V-8WZ" id="40P-jT-Y7u"/>
                         <outlet property="realTaskDescriptionLabel" destination="RYp-W0-saB" id="nY1-Rb-ZJT"/>
                         <outlet property="realTaskTitleLabel" destination="PIt-LS-eHV" id="DZF-su-ULL"/>
+                        <outlet property="showLocationButton" destination="lpA-mf-B9v" id="3rO-Op-OO4"/>
+                        <outlet property="stackViewOutlet" destination="3Fr-cT-6Vs" id="KCK-vj-bzV"/>
+                        <outlet property="taskDescriptionLabel" destination="cYN-Vp-03k" id="EJq-ym-Nsv"/>
+                        <outlet property="taskNameLabel" destination="y7d-RT-jQ1" id="Z02-eV-sBo"/>
                         <outlet property="timeLabel" destination="37B-9X-nOy" id="NXG-ZP-hYH"/>
                         <segue destination="xjs-yt-fTT" kind="show" identifier="locationSegue" id="FGG-hF-qzp"/>
                     </connections>
