@@ -10,7 +10,7 @@ import Firebase
 import FirebaseFirestoreSwift
 import CoreLocation
 
-class HomePageViewController: UITableViewController, DatabaseListener {
+class HomePageViewController: UITableViewController, DatabaseListener, CLLocationManagerDelegate  {
         
     var listenerType = ListenerType.currentAndCompletedTasks
     weak var databaseController: DatabaseProtocol?
@@ -24,6 +24,9 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     var completedTasks: [ToDoTask] = []
     var currentDate: String?
     var task: ToDoTask?
+    
+    var locationManager: CLLocationManager = CLLocationManager()
+
     
     @IBOutlet weak var datePickerOutlet: UIDatePicker!
     
@@ -74,7 +77,6 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         self.datePickerOutlet.contentHorizontalAlignment = .center
         self.tableView.allowsSelection = false
 
-        // Do any additional setup after loading the view.
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -208,11 +210,13 @@ class HomePageViewController: UITableViewController, DatabaseListener {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         databaseController?.addListener(listener: self)
+        self.determineCurrentLocation()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         databaseController?.removeListener(listener: self)
+        locationManager.stopUpdatingLocation()
     }
     
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
@@ -242,6 +246,22 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         }
     }
     
+    func determineCurrentLocation() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        let authorisationStatus = locationManager.authorizationStatus
+        if authorisationStatus != .authorizedWhenInUse {
+            locationManager.requestWhenInUseAuthorization()
+            if locationManager.authorizationStatus == .authorizedWhenInUse {
+                locationManager.startUpdatingLocation()
+            }
+        }
+    }
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            databaseController?.currentLocation = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        }
+    }
 
     /*
     // MARK: - Navigation

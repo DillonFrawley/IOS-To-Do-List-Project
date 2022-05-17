@@ -33,7 +33,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var currentUser: FirebaseAuth.User?
     var currentDate: String?
     var userID: String?
-
+    
+    var currentLocation: CLLocationCoordinate2D?
     
     override init() {
         FirebaseApp.configure()
@@ -80,7 +81,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
 
     
-    func addTask(taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?) -> ToDoTask {
+    func addTask(taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?, seconds: Int, minutes: Int, hours: Int) {
         let task = ToDoTask()
         task.taskTitle = taskTitle
         task.taskDescription = taskDescription
@@ -115,7 +116,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 print("Failed to serialize task")
             }
         }
-        return task
     }
     
     func deleteTask(task: ToDoTask, taskType: String) {

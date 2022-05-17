@@ -34,7 +34,7 @@ protocol DatabaseProtocol: AnyObject {
     func addListener(listener: DatabaseListener)
     func removeListener(listener: DatabaseListener)
     
-    func addTask(taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?) -> ToDoTask
+    func addTask(taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?, seconds: Int, minutes: Int, hours: Int)
     func deleteTask(task : ToDoTask, taskType: String)
     
 //    func getTaskById(_ id: String) -> ToDoTask?
@@ -42,6 +42,7 @@ protocol DatabaseProtocol: AnyObject {
     func createNewSignIn( email: String, password: String)
     var currentUser: FirebaseAuth.User? {get set}
     var currentDate: String? {get set}
+    var currentLocation: CLLocationCoordinate2D {get set}
     
     func setupTaskListener()
     

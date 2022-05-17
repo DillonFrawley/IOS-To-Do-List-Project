@@ -17,9 +17,9 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     var listenerType = ListenerType.allTasks
     weak var databaseController: DatabaseProtocol?
     var allTasks:[ToDoTask] = []
-    var seconds: Int?
-    var minutes: Int?
-    var hours: Int?
+    var seconds: Int? = 0
+    var minutes: Int? = 1
+    var hours: Int? = 0
 
     @IBOutlet weak var timerOutlet: UIDatePicker!
     
@@ -27,8 +27,13 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     @IBAction func timerValueChanged(_ sender: Any) {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = DateFormatter.Style.short
+        dateFormatter.dateFormat = "H:m:s"
         let strTime = dateFormatter.string(from: self.timerOutlet.date)
-        print(strTime)
+        let strTimeArr = strTime.components(separatedBy: ":")
+        self.hours = Int(strTimeArr[0])
+        self.minutes = Int(strTimeArr[1])
+        self.seconds = Int(strTimeArr[2])
+        
     }
     
     @IBAction func handleSwipeRight(_ sender: Any) {
@@ -49,7 +54,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         if taskTitle.isEmpty == false && taskDescription.isEmpty == false {
             if whitespaceBool(string: taskTitle) == true && whitespaceBool(string: taskDescription) == true {
                 if checkTaskDuplicate(taskTitle: taskTitle) == false {
-                    let _ = self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!))
+                    let _ = self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
                     navigationController?.popViewController(animated: true)
                 }
             }

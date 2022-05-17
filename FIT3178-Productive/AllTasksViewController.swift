@@ -22,12 +22,13 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     var task: ToDoTask?
     var selectedRows :[Int]?
     
+    
     @IBAction func saveSelectedTasks(_ sender: Any) {
         if self.selectedRows != nil {
             for i in 0 ... self.selectedRows!.count - 1 {
                 if selectedRows![i] == 1 {
                     let task = self.allTasks[i]
-                    let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
+                    self.databaseController?.addTask(taskTitle: task.taskTitle!, taskDescription: task.taskDescription!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!), seconds: task.seconds!, minutes: task.minutes!, hours: task.hours!)
                 }
             }
             self.navigationController?.popViewController(animated: true)
