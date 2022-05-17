@@ -16,6 +16,9 @@ class ToDoTask: NSObject, Codable {
     var taskDescription: String?
     var longitude: Double?
     var latitude: Double?
+    var seconds: Int?
+    var minutes: Int?
+    var hours: Int?
     
     enum CodingKeys : String, CodingKey {
         case id
@@ -23,6 +26,9 @@ class ToDoTask: NSObject, Codable {
         case taskDescription
         case longitude
         case latitude
+        case seconds
+        case minutes
+        case hours
     }
 
 }

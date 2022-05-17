@@ -17,7 +17,19 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     var listenerType = ListenerType.allTasks
     weak var databaseController: DatabaseProtocol?
     var allTasks:[ToDoTask] = []
+    var seconds: Int?
+    var minutes: Int?
+    var hours: Int?
 
+    @IBOutlet weak var timerOutlet: UIDatePicker!
+    
+    
+    @IBAction func timerValueChanged(_ sender: Any) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = DateFormatter.Style.short
+        let strTime = dateFormatter.string(from: self.timerOutlet.date)
+        print(strTime)
+    }
     
     @IBAction func handleSwipeRight(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
