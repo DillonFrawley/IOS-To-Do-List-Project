@@ -63,8 +63,6 @@ class PreviewTaskViewController: UIViewController{
                 taskType = "current"
             case "add":
                 taskType = "allTasks"
-            case "complete":
-                taskType = "completed"
             default:
                 return
             }
@@ -78,6 +76,8 @@ class PreviewTaskViewController: UIViewController{
             self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: taskTitle, taskDescription: taskDescription, taskType: taskType, coordinate: CLLocationCoordinate2D(latitude: (editVC!.latitude)!, longitude: (editVC!.longitude)!), seconds: editVC!.seconds!, minutes: editVC!.minutes!, hours: editVC!.hours!)
             editVC!.view.removeFromSuperview()
             editVC!.removeFromParent()
+            self.editButtonOutlet.title = "Edit"
+            self.viewDidLoad()
         }
     }
     
@@ -120,17 +120,15 @@ class PreviewTaskViewController: UIViewController{
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
-        super.viewDidLoad()
-    }
-    override func viewDidAppear(_ animated: Bool) {
         self.realTaskTitleLabel.text = self.task?.taskTitle
         self.realTaskDescriptionLabel.text = self.task?.taskDescription
         self.seconds = task?.seconds
         self.minutes = task?.minutes
         self.hours = task?.hours
-        
+        print(self.buttonType)
         if self.buttonType == nil {
             self.completeAddButtonOutlet.isHidden = true
             self.stackViewOutlet.isHidden = true
@@ -141,9 +139,19 @@ class PreviewTaskViewController: UIViewController{
             self.taskDescriptionLabel.isHidden = true
             self.taskNameLabel.text = "No current task, please add a task to start"
         }
-         else if self.buttonType == "complete" {
+        
+        else if self.buttonType == "complete" {
             self.completeAddButtonOutlet.isHidden = true
             self.stackViewOutlet.isHidden = true
+            self.realTaskTitleLabel.isHidden = true
+            self.realTaskDescriptionLabel.isHidden = true
+            self.completeAddButtonOutlet.isHidden = true
+            self.taskDescriptionLabel.isHidden = true
+            self.taskNameLabel.text = "No current task, please add a task to start"
+        }
+         else if self.buttonType == "current" {
+            self.completeAddButtonOutlet.setTitle("Complete task", for: .normal)
+            self.showLocationButton.isHidden = true
             self.updateTimerOutlet()
             self.timeLabel.text = "Time required: " + self.timeLabel.text!
             
@@ -154,11 +162,9 @@ class PreviewTaskViewController: UIViewController{
             self.updateTimerOutlet()
             self.timeLabel.text = "Time required: " + self.timeLabel.text!
         }
-        else if self.buttonType == "complete" {
-            self.completeAddButtonOutlet.setTitle("Complete task", for: .normal)
-        }
+
     }
-    
+
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
     }

@@ -118,39 +118,27 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
     
     func updateTask(taskId: String, taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?, seconds: Int, minutes: Int, hours: Int) {
-        let task = ToDoTask()
-        task.taskTitle = taskTitle
-        task.taskDescription = taskDescription
-        task.longitude = coordinate?.longitude
-        task.latitude = coordinate?.latitude
-        task.seconds = seconds
-        task.minutes = minutes
-        task.hours = hours
         if taskType == "allTasks" {
-            if let taskID = task.id {
-                self.allTasksRef?.document(taskID).updateData([
-                    "taskTitle": taskTitle,
-                    "taskDescription": taskDescription,
-                    "longitude": coordinate?.longitude,
-                    "latitude" : coordinate?.latitude,
-                    "seconds": seconds,
-                    "minutes": minutes,
-                    "hours": hours
-                    ])
+            self.allTasksRef?.document(taskId).updateData([
+                "taskTitle": taskTitle,
+                "taskDescription": taskDescription,
+                "longitude": coordinate?.longitude,
+                "latitude" : coordinate?.latitude,
+                "seconds": seconds,
+                "minutes": minutes,
+                "hours": hours
+                ])
             }
-        }
         else if taskType == "current" {
-            if let taskID = task.id {
-                self.currentTaskRef?.document(taskID).updateData([
-                    "taskTitle": taskTitle,
-                    "taskDescription": taskDescription,
-                    "longitude": coordinate?.longitude,
-                    "latitude" : coordinate?.latitude,
-                    "seconds": seconds,
-                    "minutes": minutes,
-                    "hours": hours
-                    ])
-            }
+            self.currentTaskRef?.document(taskId).updateData([
+                "taskTitle": taskTitle,
+                "taskDescription": taskDescription,
+                "longitude": coordinate?.longitude,
+                "latitude" : coordinate?.latitude,
+                "seconds": seconds,
+                "minutes": minutes,
+                "hours": hours
+                ])
         }
     }
     
