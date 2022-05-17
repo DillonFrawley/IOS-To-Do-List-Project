@@ -206,12 +206,13 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="All Tasks" id="YYr-5O-6FE">
                         <rightBarButtonItems>
-                            <barButtonItem title="Save" id="z3p-hp-521">
+                            <barButtonItem title="Add" id="z3p-hp-521">
                                 <connections>
                                     <action selector="saveSelectedTasks:" destination="rty-TX-fVm" id="Fsy-9c-TDF"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Create" id="Dbl-RV-43p">
+                            <barButtonItem title="New" id="Dbl-RV-43p">
+                                <color key="tintColor" systemColor="systemRedColor"/>
                                 <connections>
                                     <segue destination="joh-xg-R37" kind="show" id="Y7L-NG-dqm"/>
                                 </connections>
@@ -391,9 +392,17 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lpA-mf-B9v">
                                 <rect key="frame" x="20" y="272" width="374" height="31"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Location"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Show Location"/>
                                 <connections>
                                     <action selector="locationButtonAction:" destination="JaT-p4-Sps" eventType="touchUpInside" id="kcT-t7-qbn"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Det-6V-8WZ">
+                                <rect key="frame" x="20" y="323" width="374" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Button"/>
+                                <connections>
+                                    <action selector="completeaddTaskButton:" destination="JaT-p4-Sps" eventType="touchUpInside" id="9fB-cg-Up2"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -405,7 +414,10 @@
                             <constraint firstItem="lpA-mf-B9v" firstAttribute="top" secondItem="RYp-W0-saB" secondAttribute="bottom" constant="20" id="9JT-hX-VkT"/>
                             <constraint firstItem="cYN-Vp-03k" firstAttribute="top" secondItem="PIt-LS-eHV" secondAttribute="bottom" constant="20" id="AYZ-Gy-DaR"/>
                             <constraint firstItem="RYp-W0-saB" firstAttribute="leading" secondItem="CuM-rv-6FU" secondAttribute="leading" constant="20" id="C1H-vO-W5c"/>
+                            <constraint firstItem="Det-6V-8WZ" firstAttribute="leading" secondItem="CuM-rv-6FU" secondAttribute="leading" constant="20" id="Eck-HL-EDn"/>
+                            <constraint firstItem="Det-6V-8WZ" firstAttribute="top" secondItem="lpA-mf-B9v" secondAttribute="bottom" constant="20" id="Eqn-2Z-0wx"/>
                             <constraint firstItem="CuM-rv-6FU" firstAttribute="trailing" secondItem="PIt-LS-eHV" secondAttribute="trailing" constant="20" id="FBf-j1-Vm1"/>
+                            <constraint firstItem="CuM-rv-6FU" firstAttribute="trailing" secondItem="Det-6V-8WZ" secondAttribute="trailing" constant="20" id="FP4-Sl-L1P"/>
                             <constraint firstItem="RYp-W0-saB" firstAttribute="top" secondItem="cYN-Vp-03k" secondAttribute="bottom" constant="20" id="GJp-Nz-Kcy"/>
                             <constraint firstItem="PIt-LS-eHV" firstAttribute="top" secondItem="y7d-RT-jQ1" secondAttribute="bottom" constant="20" id="MRU-uR-wYr"/>
                             <constraint firstItem="y7d-RT-jQ1" firstAttribute="leading" secondItem="CuM-rv-6FU" secondAttribute="leading" constant="20" id="Mf0-Bg-J8D"/>
@@ -423,6 +435,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Task Preview" id="nTh-rT-bP9"/>
                     <connections>
+                        <outlet property="completeAddButtonOutlet" destination="Det-6V-8WZ" id="40P-jT-Y7u"/>
                         <outlet property="realTaskDescriptionLabel" destination="RYp-W0-saB" id="nY1-Rb-ZJT"/>
                         <outlet property="realTaskTitleLabel" destination="PIt-LS-eHV" id="DZF-su-ULL"/>
                         <segue destination="xjs-yt-fTT" kind="show" identifier="locationSegue" id="FGG-hF-qzp"/>
@@ -458,11 +471,14 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="Ehs-84-mhp"/>
-        <segue reference="DWb-rG-Isu"/>
+        <segue reference="FGG-hF-qzp"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

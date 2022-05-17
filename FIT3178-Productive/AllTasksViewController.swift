@@ -139,6 +139,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
             completionHandler(true)
         }
         action.backgroundColor = .systemRed
+        return UISwipeActionsConfiguration(actions: [action])
     }
     
 
@@ -172,7 +173,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
         self.allTasks = allTasks
         self.selectedRows = []
-        for _ in 0...self.allTasks.count -1 {
+        for _ in 0 ... self.allTasks.count-1 {
             self.selectedRows?.append(0)
         }
         tableView.reloadData()
@@ -186,6 +187,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         if segue.identifier == "previewTaskSegue"{
             let destination = segue.destination as! PreviewTaskViewController
             destination.task = self.task
+            destination.buttonType = "add"
             if task?.latitude != nil && task?.longitude != nil {
                 destination.coordinate = CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!)
            

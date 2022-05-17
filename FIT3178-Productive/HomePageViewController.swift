@@ -71,7 +71,8 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
-        self.datePickerOutlet.contentHorizontalAlignment = .left
+        self.datePickerOutlet.contentHorizontalAlignment = .center
+        self.tableView.allowsSelection = false
 
         // Do any additional setup after loading the view.
     }
@@ -111,6 +112,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
                 var content = taskCell.defaultContentConfiguration()
                 content.text = "No current tasks, tap the + icon to add a task"
                 taskCell.contentConfiguration = content
+                taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
                 return taskCell
             } else {
                 let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
@@ -127,6 +129,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
                 var content = taskCell.defaultContentConfiguration()
                 content.text = "No completed tasks, swipe right on a task to complete a task"
                 taskCell.contentConfiguration = content
+                taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
                 return taskCell
             }
             else {
@@ -155,41 +158,37 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         }
     }
     
-//    // Override to support editing the table view.
-//    override func tableView(_ tableView: UITableView,
-//                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-//        return .none
-//    }
-//
-////    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-////
-////    }
-//
-//
-//    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//        if indexPath.section == SECTION_CURRENT_TASK && currentTasks.count > 0 {
-//            let action = UIContextualAction(style: .normal, title: "Complete") { (action, view, completionHandler) in
-//                let task = self.currentTasks[indexPath.row]
-//                let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "completed", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
-//                self.databaseController?.deleteTask(task: task, taskType: "current")
-//                completionHandler(true)
-//            }
-//            action.backgroundColor = .systemGreen
-//            return UISwipeActionsConfiguration(actions: [action])
-//        }
-//        else {
-//            if indexPath.section == SECTION_COMPLETED_TASK && completedTasks.count > 0{
-//                let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
-//                    let task = self.completedTasks[indexPath.row]
-//                    self.databaseController?.deleteTask(task: task, taskType: "current")
-//                    completionHandler(true)
-//                }
-//                action.backgroundColor = .systemRed
-//                return UISwipeActionsConfiguration(actions: [action])
-//            }
-//        }
-//        return nil
-//    }
+
+    
+    // Override to support editing the table view.
+    override func tableView(_ tableView: UITableView,
+                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if indexPath.section == SECTION_CURRENT_TASK && currentTasks.count > 0 {
+            let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+                let task = self.currentTasks[indexPath.row]
+                self.databaseController?.deleteTask(task: task, taskType: "current")
+                completionHandler(true)
+            }
+            action.backgroundColor = .systemRed
+            return UISwipeActionsConfiguration(actions: [action])
+        }
+        else {
+            if indexPath.section == SECTION_COMPLETED_TASK && completedTasks.count > 0{
+                let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+                    let task = self.completedTasks[indexPath.row]
+                    self.databaseController?.deleteTask(task: task, taskType: "completed")
+                    completionHandler(true)
+                }
+                action.backgroundColor = .systemRed
+                return UISwipeActionsConfiguration(actions: [action])
+            }
+        }
+        return nil
+    }
 
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection
@@ -235,9 +234,10 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         if segue.identifier == "previewTaskSegue"{
             let destination = segue.destination as! PreviewTaskViewController
             destination.task = self.task
+            destination.buttonType = "complete"
             if task?.latitude != nil && task?.longitude != nil {
                 destination.coordinate = CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!)
-           
+                
             }
         }
     }
