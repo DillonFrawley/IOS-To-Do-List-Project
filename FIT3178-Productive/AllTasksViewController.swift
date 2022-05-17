@@ -20,8 +20,21 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     
     var allTasks: [ToDoTask] = []
     var task: ToDoTask?
+    var selectedRows :[Int]?
     
-
+    @IBAction func saveSelectedTasks(_ sender: Any) {
+        if self.selectedRows != nil {
+            for i in 0 ... self.selectedRows!.count - 1 {
+                if selectedRows![i] == 1 {
+                    let task = self.allTasks[i]
+                    let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
+                }
+            }
+            self.navigationController?.popViewController(animated: true)
+        }
+        
+    }
+    
     @IBAction func handleDoubleTap(_ sender: Any) {
         guard let recognizer = sender as? UITapGestureRecognizer else {
             return
@@ -44,6 +57,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         databaseController = appDelegate?.databaseController
         super.viewDidLoad()
         self.tableView.separatorColor = UIColor.clear
+        self.tableView.allowsMultipleSelection = true
 
         // Do any additional setup after loading the view.
     }
@@ -118,30 +132,13 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         return .none
     }
     
-//    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//        let action = UIContextualAction(style: .normal, title: "Add") { (action, view, completionHandler) in
-//            let task = self.allTasks[indexPath.row]
-//            let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
-//            completionHandler(true)
-//        }
-//        action.backgroundColor = .systemBlue
-//        return UISwipeActionsConfiguration(actions: [action])
-//    }
-    
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .normal, title: "Add") { (action, view, completionHandler) in
+        let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
             let task = self.allTasks[indexPath.row]
-            let _ = self.databaseController?.addTask(taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!))
+            self.databaseController?.deleteTask(task: task, taskType: "allTasks")
             completionHandler(true)
         }
-        action.backgroundColor = .systemBlue
-        return UISwipeActionsConfiguration(actions: [action])
-//        let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
-//            let task = self.allTasks[indexPath.row]
-//            self.databaseController?.deleteTask(task: task, taskType: "allTasks")
-//            completionHandler(true)
-//        }
-//        action.backgroundColor = .systemRed
+        action.backgroundColor = .systemRed
     }
     
 
@@ -158,6 +155,14 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
 
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.selectedRows?[indexPath.row] = 1
+    }
+    
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        self.selectedRows?[indexPath.row] = 0
+    }
+    
 
     
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
@@ -166,6 +171,10 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
         self.allTasks = allTasks
+        self.selectedRows = []
+        for _ in 0...self.allTasks.count -1 {
+            self.selectedRows?.append(0)
+        }
         tableView.reloadData()
     }
     

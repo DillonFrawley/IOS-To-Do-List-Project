@@ -105,7 +105,7 @@
                             </connections>
                         </datePicker>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="currentTaskCell" textLabel="fkf-Kh-zd0" style="IBUITableViewCellStyleDefault" id="XTa-TC-FV0">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="currentTaskCell" editingAccessoryType="checkmark" textLabel="fkf-Kh-zd0" style="IBUITableViewCellStyleDefault" id="XTa-TC-FV0">
                                 <rect key="frame" x="0.0" y="88.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XTa-TC-FV0" id="TEf-18-slD">
@@ -123,7 +123,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="completedTaskCell" textLabel="QVH-Dk-vii" style="IBUITableViewCellStyleDefault" id="A7A-HF-cac">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="completedTaskCell" editingAccessoryType="checkmark" textLabel="QVH-Dk-vii" style="IBUITableViewCellStyleDefault" id="A7A-HF-cac">
                                 <rect key="frame" x="0.0" y="132" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="A7A-HF-cac" id="aCF-ix-nAT">
@@ -205,11 +205,18 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="All Tasks" id="YYr-5O-6FE">
-                        <barButtonItem key="rightBarButtonItem" title="New" id="Dbl-RV-43p">
-                            <connections>
-                                <segue destination="joh-xg-R37" kind="show" id="Y7L-NG-dqm"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Save" id="z3p-hp-521">
+                                <connections>
+                                    <action selector="saveSelectedTasks:" destination="rty-TX-fVm" id="Fsy-9c-TDF"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Create" id="Dbl-RV-43p">
+                                <connections>
+                                    <segue destination="joh-xg-R37" kind="show" id="Y7L-NG-dqm"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <segue destination="JaT-p4-Sps" kind="show" identifier="previewTaskSegue" id="Ehs-84-mhp"/>
@@ -450,7 +457,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="9Em-fe-SYI"/>
+        <segue reference="Ehs-84-mhp"/>
         <segue reference="DWb-rG-Isu"/>
     </inferredMetricsTieBreakers>
     <resources>

@@ -66,6 +66,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
         }
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
@@ -159,8 +160,12 @@ class HomePageViewController: UITableViewController, DatabaseListener {
 //                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
 //        return .none
 //    }
-    
-    
+//
+////    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+////
+////    }
+//
+//
 //    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 //        if indexPath.section == SECTION_CURRENT_TASK && currentTasks.count > 0 {
 //            let action = UIContextualAction(style: .normal, title: "Complete") { (action, view, completionHandler) in
@@ -185,6 +190,7 @@ class HomePageViewController: UITableViewController, DatabaseListener {
 //        }
 //        return nil
 //    }
+
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection
                                 section: Int) -> String? {
@@ -199,11 +205,6 @@ class HomePageViewController: UITableViewController, DatabaseListener {
 
     }
     
-//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        if indexPath.section == SECTION_COMPLETED_TASK {
-//        }
-//    }
-
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
