@@ -42,7 +42,7 @@ protocol DatabaseProtocol: AnyObject {
     func createNewSignIn( email: String, password: String)
     var currentUser: FirebaseAuth.User? {get set}
     var currentDate: String? {get set}
-    var currentLocation: CLLocationCoordinate2D {get set}
+    var currentLocation: CLLocationCoordinate2D? {get set}
     
     func setupTaskListener()
     

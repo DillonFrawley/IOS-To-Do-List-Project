@@ -234,6 +234,24 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         //
     }
     
+    func determineCurrentLocation() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        let authorisationStatus = locationManager.authorizationStatus
+        if authorisationStatus != .authorizedWhenInUse {
+            locationManager.requestWhenInUseAuthorization()
+        }
+        else if locationManager.authorizationStatus == .authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            databaseController?.currentLocation = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "previewTaskSegue"{
             let destination = segue.destination as! PreviewTaskViewController
@@ -243,23 +261,6 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                 destination.coordinate = CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!)
                 
             }
-        }
-    }
-    
-    func determineCurrentLocation() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        let authorisationStatus = locationManager.authorizationStatus
-        if authorisationStatus != .authorizedWhenInUse {
-            locationManager.requestWhenInUseAuthorization()
-            if locationManager.authorizationStatus == .authorizedWhenInUse {
-                locationManager.startUpdatingLocation()
-            }
-        }
-    }
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
-            databaseController?.currentLocation = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         }
     }
 

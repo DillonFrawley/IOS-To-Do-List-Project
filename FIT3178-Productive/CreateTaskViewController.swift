@@ -51,10 +51,11 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         guard let taskTitle = taskTitleTextField.text, let taskDescription = taskDescriptionTextField.text else {
             return
         }
+        
         if taskTitle.isEmpty == false && taskDescription.isEmpty == false {
             if whitespaceBool(string: taskTitle) == true && whitespaceBool(string: taskDescription) == true {
                 if checkTaskDuplicate(taskTitle: taskTitle) == false {
-                    let _ = self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
+                    self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
                     navigationController?.popViewController(animated: true)
                 }
             }
@@ -67,6 +68,8 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     override func viewDidLoad() {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
+        self.latitude = databaseController?.currentLocation?.latitude
+        self.longitude = databaseController?.currentLocation?.longitude
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.

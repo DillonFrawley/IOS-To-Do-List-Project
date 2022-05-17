@@ -25,7 +25,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     
     @IBAction func saveSelectedTasks(_ sender: Any) {
         if self.selectedRows != nil {
-            for i in 0 ... self.selectedRows!.count - 1 {
+            for i in 0 ... self.selectedRows!.count {
                 if selectedRows![i] == 1 {
                     let task = self.allTasks[i]
                     self.databaseController?.addTask(taskTitle: task.taskTitle!, taskDescription: task.taskDescription!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!), seconds: task.seconds!, minutes: task.minutes!, hours: task.hours!)
@@ -174,7 +174,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
         self.allTasks = allTasks
         self.selectedRows = []
-        for _ in 0 ... self.allTasks.count-1 {
+        for _ in 0 ... self.allTasks.count {
             self.selectedRows?.append(0)
         }
         tableView.reloadData()

@@ -110,6 +110,7 @@ class PreviewTaskViewController: UIViewController{
         self.seconds = task?.seconds
         self.minutes = task?.minutes
         self.hours = task?.hours
+        self.timeLabel.text = String(self.hours!) + ":" + String(self.minutes!) + ":" + String(self.seconds!)
 
         // Do any additional setup after loading the view.
     }

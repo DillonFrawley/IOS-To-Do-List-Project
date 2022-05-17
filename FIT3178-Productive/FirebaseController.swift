@@ -13,8 +13,6 @@ import CoreLocation
 
 class FirebaseController: NSObject, DatabaseProtocol {
 
-    
-
     var listeners = MulticastDelegate<DatabaseListener>()
     var allTaskList: [ToDoTask]
     var currentTasks: [ToDoTask]
@@ -85,10 +83,11 @@ class FirebaseController: NSObject, DatabaseProtocol {
         let task = ToDoTask()
         task.taskTitle = taskTitle
         task.taskDescription = taskDescription
-        if coordinate != nil {
-            task.longitude = coordinate?.longitude
-            task.latitude = coordinate?.latitude
-        }
+        task.longitude = coordinate?.longitude
+        task.latitude = coordinate?.latitude
+        task.seconds = seconds
+        task.minutes = minutes
+        task.hours = hours
         if taskType == "allTasks" {
             do {
                 if let taskRef = try self.allTasksRef?.addDocument(from: task) {
