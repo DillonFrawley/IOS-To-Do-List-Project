@@ -94,7 +94,7 @@ class PreviewTaskViewController: UIViewController{
         self.seconds = task?.seconds
         self.minutes = task?.minutes
         self.hours = task?.hours
-        self.timeLabel.text = String(self.hours!) + ":" + String(self.minutes!) + ":" + String(self.seconds!)
+        self.updateTimerOutlet()
         
     }
     
@@ -106,7 +106,7 @@ class PreviewTaskViewController: UIViewController{
     }
     
     @IBAction func completeaddTaskButton(_ sender: Any) {
-        if self.buttonType == "complete" {
+        if self.buttonType == "current" {
             self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "completed", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
             self.databaseController?.deleteTask(task: task!, taskType: "current")
             navigationController?.popViewController(animated: true)
@@ -120,15 +120,14 @@ class PreviewTaskViewController: UIViewController{
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
+        super.viewDidLoad()
         self.realTaskTitleLabel.text = self.task?.taskTitle
         self.realTaskDescriptionLabel.text = self.task?.taskDescription
         self.seconds = task?.seconds
         self.minutes = task?.minutes
         self.hours = task?.hours
-        print(self.buttonType)
         if self.buttonType == nil {
             self.completeAddButtonOutlet.isHidden = true
             self.stackViewOutlet.isHidden = true
@@ -138,23 +137,29 @@ class PreviewTaskViewController: UIViewController{
             self.showLocationButton.isHidden = true
             self.taskDescriptionLabel.isHidden = true
             self.taskNameLabel.text = "No current task, please add a task to start"
+            self.navigationController?.navigationItem.rightBarButtonItem = nil
         }
-        
-        else if self.buttonType == "complete" {
-            self.completeAddButtonOutlet.isHidden = true
+
+        if self.buttonType == "complete" {
             self.stackViewOutlet.isHidden = true
-            self.realTaskTitleLabel.isHidden = true
-            self.realTaskDescriptionLabel.isHidden = true
             self.completeAddButtonOutlet.isHidden = true
-            self.taskDescriptionLabel.isHidden = true
-            self.taskNameLabel.text = "No current task, please add a task to start"
+            self.updateTimerOutlet()
+            self.timeLabel.text = "Time required: " + self.timeLabel.text!
+            self.navigationController?.navigationItem.rightBarButtonItem = nil
         }
          else if self.buttonType == "current" {
             self.completeAddButtonOutlet.setTitle("Complete task", for: .normal)
-            self.showLocationButton.isHidden = true
-            self.updateTimerOutlet()
-            self.timeLabel.text = "Time required: " + self.timeLabel.text!
-            
+             if self.hours! == 0 {
+                 if self.minutes! == 0 {
+                     self.timeLabel.text = String(self.seconds!) + "s"
+                 }
+                 else {
+                     self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                 }
+             }
+             else {
+                 self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+             }
         }
         else if self.buttonType == "add" {
             self.completeAddButtonOutlet.setTitle("Add task to current day", for: .normal)
@@ -162,12 +167,13 @@ class PreviewTaskViewController: UIViewController{
             self.updateTimerOutlet()
             self.timeLabel.text = "Time required: " + self.timeLabel.text!
         }
-
     }
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
     }
+    
+
         
     @objc func counter() {
         if seconds == 0 {
@@ -194,7 +200,6 @@ class PreviewTaskViewController: UIViewController{
     }
     
     func updateTimerOutlet() {
-        
         if self.hours! == 0 {
             if self.minutes! == 0 {
                 self.timeLabel.text = String(self.seconds!) + "s"
@@ -206,7 +211,6 @@ class PreviewTaskViewController: UIViewController{
         else {
             self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
         }
-       
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
