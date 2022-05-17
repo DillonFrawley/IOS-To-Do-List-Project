@@ -9,6 +9,7 @@ import UIKit
 import Firebase
 import FirebaseFirestoreSwift
 import CoreLocation
+import AVKit
 
 class PreviewTaskViewController: UIViewController{
     
@@ -22,6 +23,7 @@ class PreviewTaskViewController: UIViewController{
     var minutes: Int?
     var hours: Int?
     var timer: Timer = Timer()
+    let systemSoundID: SystemSoundID = 1005
     
     
 
@@ -47,6 +49,7 @@ class PreviewTaskViewController: UIViewController{
             if self.minutes == 0 && self.seconds == 0 {
                 if self.hours == 0 && self.minutes == 0 && self.seconds == 0 {
                     self.timer.invalidate()
+                    AudioServicesPlaySystemSound(self.systemSoundID)
                 }
                 else {
                     self.hours! -= 1
@@ -62,7 +65,8 @@ class PreviewTaskViewController: UIViewController{
         else {
             self.seconds! -= 1
         }
-        self.timeLabel.text = String(self.hours!) + ":" + String(self.minutes!) + ":" + String(self.seconds!)
+        
+        self.updateTimerOutlet()
     }
     
     
@@ -110,7 +114,7 @@ class PreviewTaskViewController: UIViewController{
         self.seconds = task?.seconds
         self.minutes = task?.minutes
         self.hours = task?.hours
-        self.timeLabel.text = String(self.hours!) + ":" + String(self.minutes!) + ":" + String(self.seconds!)
+        self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
 
         // Do any additional setup after loading the view.
     }
@@ -121,6 +125,21 @@ class PreviewTaskViewController: UIViewController{
             destination.coordinate = self.coordinate
 
         }
+    }
+    
+    func updateTimerOutlet() {
+        if self.hours! == 0 {
+            if self.minutes! == 0 {
+                self.timeLabel.text = String(self.seconds!) + "s"
+            }
+            else {
+                self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+            }
+        }
+        else {
+            self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+        }
+       
     }
     
     
