@@ -236,7 +236,7 @@
         <!--Create Task-->
         <scene sceneID="3F2-n6-j9K">
             <objects>
-                <viewController id="joh-xg-R37" customClass="CreateTaskViewController" customModule="FIT3178_Productive" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="createTaskViewController" id="joh-xg-R37" customClass="CreateTaskViewController" customModule="FIT3178_Productive" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GMS-FI-Jf2">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -490,9 +490,16 @@
                             <outletCollection property="gestureRecognizers" destination="RXy-ls-Pop" appends="YES" id="l8E-ZI-lHN"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Task Preview" id="nTh-rT-bP9"/>
+                    <navigationItem key="navigationItem" title="Task Preview" id="nTh-rT-bP9">
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="x7I-oz-AT6">
+                            <connections>
+                                <action selector="editButtonAction:" destination="JaT-p4-Sps" id="UhM-3D-ujI"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="completeAddButtonOutlet" destination="Det-6V-8WZ" id="40P-jT-Y7u"/>
+                        <outlet property="editButtonOutlet" destination="x7I-oz-AT6" id="Lfa-eV-TNf"/>
                         <outlet property="realTaskDescriptionLabel" destination="RYp-W0-saB" id="nY1-Rb-ZJT"/>
                         <outlet property="realTaskTitleLabel" destination="PIt-LS-eHV" id="DZF-su-ULL"/>
                         <outlet property="showLocationButton" destination="lpA-mf-B9v" id="3rO-Op-OO4"/>

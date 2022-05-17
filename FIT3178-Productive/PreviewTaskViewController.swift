@@ -22,6 +22,8 @@ class PreviewTaskViewController: UIViewController{
     var hours: Int?
     var timer: Timer = Timer()
     let systemSoundID: SystemSoundID = 1005
+    var editVC: CreateTaskViewController?
+
     
     @IBOutlet weak var realTaskTitleLabel: UILabel!
     @IBOutlet weak var realTaskDescriptionLabel: UILabel!
@@ -31,6 +33,53 @@ class PreviewTaskViewController: UIViewController{
     @IBOutlet weak var showLocationButton: UIButton!
     @IBOutlet weak var taskDescriptionLabel: UILabel!
     @IBOutlet weak var taskNameLabel: UILabel!
+    @IBOutlet weak var editButtonOutlet: UIBarButtonItem!
+    
+    
+    @IBAction func editButtonAction(_ sender: Any) {
+        if self.editButtonOutlet.title == "Edit" {
+            self.editVC = storyboard!.instantiateViewController(withIdentifier: "createTaskViewController") as? CreateTaskViewController
+            self.addChild(editVC!)
+            editVC!.view.frame = CGRect(x: 0, y: view.safeAreaInsets.top, width: view.frame.size.width, height: view.frame.size.height - view.safeAreaInsets.top)
+            view.addSubview(editVC!.view)
+            editVC!.taskTitleTextField.text = task?.taskTitle
+            editVC!.taskDescriptionTextField.text = task?.taskDescription
+            editVC!.longitude = task?.longitude
+            editVC!.latitude = task?.latitude
+            let dateFormatter = DateFormatter()
+            dateFormatter.timeStyle = DateFormatter.Style.short
+            dateFormatter.dateFormat = "H:m:s"
+            editVC!.timerOutlet.date = dateFormatter.date(from: String(self.hours!) + ":" + String(self.minutes!) + ":" + String(self.seconds!))!
+            self.editButtonOutlet.title = "Save"
+            view.layoutSubviews()
+        }
+        else if self.editButtonOutlet.title == "Save" {
+            guard let taskTitle = editVC!.taskTitleTextField.text, let taskDescription = editVC!.taskDescriptionTextField.text, taskTitle.trimmingCharacters(in: .whitespaces).isEmpty == false && taskDescription.trimmingCharacters(in: .whitespaces).isEmpty == false else {
+                return
+            }
+            var taskType: String
+            switch buttonType {
+            case "current":
+                taskType = "current"
+            case "add":
+                taskType = "allTasks"
+            case "complete":
+                taskType = "completed"
+            default:
+                return
+            }
+            task?.taskTitle = taskTitle
+            task?.taskDescription = taskDescription
+            task?.latitude = (editVC!.latitude)!
+            task?.longitude = (editVC!.longitude)!
+            task?.seconds = editVC!.seconds!
+            task?.minutes = editVC!.minutes!
+            task?.hours = editVC!.hours!
+            self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: taskTitle, taskDescription: taskDescription, taskType: taskType, coordinate: CLLocationCoordinate2D(latitude: (editVC!.latitude)!, longitude: (editVC!.longitude)!), seconds: editVC!.seconds!, minutes: editVC!.minutes!, hours: editVC!.hours!)
+            editVC!.view.removeFromSuperview()
+            editVC!.removeFromParent()
+        }
+    }
     
     @IBAction func handlePlay(_ sender: Any) {
         self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
@@ -74,11 +123,14 @@ class PreviewTaskViewController: UIViewController{
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
         super.viewDidLoad()
+    }
+    override func viewDidAppear(_ animated: Bool) {
         self.realTaskTitleLabel.text = self.task?.taskTitle
         self.realTaskDescriptionLabel.text = self.task?.taskDescription
         self.seconds = task?.seconds
         self.minutes = task?.minutes
         self.hours = task?.hours
+        
         if self.buttonType == nil {
             self.completeAddButtonOutlet.isHidden = true
             self.stackViewOutlet.isHidden = true
@@ -105,8 +157,10 @@ class PreviewTaskViewController: UIViewController{
         else if self.buttonType == "complete" {
             self.completeAddButtonOutlet.setTitle("Complete task", for: .normal)
         }
-
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
     }
         
     @objc func counter() {
@@ -158,14 +212,5 @@ class PreviewTaskViewController: UIViewController{
     }
     
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

@@ -21,13 +21,16 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     var coordinate: CLLocationCoordinate2D?
     weak var delegate: MapViewControllerDelegate?
     var presetLocationBool: Bool = false
-    
+    weak var databaseController: DatabaseProtocol?
 
 
     @IBOutlet weak var saveButtonOutlet: UIBarButtonItem!
     @IBOutlet var longPressOutlet: UILongPressGestureRecognizer!
     
     @IBAction func saveButtonAction(_ sender: Any) {
+        if self.coordinate == nil {
+            self.coordinate = databaseController?.currentLocation
+        }
         DispatchQueue.main.async {
             self.delegate?.saveLocation(coordinate: (self.coordinate)!)
         }
@@ -35,6 +38,8 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        databaseController = appDelegate?.databaseController
         self.title = "Maps"
         let currentLocationButtonItem = MKUserTrackingBarButtonItem(mapView: mapView)
         self.navigationItem.rightBarButtonItems = [saveButtonOutlet, currentLocationButtonItem]

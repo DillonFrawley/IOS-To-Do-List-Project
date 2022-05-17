@@ -22,7 +22,6 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     var hours: Int? = 0
     var latitude: Double?
     var longitude: Double?
-    var taskId: String?
 
     @IBOutlet weak var timerOutlet: UIDatePicker!
     @IBOutlet weak var taskTitleTextField: UITextField!
@@ -50,13 +49,7 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         guard let taskTitle = taskTitleTextField.text, let taskDescription = taskDescriptionTextField.text, taskTitle.trimmingCharacters(in: .whitespaces).isEmpty == false && taskDescription.trimmingCharacters(in: .whitespaces).isEmpty == false else {
             return
         }
-        if self.taskId != nil {
-            self.databaseController?.updateTask(taskId: self.taskId!,taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
-            
-        }
-        else {
-            self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
-        }
+        self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
         navigationController?.popViewController(animated: true)
     }
     @IBAction func locationButtonAction(_ sender: Any) {
@@ -67,16 +60,13 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
     override func viewDidLoad() {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
-        self.latitude = databaseController?.currentLocation?.latitude
-        self.longitude = databaseController?.currentLocation?.longitude
+        if self.longitude == nil && self.latitude == nil {
+            self.latitude = databaseController?.currentLocation?.latitude
+            self.longitude = databaseController?.currentLocation?.longitude
+        }
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        self.view.frame = view.bounds
     }
     
     override func viewWillAppear(_ animated: Bool) {
