@@ -44,6 +44,7 @@ protocol DatabaseProtocol: AnyObject {
     var currentUser: FirebaseAuth.User? {get set}
     var currentDate: String? {get set}
     var currentLocation: CLLocationCoordinate2D? {get set}
+    var currentTask: ToDoTask? {get set}
     
     func setupTaskListener()
     

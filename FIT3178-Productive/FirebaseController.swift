@@ -33,6 +33,8 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var userID: String?
     
     var currentLocation: CLLocationCoordinate2D?
+    var currentTask: ToDoTask?
+    
     
     override init() {
         FirebaseApp.configure()

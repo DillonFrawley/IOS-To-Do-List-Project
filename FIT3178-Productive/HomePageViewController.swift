@@ -10,11 +10,11 @@ import Firebase
 import FirebaseFirestoreSwift
 import CoreLocation
 
-class HomePageViewController: UITableViewController, DatabaseListener, CLLocationManagerDelegate {
+
+class HomePageViewController: UITableViewController, DatabaseListener, CLLocationManagerDelegate  {
         
     var listenerType = ListenerType.currentAndCompletedTasks
     weak var databaseController: DatabaseProtocol?
-
     let CELL_CURRENT_TASK = "currentTaskCell"
     let CELL_COMPLETED_TASK = "completedTaskCell"
     
@@ -55,7 +55,13 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                     let isIndexValid = currentTasks.indices.contains(tapIndexPath.row)
                     if isIndexValid == true {
                         self.task = currentTasks[tapIndexPath.row]
-                        performSegue(withIdentifier: "previewTaskSegue", sender: self)
+                        if self.task?.id != self.databaseController?.currentTask?.id {
+                            performSegue(withIdentifier: "previewTaskSegue", sender: self)
+                        }
+                        else {
+                            self.tabBarController?.selectedIndex = 1
+                        }
+                        
                     }
                 case 1:
                     self.tappedTask = 1
@@ -79,6 +85,8 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         databaseController = appDelegate?.databaseController
         self.datePickerOutlet.contentHorizontalAlignment = .center
         self.tableView.allowsSelection = false
+        self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
+        
 
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -256,31 +264,34 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "previewTaskSegue"{
-            let destination = segue.destination as! PreviewTaskViewController
-            destination.task = self.task
-            if self.tappedTask == 1 {
-                destination.buttonType = "complete"
-            }
-            else {
-                destination.buttonType = "current"
-            }
-            if task?.latitude != nil && task?.longitude != nil {
-                destination.coordinate = CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!)
-                
+        if self.task != self.databaseController?.currentTask {
+//            print(self.task?.id)
+//            print(self.databaseController?.currentTask)
+            if segue.identifier == "previewTaskSegue"{
+                let destination = segue.destination as! PreviewTaskViewController
+                destination.task = self.task
+                destination.delegate = self
+                if self.tappedTask == 1 {
+                    destination.buttonType = "complete"
+                }
+                else {
+                    destination.buttonType = "start"
+                }
+                if task?.latitude != nil && task?.longitude != nil {
+                    destination.coordinate = CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!)
+                    
+                }
             }
         }
     }
 
 
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+}
+
+extension HomePageViewController: previewTaskControllerDelegate {
+    func setCurrentTask(task: ToDoTask) {
+        self.databaseController?.currentTask = task
+        self.tabBarController?.viewDidLoad()
     }
-    */
-
 }

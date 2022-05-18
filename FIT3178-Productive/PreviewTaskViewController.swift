@@ -11,9 +11,14 @@ import FirebaseFirestoreSwift
 import CoreLocation
 import AVKit
 
+protocol previewTaskControllerDelegate: AnyObject {
+    func setCurrentTask(task: ToDoTask)
+}
+
 class PreviewTaskViewController: UIViewController{
     
     weak var databaseController: DatabaseProtocol?
+    weak var delegate: previewTaskControllerDelegate?
     var coordinate: CLLocationCoordinate2D?
     var buttonType: String?
     var task: ToDoTask?
@@ -23,6 +28,7 @@ class PreviewTaskViewController: UIViewController{
     var timer: Timer = Timer()
     let systemSoundID: SystemSoundID = 1005
     var editVC: CreateTaskViewController?
+    var startCurrenttask: Bool?
 
     
     @IBOutlet weak var realTaskTitleLabel: UILabel!
@@ -106,14 +112,19 @@ class PreviewTaskViewController: UIViewController{
     }
     
     @IBAction func completeaddTaskButton(_ sender: Any) {
-        if self.buttonType == "current" {
-            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "completed", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
-            self.databaseController?.deleteTask(task: task!, taskType: "current")
+        if self.buttonType == "start" {
+            self.delegate!.setCurrentTask(task: self.task!)
             navigationController?.popViewController(animated: true)
         }
         else if self.buttonType == "add" {
             self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
             navigationController?.popViewController(animated: true)
+        }
+        else if self.buttonType == "current" {
+            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "completed", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
+            self.databaseController?.deleteTask(task: task!, taskType: "current")
+            self.databaseController?.currentTask = nil
+            self.tabBarController?.selectedIndex = 0
         }
         
         
@@ -123,12 +134,18 @@ class PreviewTaskViewController: UIViewController{
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
         super.viewDidLoad()
+        if self.databaseController?.currentTask != nil {
+            self.task = self.databaseController?.currentTask
+            self.buttonType = "current"
+            self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
+        }
+ 
         self.realTaskTitleLabel.text = self.task?.taskTitle
         self.realTaskDescriptionLabel.text = self.task?.taskDescription
         self.seconds = task?.seconds
         self.minutes = task?.minutes
         self.hours = task?.hours
-        if self.buttonType == nil {
+        if self.buttonType == nil && self.databaseController?.currentTask == nil {
             self.completeAddButtonOutlet.isHidden = true
             self.stackViewOutlet.isHidden = true
             self.realTaskTitleLabel.isHidden = true
@@ -138,6 +155,7 @@ class PreviewTaskViewController: UIViewController{
             self.taskDescriptionLabel.isHidden = true
             self.taskNameLabel.text = "No current task, please add a task to start"
             self.navigationController?.navigationItem.rightBarButtonItem = nil
+            self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
         }
 
         if self.buttonType == "complete" {
@@ -164,7 +182,33 @@ class PreviewTaskViewController: UIViewController{
         else if self.buttonType == "add" {
             self.completeAddButtonOutlet.setTitle("Add task to current day", for: .normal)
             self.stackViewOutlet.isHidden = true
-            self.updateTimerOutlet()
+            if self.hours! == 0 {
+                if self.minutes! == 0 {
+                    self.timeLabel.text = String(self.seconds!) + "s"
+                }
+                else {
+                    self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                }
+            }
+            else {
+                self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+            }
+            self.timeLabel.text = "Time required: " + self.timeLabel.text!
+        }
+        else if self.buttonType == "start" {
+            self.completeAddButtonOutlet.setTitle("Start this task", for: .normal)
+            self.stackViewOutlet.isHidden = true
+            if self.hours! == 0 {
+                if self.minutes! == 0 {
+                    self.timeLabel.text = String(self.seconds!) + "s"
+                }
+                else {
+                    self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                }
+            }
+            else {
+                self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+            }
             self.timeLabel.text = "Time required: " + self.timeLabel.text!
         }
     }
@@ -173,8 +217,6 @@ class PreviewTaskViewController: UIViewController{
         super.viewWillLayoutSubviews()
     }
     
-
-        
     @objc func counter() {
         if seconds == 0 {
             if self.minutes == 0 && self.seconds == 0 {
@@ -224,3 +266,5 @@ class PreviewTaskViewController: UIViewController{
     
 
 }
+
+
