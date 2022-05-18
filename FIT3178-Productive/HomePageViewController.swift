@@ -10,7 +10,7 @@ import Firebase
 import FirebaseFirestoreSwift
 import CoreLocation
 
-class HomePageViewController: UITableViewController, DatabaseListener, CLLocationManagerDelegate  {
+class HomePageViewController: UITableViewController, DatabaseListener, CLLocationManagerDelegate {
         
     var listenerType = ListenerType.currentAndCompletedTasks
     weak var databaseController: DatabaseProtocol?
@@ -271,6 +271,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
             }
         }
     }
+
 
     /*
     // MARK: - Navigation

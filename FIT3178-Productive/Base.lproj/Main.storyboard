@@ -83,7 +83,7 @@
                     <connections>
                         <outlet property="emailTextField" destination="pMa-FY-bEa" id="51B-KF-lZY"/>
                         <outlet property="passwordTextField" destination="UhF-5j-gIg" id="MPn-ec-uVl"/>
-                        <segue destination="def-j2-WEV" kind="show" identifier="authSegue" id="dXD-i1-6yp"/>
+                        <segue destination="v45-B4-avA" kind="show" identifier="authSegue" id="dXD-i1-6yp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NfB-ma-yYp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -93,7 +93,7 @@
         <!--Home-->
         <scene sceneID="SY7-Ws-tZB">
             <objects>
-                <tableViewController id="def-j2-WEV" customClass="HomePageViewController" customModule="FIT3178_Productive" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Home" id="def-j2-WEV" customClass="HomePageViewController" customModule="FIT3178_Productive" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="3dK-6S-SYD">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -150,12 +150,9 @@
                             <outletCollection property="gestureRecognizers" destination="k5x-8o-8ZO" appends="YES" id="72i-gV-Wtp"/>
                         </connections>
                     </tableView>
+                    <tabBarItem key="tabBarItem" title="Home" image="homekit" catalog="system" id="KlS-SO-ht2"/>
                     <navigationItem key="navigationItem" title="Home" id="Reb-wm-1gO">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="D44-1E-WUg">
-                            <connections>
-                                <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="uep-xs-eWz"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="D44-1E-WUg"/>
                     </navigationItem>
                     <connections>
                         <outlet property="datePickerOutlet" destination="Xr0-Ed-lvs" id="QtW-Oq-ie4"/>
@@ -169,7 +166,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1631.8840579710147" y="79.6875"/>
+            <point key="canvasLocation" x="2542.0289855072465" y="79.6875"/>
         </scene>
         <!--All Tasks-->
         <scene sceneID="xuY-SG-XXr">
@@ -369,7 +366,7 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3918.8405797101454" y="79.6875"/>
+            <point key="canvasLocation" x="4828.985507246377" y="79.6875"/>
         </scene>
         <!--Task Preview-->
         <scene sceneID="lOk-DW-Izc">
@@ -490,6 +487,7 @@
                             <outletCollection property="gestureRecognizers" destination="RXy-ls-Pop" appends="YES" id="l8E-ZI-lHN"/>
                         </connections>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Current task" image="timer" catalog="system" id="oim-wC-ZI5"/>
                     <navigationItem key="navigationItem" title="Task Preview" id="nTh-rT-bP9">
                         <barButtonItem key="rightBarButtonItem" title="Edit" id="x7I-oz-AT6">
                             <connections>
@@ -517,7 +515,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2637.68115942029" y="79.6875"/>
+            <point key="canvasLocation" x="3547.826086956522" y="79.6875"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="JlF-fB-PIA">
@@ -537,15 +535,42 @@
             </objects>
             <point key="canvasLocation" x="-258" y="80"/>
         </scene>
+        <!--Home-->
+        <scene sceneID="fR1-v1-EQ6">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="v45-B4-avA" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Home" id="uAW-BN-9qg">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Kus-ZL-dyk">
+                            <connections>
+                                <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="ldh-td-nS3"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YsR-Gt-pJz">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="def-j2-WEV" kind="relationship" relationship="viewControllers" id="OUK-O1-xL3"/>
+                        <segue destination="JaT-p4-Sps" kind="relationship" relationship="viewControllers" id="sie-4e-lFC"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pEI-x8-m0C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1631.8840579710147" y="79.6875"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Ehs-84-mhp"/>
+        <segue reference="sie-4e-lFC"/>
         <segue reference="FGG-hF-qzp"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="homekit" catalog="system" width="128" height="106"/>
         <image name="pause.fill" catalog="system" width="116" height="128"/>
         <image name="play.fill" catalog="system" width="116" height="128"/>
         <image name="stop.fill" catalog="system" width="128" height="113"/>
+        <image name="timer" catalog="system" width="128" height="121"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
