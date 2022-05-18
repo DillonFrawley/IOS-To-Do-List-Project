@@ -27,56 +27,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     var tappedTask: Int?
     
     var locationManager: CLLocationManager = CLLocationManager()
-
-    
     @IBOutlet weak var datePickerOutlet: UIDatePicker!
-    
-    @IBAction func datePickerChanged(_ sender: Any) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = DateFormatter.Style.short
-        
-        let strDate = dateFormatter.string(from: self.datePickerOutlet.date)
-        self.currentDate = strDate.replacingOccurrences(of: "/", with: "-")
-        self.databaseController?.currentDate = self.currentDate
-        self.databaseController?.setupTaskListener()
-        
-    }
-    
-    @IBAction func handleDoubleTap(_ sender: Any) {
-        guard let recognizer = sender as? UITapGestureRecognizer else {
-            return
-        }
-        if recognizer.state == UIGestureRecognizer.State.ended {
-            let tapLocation = recognizer.location(in: self.tableView)
-            if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
-                switch tapIndexPath.section {
-                case 0:
-                    self.tappedTask = 0
-                    let isIndexValid = currentTasks.indices.contains(tapIndexPath.row)
-                    if isIndexValid == true {
-                        self.task = currentTasks[tapIndexPath.row]
-                        if self.task?.id != self.databaseController?.currentTask?.id {
-                            performSegue(withIdentifier: "previewTaskSegue", sender: self)
-                        }
-                        else {
-                            self.tabBarController?.selectedIndex = 1
-                        }
-                        
-                    }
-                case 1:
-                    self.tappedTask = 1
-                    let isIndexValid = completedTasks.indices.contains(tapIndexPath.row)
-                    if isIndexValid == true {
-                        self.task = completedTasks[tapIndexPath.row]
-                        performSegue(withIdentifier: "previewTaskSegue", sender: self)
-                    }
-                default:
-                    return
-                }
-                
-            }
-        }
-    }
     
     
     override func viewDidLoad() {
@@ -86,6 +37,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         self.datePickerOutlet.contentHorizontalAlignment = .center
         self.tableView.allowsSelection = false
         self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
+        self.tabBarController?.title = "Home"
         
 
     }
@@ -132,6 +84,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                 var content = taskCell.defaultContentConfiguration()
                 let task = currentTasks[indexPath.row]
                 content.text = task.taskTitle
+                content.secondaryText = task.taskDescription
                 taskCell.contentConfiguration = content
                 return taskCell
             }
@@ -150,6 +103,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                 var content = taskCell.defaultContentConfiguration()
                 let task = completedTasks[indexPath.row]
                 content.text = task.taskTitle
+                content.secondaryText = task.taskDescription
                 taskCell.contentConfiguration = content
                 return taskCell
             }
@@ -262,11 +216,58 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
             databaseController?.currentLocation = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         }
     }
+    @IBAction func datePickerChanged(_ sender: Any) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.short
+        
+        let strDate = dateFormatter.string(from: self.datePickerOutlet.date)
+        self.currentDate = strDate.replacingOccurrences(of: "/", with: "-")
+        self.databaseController?.currentDate = self.currentDate
+        self.databaseController?.setupTaskListener()
+        
+    }
+    
+    @IBAction func handleDoubleTap(_ sender: Any) {
+        guard let recognizer = sender as? UITapGestureRecognizer else {
+            return
+        }
+        if recognizer.state == UIGestureRecognizer.State.ended {
+            let tapLocation = recognizer.location(in: self.tableView)
+            if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
+                switch tapIndexPath.section {
+                case 0:
+                    self.tappedTask = 0
+                    let isIndexValid = currentTasks.indices.contains(tapIndexPath.row)
+                    if isIndexValid == true {
+                        self.task = currentTasks[tapIndexPath.row]
+                        if self.task?.id != self.databaseController?.currentTask?.id {
+                            performSegue(withIdentifier: "previewTaskSegue", sender: self)
+                        }
+                        else {
+                            self.tabBarController?.selectedIndex = 1
+                        }
+                        
+                    }
+                case 1:
+                    self.tappedTask = 1
+                    let isIndexValid = completedTasks.indices.contains(tapIndexPath.row)
+                    if isIndexValid == true {
+                        self.task = completedTasks[tapIndexPath.row]
+                        performSegue(withIdentifier: "previewTaskSegue", sender: self)
+                    }
+                default:
+                    return
+                }
+                
+            }
+        }
+    }
+    
+    
+
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if self.task != self.databaseController?.currentTask {
-//            print(self.task?.id)
-//            print(self.databaseController?.currentTask)
             if segue.identifier == "previewTaskSegue"{
                 let destination = segue.destination as! PreviewTaskViewController
                 destination.task = self.task

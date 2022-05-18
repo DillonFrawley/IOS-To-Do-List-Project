@@ -106,7 +106,7 @@
                             </connections>
                         </datePicker>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="currentTaskCell" editingAccessoryType="checkmark" textLabel="fkf-Kh-zd0" style="IBUITableViewCellStyleDefault" id="XTa-TC-FV0">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="currentTaskCell" editingAccessoryType="checkmark" textLabel="fkf-Kh-zd0" detailTextLabel="4r2-VA-4fD" style="IBUITableViewCellStyleSubtitle" id="XTa-TC-FV0">
                                 <rect key="frame" x="0.0" y="88.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XTa-TC-FV0" id="TEf-18-slD">
@@ -114,17 +114,24 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Current Tasks" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fkf-Kh-zd0">
-                                            <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                            <rect key="frame" x="20" y="6" width="78.5" height="14.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4r2-VA-4fD">
+                                            <rect key="frame" x="20" y="22.5" width="40.5" height="13.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="completedTaskCell" editingAccessoryType="checkmark" textLabel="QVH-Dk-vii" style="IBUITableViewCellStyleDefault" id="A7A-HF-cac">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="completedTaskCell" editingAccessoryType="checkmark" textLabel="QVH-Dk-vii" detailTextLabel="LDm-7W-5cz" style="IBUITableViewCellStyleSubtitle" id="A7A-HF-cac">
                                 <rect key="frame" x="0.0" y="132" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="A7A-HF-cac" id="aCF-ix-nAT">
@@ -132,10 +139,17 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Completed task" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QVH-Dk-vii">
-                                            <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                            <rect key="frame" x="20" y="6" width="89" height="14.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="LDm-7W-5cz">
+                                            <rect key="frame" x="20" y="22.5" width="40.5" height="13.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -151,9 +165,7 @@
                         </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Home" image="homekit" catalog="system" id="KlS-SO-ht2"/>
-                    <navigationItem key="navigationItem" title="Home" id="Reb-wm-1gO">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="D44-1E-WUg"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Home" id="Reb-wm-1gO"/>
                     <connections>
                         <outlet property="datePickerOutlet" destination="Xr0-Ed-lvs" id="QtW-Oq-ie4"/>
                         <segue destination="JaT-p4-Sps" kind="show" identifier="previewTaskSegue" id="9Em-fe-SYI"/>
@@ -177,18 +189,43 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <gestureRecognizers/>
+                        <toolbar key="tableHeaderView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="dcg-Yq-Zyw">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <items>
+                                <barButtonItem title="Create" id="Dbl-RV-43p">
+                                    <color key="tintColor" systemColor="tintColor"/>
+                                    <connections>
+                                        <segue destination="joh-xg-R37" kind="show" id="Y7L-NG-dqm"/>
+                                    </connections>
+                                </barButtonItem>
+                                <barButtonItem title="Add Selected" id="z3p-hp-521">
+                                    <color key="tintColor" systemColor="linkColor"/>
+                                    <connections>
+                                        <action selector="saveSelectedTasks:" destination="rty-TX-fVm" id="Fsy-9c-TDF"/>
+                                    </connections>
+                                </barButtonItem>
+                            </items>
+                        </toolbar>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="allTasksCell" textLabel="0bC-YK-QwI" style="IBUITableViewCellStyleDefault" id="0cN-HG-FJd">
-                                <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="allTasksCell" textLabel="0bC-YK-QwI" detailTextLabel="Bas-Cq-i7B" style="IBUITableViewCellStyleSubtitle" id="0cN-HG-FJd">
+                                <rect key="frame" x="0.0" y="88.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0cN-HG-FJd" id="Mzd-hv-53F">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0bC-YK-QwI">
-                                            <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0bC-YK-QwI">
+                                            <rect key="frame" x="20" y="6" width="25" height="14.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Bas-Cq-i7B">
+                                            <rect key="frame" x="20" y="22.5" width="40.5" height="13.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -202,21 +239,7 @@
                             <outletCollection property="gestureRecognizers" destination="8FW-KJ-sfr" appends="YES" id="0DG-Wg-BS7"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="All Tasks" id="YYr-5O-6FE">
-                        <rightBarButtonItems>
-                            <barButtonItem title="Add" id="z3p-hp-521">
-                                <connections>
-                                    <action selector="saveSelectedTasks:" destination="rty-TX-fVm" id="Fsy-9c-TDF"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="New" id="Dbl-RV-43p">
-                                <color key="tintColor" systemColor="systemRedColor"/>
-                                <connections>
-                                    <segue destination="joh-xg-R37" kind="show" id="Y7L-NG-dqm"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="All Tasks" id="YYr-5O-6FE"/>
                     <connections>
                         <segue destination="JaT-p4-Sps" kind="show" identifier="previewTaskSegue" id="Ehs-84-mhp"/>
                     </connections>
@@ -527,6 +550,9 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="h1e-UQ-S2V">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="FXT-EF-b78" kind="relationship" relationship="rootViewController" id="a9Y-OV-55b"/>
                     </connections>
@@ -541,11 +567,14 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="v45-B4-avA" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Tab Bar" id="uAW-BN-9qg">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Kus-ZL-dyk">
-                            <connections>
-                                <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="ldh-td-nS3"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="Kus-ZL-dyk">
+                                <connections>
+                                    <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="ldh-td-nS3"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Item" systemItem="search" id="VE7-4a-jkf"/>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YsR-Gt-pJz">
                         <autoresizingMask key="autoresizingMask"/>
@@ -562,7 +591,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="sie-4e-lFC"/>
+        <segue reference="Ehs-84-mhp"/>
         <segue reference="FGG-hF-qzp"/>
     </inferredMetricsTieBreakers>
     <resources>
@@ -571,11 +600,14 @@
         <image name="play.fill" catalog="system" width="116" height="128"/>
         <image name="stop.fill" catalog="system" width="128" height="113"/>
         <image name="timer" catalog="system" width="128" height="121"/>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="tintColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

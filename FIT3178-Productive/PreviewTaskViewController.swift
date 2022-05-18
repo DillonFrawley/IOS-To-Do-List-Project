@@ -42,6 +42,135 @@ class PreviewTaskViewController: UIViewController{
     @IBOutlet weak var editButtonOutlet: UIBarButtonItem!
     
     
+    override func viewDidLoad() {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        databaseController = appDelegate?.databaseController
+        super.viewDidLoad()
+        self.tabBarController?.title = "Preview Task"
+        if self.databaseController?.currentTask != nil {
+            self.task = self.databaseController?.currentTask
+            self.buttonType = "current"
+            self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
+        }
+ 
+        self.realTaskTitleLabel.text = self.task?.taskTitle
+        self.realTaskDescriptionLabel.text = self.task?.taskDescription
+        self.seconds = task?.seconds
+        self.minutes = task?.minutes
+        self.hours = task?.hours
+        if self.buttonType == nil && self.databaseController?.currentTask == nil {
+            self.completeAddButtonOutlet.isHidden = true
+            self.stackViewOutlet.isHidden = true
+            self.realTaskTitleLabel.isHidden = true
+            self.realTaskDescriptionLabel.isHidden = true
+            self.completeAddButtonOutlet.isHidden = true
+            self.showLocationButton.isHidden = true
+            self.taskDescriptionLabel.isHidden = true
+            self.timeLabel.isHidden = true
+            self.taskNameLabel.text = "No current task, please add a task to start"
+            self.navigationController?.navigationItem.rightBarButtonItem = nil
+            self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
+        }
+
+        if self.buttonType == "complete" {
+            self.stackViewOutlet.isHidden = true
+            self.completeAddButtonOutlet.isHidden = true
+            self.updateTimerOutlet()
+            self.timeLabel.text = "Time required: " + self.timeLabel.text!
+            self.navigationController?.navigationItem.rightBarButtonItem = nil
+        }
+         else if self.buttonType == "current" {
+            self.completeAddButtonOutlet.setTitle("Complete task", for: .normal)
+             if self.hours! == 0 {
+                 if self.minutes! == 0 {
+                     self.timeLabel.text = String(self.seconds!) + "s"
+                 }
+                 else {
+                     self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                 }
+             }
+             else {
+                 self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+             }
+        }
+        else if self.buttonType == "add" {
+            self.completeAddButtonOutlet.setTitle("Add task to current day", for: .normal)
+            self.stackViewOutlet.isHidden = true
+            if self.hours! == 0 {
+                if self.minutes! == 0 {
+                    self.timeLabel.text = String(self.seconds!) + "s"
+                }
+                else {
+                    self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                }
+            }
+            else {
+                self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+            }
+            self.timeLabel.text = "Time required: " + self.timeLabel.text!
+        }
+        else if self.buttonType == "start" {
+            self.completeAddButtonOutlet.setTitle("Start this task", for: .normal)
+            self.stackViewOutlet.isHidden = true
+            if self.hours! == 0 {
+                if self.minutes! == 0 {
+                    self.timeLabel.text = String(self.seconds!) + "s"
+                }
+                else {
+                    self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                }
+            }
+            else {
+                self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+            }
+            self.timeLabel.text = "Time required: " + self.timeLabel.text!
+        }
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+    }
+    
+    
+    @objc func counter() {
+        if seconds == 0 {
+            if self.minutes == 0 && self.seconds == 0 {
+                if self.hours == 0 && self.minutes == 0 && self.seconds == 0 {
+                    self.timer.invalidate()
+                    AudioServicesPlaySystemSound(self.systemSoundID)
+                }
+                else {
+                    self.hours! -= 1
+                    self.minutes! = 59
+                    self.seconds! = 59
+                }
+            }
+            else {
+                self.minutes! -= 1
+                self.seconds! = 59
+            }
+        }
+        else {
+            self.seconds! -= 1
+        }
+        self.updateTimerOutlet()
+    }
+    
+    func updateTimerOutlet() {
+        if self.hours! == 0 {
+            if self.minutes! == 0 {
+                self.timeLabel.text = String(self.seconds!) + "s"
+            }
+            else {
+                self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+            }
+        }
+        else {
+            self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+        }
+    }
+    
+    
     @IBAction func editButtonAction(_ sender: Any) {
         if self.editButtonOutlet.title == "Edit" {
             self.editVC = storyboard!.instantiateViewController(withIdentifier: "createTaskViewController") as? CreateTaskViewController
@@ -129,131 +258,7 @@ class PreviewTaskViewController: UIViewController{
         
         
     }
-    
-    override func viewDidLoad() {
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        databaseController = appDelegate?.databaseController
-        super.viewDidLoad()
-        if self.databaseController?.currentTask != nil {
-            self.task = self.databaseController?.currentTask
-            self.buttonType = "current"
-            self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
-        }
- 
-        self.realTaskTitleLabel.text = self.task?.taskTitle
-        self.realTaskDescriptionLabel.text = self.task?.taskDescription
-        self.seconds = task?.seconds
-        self.minutes = task?.minutes
-        self.hours = task?.hours
-        if self.buttonType == nil && self.databaseController?.currentTask == nil {
-            self.completeAddButtonOutlet.isHidden = true
-            self.stackViewOutlet.isHidden = true
-            self.realTaskTitleLabel.isHidden = true
-            self.realTaskDescriptionLabel.isHidden = true
-            self.completeAddButtonOutlet.isHidden = true
-            self.showLocationButton.isHidden = true
-            self.taskDescriptionLabel.isHidden = true
-            self.taskNameLabel.text = "No current task, please add a task to start"
-            self.navigationController?.navigationItem.rightBarButtonItem = nil
-            self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
-        }
 
-        if self.buttonType == "complete" {
-            self.stackViewOutlet.isHidden = true
-            self.completeAddButtonOutlet.isHidden = true
-            self.updateTimerOutlet()
-            self.timeLabel.text = "Time required: " + self.timeLabel.text!
-            self.navigationController?.navigationItem.rightBarButtonItem = nil
-        }
-         else if self.buttonType == "current" {
-            self.completeAddButtonOutlet.setTitle("Complete task", for: .normal)
-             if self.hours! == 0 {
-                 if self.minutes! == 0 {
-                     self.timeLabel.text = String(self.seconds!) + "s"
-                 }
-                 else {
-                     self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
-                 }
-             }
-             else {
-                 self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
-             }
-        }
-        else if self.buttonType == "add" {
-            self.completeAddButtonOutlet.setTitle("Add task to current day", for: .normal)
-            self.stackViewOutlet.isHidden = true
-            if self.hours! == 0 {
-                if self.minutes! == 0 {
-                    self.timeLabel.text = String(self.seconds!) + "s"
-                }
-                else {
-                    self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
-                }
-            }
-            else {
-                self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
-            }
-            self.timeLabel.text = "Time required: " + self.timeLabel.text!
-        }
-        else if self.buttonType == "start" {
-            self.completeAddButtonOutlet.setTitle("Start this task", for: .normal)
-            self.stackViewOutlet.isHidden = true
-            if self.hours! == 0 {
-                if self.minutes! == 0 {
-                    self.timeLabel.text = String(self.seconds!) + "s"
-                }
-                else {
-                    self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
-                }
-            }
-            else {
-                self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
-            }
-            self.timeLabel.text = "Time required: " + self.timeLabel.text!
-        }
-    }
-
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-    }
-    
-    @objc func counter() {
-        if seconds == 0 {
-            if self.minutes == 0 && self.seconds == 0 {
-                if self.hours == 0 && self.minutes == 0 && self.seconds == 0 {
-                    self.timer.invalidate()
-                    AudioServicesPlaySystemSound(self.systemSoundID)
-                }
-                else {
-                    self.hours! -= 1
-                    self.minutes! = 59
-                    self.seconds! = 59
-                }
-            }
-            else {
-                self.minutes! -= 1
-                self.seconds! = 59
-            }
-        }
-        else {
-            self.seconds! -= 1
-        }
-        self.updateTimerOutlet()
-    }
-    
-    func updateTimerOutlet() {
-        if self.hours! == 0 {
-            if self.minutes! == 0 {
-                self.timeLabel.text = String(self.seconds!) + "s"
-            }
-            else {
-                self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
-            }
-        }
-        else {
-            self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
-        }
-    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "locationSegue" {

@@ -10,7 +10,7 @@ import Firebase
 import FirebaseFirestoreSwift
 import CoreLocation
 
-class AllTasksViewController: UITableViewController, DatabaseListener {
+class AllTasksViewController: UITableViewController, DatabaseListener, UISearchResultsUpdating {
     
     var listenerType = ListenerType.allTasks
     weak var databaseController: DatabaseProtocol?
@@ -19,46 +19,23 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     let CELL_ALL_TASKS: String = "allTasksCell"
     
     var allTasks: [ToDoTask] = []
+    var filterTasks: [ToDoTask] = []
     var task: ToDoTask?
     var selectedRows :[Int]?
     
-    
-    @IBAction func saveSelectedTasks(_ sender: Any) {
-        if self.selectedRows != nil {
-            for i in 0 ... self.selectedRows!.count {
-                if selectedRows![i] == 1 {
-                    let task = self.allTasks[i]
-                    self.databaseController?.addTask(taskTitle: task.taskTitle!, taskDescription: task.taskDescription!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!), seconds: task.seconds!, minutes: task.minutes!, hours: task.hours!)
-                }
-            }
-            self.navigationController?.popViewController(animated: true)
-        }
-        
-    }
-    
-    @IBAction func handleDoubleTap(_ sender: Any) {
-        guard let recognizer = sender as? UITapGestureRecognizer else {
-            return
-        }
-        if recognizer.state == UIGestureRecognizer.State.ended {
-            let tapLocation = recognizer.location(in: self.tableView)
-            if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
-                let isIndexValid = allTasks.indices.contains(tapIndexPath.row)
-                if isIndexValid == true {
-                    self.task = self.allTasks[tapIndexPath.row]
-                    performSegue(withIdentifier: "previewTaskSegue", sender: self)
-                }
-            }
-        }
-        
-        
-    }
+
     override func viewDidLoad() {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
         super.viewDidLoad()
-        self.tableView.separatorColor = UIColor.clear
         self.tableView.allowsMultipleSelection = true
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Enter a task name"
+        self.navigationItem.searchController = searchController
+
+
 
         // Do any additional setup after loading the view.
     }
@@ -110,6 +87,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
             var content = taskCell.defaultContentConfiguration()
             let task = allTasks[indexPath.row]
             content.text = task.taskTitle
+            content.secondaryText = task.taskDescription
             taskCell.contentConfiguration = content
             return taskCell
         }
@@ -165,6 +143,21 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         self.selectedRows?[indexPath.row] = 0
     }
     
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text?.lowercased(), searchText.trimmingCharacters(in: .whitespaces).isEmpty == false else {
+                return
+            }
+        if searchText.count > 0 {
+            filterTasks = allTasks.filter({ (task: ToDoTask) -> Bool in
+                return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
+            
+        } else {
+            filterTasks = allTasks
+            
+        }
+        tableView.reloadData()
+        }
+
 
     
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
@@ -174,7 +167,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
         self.allTasks = allTasks
         self.selectedRows = []
-        for _ in 0 ... self.allTasks.count {
+        for _ in 0 ... self.allTasks.count - 1 {
             self.selectedRows?.append(0)
         }
         tableView.reloadData()
@@ -184,6 +177,39 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         //
     }
     
+    
+    @IBAction func saveSelectedTasks(_ sender: Any) {
+        if self.selectedRows != nil {
+            if self.selectedRows!.contains(1) == true {
+                for i in 0 ... self.selectedRows!.count - 1 {
+                    if selectedRows![i] == 1 {
+                        let task = self.allTasks[i]
+                        self.databaseController?.addTask(taskTitle: task.taskTitle!, taskDescription: task.taskDescription!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!), seconds: task.seconds!, minutes: task.minutes!, hours: task.hours!)
+                    }
+                }
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
+    
+    @IBAction func handleDoubleTap(_ sender: Any) {
+        guard let recognizer = sender as? UITapGestureRecognizer else {
+            return
+        }
+        if recognizer.state == UIGestureRecognizer.State.ended {
+            let tapLocation = recognizer.location(in: self.tableView)
+            if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
+                let isIndexValid = allTasks.indices.contains(tapIndexPath.row)
+                if isIndexValid == true {
+                    self.task = self.allTasks[tapIndexPath.row]
+                    performSegue(withIdentifier: "previewTaskSegue", sender: self)
+                }
+            }
+        }
+        
+        
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "previewTaskSegue"{
             let destination = segue.destination as! PreviewTaskViewController
@@ -196,15 +222,6 @@ class AllTasksViewController: UITableViewController, DatabaseListener {
         }
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
