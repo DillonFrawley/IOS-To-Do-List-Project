@@ -165,7 +165,9 @@
                         </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Home" image="homekit" catalog="system" id="KlS-SO-ht2"/>
-                    <navigationItem key="navigationItem" title="Home" id="Reb-wm-1gO"/>
+                    <navigationItem key="navigationItem" title="Home" id="Reb-wm-1gO">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="L1g-0X-bVI"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="datePickerOutlet" destination="Xr0-Ed-lvs" id="QtW-Oq-ie4"/>
                         <segue destination="JaT-p4-Sps" kind="show" identifier="previewTaskSegue" id="9Em-fe-SYI"/>
@@ -562,12 +564,12 @@
             </objects>
             <point key="canvasLocation" x="-258" y="80"/>
         </scene>
-        <!--Tab Bar-->
+        <!--Home-->
         <scene sceneID="fR1-v1-EQ6">
             <objects>
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="v45-B4-avA" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Tab Bar" id="uAW-BN-9qg">
+                    <navigationItem key="navigationItem" title="Home" id="uAW-BN-9qg">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Kus-ZL-dyk">
                             <connections>
                                 <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="ldh-td-nS3"/>

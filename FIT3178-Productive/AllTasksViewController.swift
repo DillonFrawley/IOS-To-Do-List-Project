@@ -42,13 +42,11 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print("view did appear")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         databaseController?.addListener(listener: self)
-        print("view will appear")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -163,6 +161,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
 
         }
         self.tableView.reloadData()
+        self.navigationItem.titleView?.resignFirstResponder()
         }
 
 

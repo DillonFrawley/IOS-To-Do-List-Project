@@ -38,16 +38,8 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         databaseController = appDelegate?.databaseController
         self.datePickerOutlet.contentHorizontalAlignment = .center
         self.tableView.allowsSelection = false
-        self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
         self.tabBarController?.title = "Home"
-        let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.searchBar.placeholder = "Enter a task name"
-        self.tabBarController?.navigationItem.searchController = searchController
-        searchController.searchBar.scopeButtonTitles = ["All", "Current", "Completed"]
-        searchController.searchBar.showsScopeBar = true
+        self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
         filteredCurrentTasks = currentTasks
         filteredCompletedTasks = completedTasks
     }
@@ -56,7 +48,16 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         super.viewWillAppear(animated)
         databaseController?.addListener(listener: self)
         self.determineCurrentLocation()
-        self.tabBarController?.navigationItem.hidesSearchBarWhenScrolling = true
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = true
+        searchController.searchBar.placeholder = "Enter a task name"
+        self.tabBarController?.navigationItem.searchController = searchController
+        searchController.searchBar.scopeButtonTitles = ["All", "Current", "Completed"]
+        searchController.searchBar.showsScopeBar = true
+        searchController.searchBar.isHidden = true
+        self.tabBarController?.title = "Home"
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -67,7 +68,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.tabBarController?.navigationItem.hidesSearchBarWhenScrolling = true
+    
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections

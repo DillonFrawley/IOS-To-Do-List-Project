@@ -46,7 +46,6 @@ class PreviewTaskViewController: UIViewController{
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
         super.viewDidLoad()
-        self.tabBarController?.title = "Preview Task"
         if self.databaseController?.currentTask != nil {
             self.task = self.databaseController?.currentTask
             self.buttonType = "current"
@@ -129,6 +128,11 @@ class PreviewTaskViewController: UIViewController{
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.tabBarController?.title = "Preview Task"
+        self.tabBarController?.navigationItem.searchController = nil
     }
     
     
