@@ -32,12 +32,13 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = true
         searchController.searchBar.placeholder = "Enter a task name"
         self.navigationItem.searchController = searchController
-
-
-
-        // Do any additional setup after loading the view.
+        filterTasks = allTasks
+//        self.tableView.tableHeaderView = searchController.searchBar
+//        self.tableView.tableHeaderView?.isHidden = true
+        
     }
     
     
@@ -62,11 +63,11 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
         // #warning Incomplete implementation, return the number of rows
         switch section {
         case 0:
-            if allTasks.count == 0 {
+            if filterTasks.count == 0 {
                 return 1
             }
             else {
-                return self.allTasks.count
+                return self.filterTasks.count
             }
         default:
             return 0
@@ -76,7 +77,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Configure and return a task cell
-        if allTasks.count == 0 {
+        if filterTasks.count == 0 {
             let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ALL_TASKS, for: indexPath)
             var content = taskCell.defaultContentConfiguration()
             content.text = "No saved tasks, tap + to create a task"
@@ -85,7 +86,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
         } else {
             let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ALL_TASKS, for: indexPath)
             var content = taskCell.defaultContentConfiguration()
-            let task = allTasks[indexPath.row]
+            let task = filterTasks[indexPath.row]
             content.text = task.taskTitle
             content.secondaryText = task.taskDescription
             taskCell.contentConfiguration = content
@@ -113,7 +114,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
-            let task = self.allTasks[indexPath.row]
+            let task = self.filterTasks[indexPath.row]
             self.databaseController?.deleteTask(task: task, taskType: "allTasks")
             completionHandler(true)
         }
@@ -128,7 +129,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
                                 section: Int) -> String? {
         switch section {
         case 0:
-            return "Number of Tasks Saved:" + String(self.allTasks.count)
+            return "Number of Tasks Saved:" + String(self.filterTasks.count)
         default:
             return ""
         }
@@ -145,16 +146,21 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text?.lowercased(), searchText.trimmingCharacters(in: .whitespaces).isEmpty == false else {
+            print(searchController.searchBar.text)
                 return
             }
+//        print(searchText.trimmingCharacters(in: .whitespaces))
+//        print(searchController.searchBar.text?.lowercased())
         if searchText.count > 0 {
             filterTasks = allTasks.filter({ (task: ToDoTask) -> Bool in
                 return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
-            
+
         } else {
             filterTasks = allTasks
-            
+
         }
+        print(searchText)
+//        self.navigationItem.searchController?.resignFirstResponder()
         tableView.reloadData()
         }
 
@@ -183,7 +189,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
             if self.selectedRows!.contains(1) == true {
                 for i in 0 ... self.selectedRows!.count - 1 {
                     if selectedRows![i] == 1 {
-                        let task = self.allTasks[i]
+                        let task = self.filterTasks[i]
                         self.databaseController?.addTask(taskTitle: task.taskTitle!, taskDescription: task.taskDescription!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!), seconds: task.seconds!, minutes: task.minutes!, hours: task.hours!)
                     }
                 }
@@ -199,9 +205,9 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
         if recognizer.state == UIGestureRecognizer.State.ended {
             let tapLocation = recognizer.location(in: self.tableView)
             if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
-                let isIndexValid = allTasks.indices.contains(tapIndexPath.row)
+                let isIndexValid = filterTasks.indices.contains(tapIndexPath.row)
                 if isIndexValid == true {
-                    self.task = self.allTasks[tapIndexPath.row]
+                    self.task = self.filterTasks[tapIndexPath.row]
                     performSegue(withIdentifier: "previewTaskSegue", sender: self)
                 }
             }
@@ -210,6 +216,12 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
         
     }
 
+    @IBAction func searchButtonAction(_ sender: Any) {
+        self.tableView.tableHeaderView?.isHidden = false
+        
+    }
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "previewTaskSegue"{
             let destination = segue.destination as! PreviewTaskViewController

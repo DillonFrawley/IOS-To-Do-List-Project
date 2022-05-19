@@ -199,6 +199,7 @@
                                         <segue destination="joh-xg-R37" kind="show" id="Y7L-NG-dqm"/>
                                     </connections>
                                 </barButtonItem>
+                                <barButtonItem style="plain" systemItem="flexibleSpace" id="c0s-cK-zgz"/>
                                 <barButtonItem title="Add Selected" id="z3p-hp-521">
                                     <color key="tintColor" systemColor="linkColor"/>
                                     <connections>
@@ -567,14 +568,11 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="v45-B4-avA" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Tab Bar" id="uAW-BN-9qg">
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="add" id="Kus-ZL-dyk">
-                                <connections>
-                                    <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="ldh-td-nS3"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Item" systemItem="search" id="VE7-4a-jkf"/>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Kus-ZL-dyk">
+                            <connections>
+                                <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="ldh-td-nS3"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YsR-Gt-pJz">
                         <autoresizingMask key="autoresizingMask"/>
@@ -591,7 +589,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Ehs-84-mhp"/>
+        <segue reference="9Em-fe-SYI"/>
         <segue reference="FGG-hF-qzp"/>
     </inferredMetricsTieBreakers>
     <resources>
