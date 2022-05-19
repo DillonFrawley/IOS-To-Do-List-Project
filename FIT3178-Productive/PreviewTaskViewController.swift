@@ -133,6 +133,7 @@ class PreviewTaskViewController: UIViewController{
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.title = "Preview Task"
         self.tabBarController?.navigationItem.searchController = nil
+        self.tabBarController?.navigationItem.rightBarButtonItem = nil
     }
     
     

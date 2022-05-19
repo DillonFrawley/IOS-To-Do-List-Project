@@ -150,6 +150,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text?.lowercased(), searchText.trimmingCharacters(in: .whitespaces).isEmpty == false else {
                 filteredTasks = allTasks
+                tableView.reloadData()
                 return
             }
         if searchText.count > 0 {
@@ -161,7 +162,6 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
 
         }
         self.tableView.reloadData()
-        self.navigationItem.titleView?.resignFirstResponder()
         }
 
 

@@ -18,8 +18,8 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     let CELL_CURRENT_TASK = "currentTaskCell"
     let CELL_COMPLETED_TASK = "completedTaskCell"
     
-    let SECTION_CURRENT_TASK = 0
-    let SECTION_COMPLETED_TASK = 1
+    var SECTION_CURRENT_TASK = 0
+    var SECTION_COMPLETED_TASK = 1
     var currentTasks: [ToDoTask] = []
     var completedTasks: [ToDoTask] = []
     var filteredCurrentTasks: [ToDoTask] = []
@@ -31,10 +31,12 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     var locationManager: CLLocationManager = CLLocationManager()
     @IBOutlet weak var datePickerOutlet: UIDatePicker!
     
+    var addButton: UIBarButtonItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        self.addButton = self.tabBarController?.navigationItem.rightBarButtonItem
         databaseController = appDelegate?.databaseController
         self.datePickerOutlet.contentHorizontalAlignment = .center
         self.tableView.allowsSelection = false
@@ -46,6 +48,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.tabBarController?.navigationItem.setRightBarButton(self.addButton, animated: true)
         databaseController?.addListener(listener: self)
         self.determineCurrentLocation()
         let searchController = UISearchController(searchResultsController: nil)
@@ -56,7 +59,6 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         self.tabBarController?.navigationItem.searchController = searchController
         searchController.searchBar.scopeButtonTitles = ["All", "Current", "Completed"]
         searchController.searchBar.showsScopeBar = true
-        searchController.searchBar.isHidden = true
         self.tabBarController?.title = "Home"
     }
     
@@ -210,6 +212,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         guard let searchText = searchController.searchBar.text?.lowercased(), searchText.trimmingCharacters(in: .whitespaces).isEmpty == false else {
                 filteredCurrentTasks = currentTasks
                 filteredCompletedTasks = completedTasks
+                tableView.reloadData()
                 return
             }
         let searchIndex = searchController.searchBar.selectedScopeButtonIndex
@@ -222,16 +225,13 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         case 1:
             filteredCurrentTasks = currentTasks.filter({ (task: ToDoTask) -> Bool in
                 return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
-            filteredCompletedTasks = []
         case 2:
-            filteredCurrentTasks = []
             filteredCompletedTasks = completedTasks.filter({ (task: ToDoTask) -> Bool in
                 return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
         default:
             return
         }
         tableView.reloadData()
-        self.navigationItem.searchController?.resignFirstResponder()
         }
     
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
