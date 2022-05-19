@@ -19,7 +19,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
     let CELL_ALL_TASKS: String = "allTasksCell"
     
     var allTasks: [ToDoTask] = []
-    var filterTasks: [ToDoTask] = []
+    var filteredTasks: [ToDoTask] = []
     var task: ToDoTask?
     var selectedRows :[Int]?
     
@@ -35,17 +35,20 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
         searchController.hidesNavigationBarDuringPresentation = true
         searchController.searchBar.placeholder = "Enter a task name"
         self.navigationItem.searchController = searchController
-        filterTasks = allTasks
-//        self.tableView.tableHeaderView = searchController.searchBar
-//        self.tableView.tableHeaderView?.isHidden = true
+        filteredTasks = allTasks
         
     }
     
-    
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("view did appear")
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         databaseController?.addListener(listener: self)
+        print("view will appear")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -63,11 +66,11 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
         // #warning Incomplete implementation, return the number of rows
         switch section {
         case 0:
-            if filterTasks.count == 0 {
+            if filteredTasks.count == 0 {
                 return 1
             }
             else {
-                return self.filterTasks.count
+                return self.filteredTasks.count
             }
         default:
             return 0
@@ -77,7 +80,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Configure and return a task cell
-        if filterTasks.count == 0 {
+        if allTasks.count == 0 {
             let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ALL_TASKS, for: indexPath)
             var content = taskCell.defaultContentConfiguration()
             content.text = "No saved tasks, tap + to create a task"
@@ -86,9 +89,11 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
         } else {
             let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ALL_TASKS, for: indexPath)
             var content = taskCell.defaultContentConfiguration()
-            let task = filterTasks[indexPath.row]
-            content.text = task.taskTitle
-            content.secondaryText = task.taskDescription
+            if filteredTasks.count > 0 {
+                let task = filteredTasks[indexPath.row]
+                content.text = task.taskTitle
+                content.secondaryText = task.taskDescription
+            }
             taskCell.contentConfiguration = content
             return taskCell
         }
@@ -114,7 +119,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
-            let task = self.filterTasks[indexPath.row]
+            let task = self.filteredTasks[indexPath.row]
             self.databaseController?.deleteTask(task: task, taskType: "allTasks")
             completionHandler(true)
         }
@@ -129,7 +134,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
                                 section: Int) -> String? {
         switch section {
         case 0:
-            return "Number of Tasks Saved:" + String(self.filterTasks.count)
+            return "Number of Tasks Saved:" + String(self.filteredTasks.count)
         default:
             return ""
         }
@@ -146,25 +151,22 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text?.lowercased(), searchText.trimmingCharacters(in: .whitespaces).isEmpty == false else {
-            print(searchController.searchBar.text)
+                filteredTasks = allTasks
                 return
             }
-//        print(searchText.trimmingCharacters(in: .whitespaces))
-//        print(searchController.searchBar.text?.lowercased())
         if searchText.count > 0 {
-            filterTasks = allTasks.filter({ (task: ToDoTask) -> Bool in
+            filteredTasks = allTasks.filter({ (task: ToDoTask) -> Bool in
                 return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
 
         } else {
-            filterTasks = allTasks
+            filteredTasks = allTasks
 
         }
-        print(searchText)
-//        self.navigationItem.searchController?.resignFirstResponder()
-        tableView.reloadData()
+        self.tableView.reloadData()
         }
 
 
+    
     
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
         //
@@ -176,6 +178,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
         for _ in 0 ... self.allTasks.count - 1 {
             self.selectedRows?.append(0)
         }
+        filteredTasks = allTasks
         tableView.reloadData()
     }
     
@@ -189,7 +192,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
             if self.selectedRows!.contains(1) == true {
                 for i in 0 ... self.selectedRows!.count - 1 {
                     if selectedRows![i] == 1 {
-                        let task = self.filterTasks[i]
+                        let task = self.filteredTasks[i]
                         self.databaseController?.addTask(taskTitle: task.taskTitle!, taskDescription: task.taskDescription!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!), seconds: task.seconds!, minutes: task.minutes!, hours: task.hours!)
                     }
                 }
@@ -205,9 +208,9 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
         if recognizer.state == UIGestureRecognizer.State.ended {
             let tapLocation = recognizer.location(in: self.tableView)
             if let tapIndexPath = self.tableView.indexPathForRow(at: tapLocation) {
-                let isIndexValid = filterTasks.indices.contains(tapIndexPath.row)
+                let isIndexValid = filteredTasks.indices.contains(tapIndexPath.row)
                 if isIndexValid == true {
-                    self.task = self.filterTasks[tapIndexPath.row]
+                    self.task = self.filteredTasks[tapIndexPath.row]
                     performSegue(withIdentifier: "previewTaskSegue", sender: self)
                 }
             }
