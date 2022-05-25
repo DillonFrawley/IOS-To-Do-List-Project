@@ -31,35 +31,32 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     var locationManager: CLLocationManager = CLLocationManager()
     @IBOutlet weak var datePickerOutlet: UIDatePicker!
     
-    var addButton: UIBarButtonItem?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        self.addButton = self.tabBarController?.navigationItem.rightBarButtonItem
         databaseController = appDelegate?.databaseController
         self.datePickerOutlet.contentHorizontalAlignment = .center
         self.tableView.allowsSelection = false
-        self.tabBarController?.title = "Home"
-        self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
+        self.title = "Home"
+        self.navigationItem.setHidesBackButton(true, animated: true)
         filteredCurrentTasks = currentTasks
         filteredCompletedTasks = completedTasks
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.placeholder = "Enter a task name"
+        self.navigationItem.searchController = searchController
+        searchController.searchBar.scopeButtonTitles = ["All", "Current", "Completed"]
+        searchController.searchBar.showsScopeBar = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.tabBarController?.navigationItem.setRightBarButton(self.addButton, animated: true)
         databaseController?.addListener(listener: self)
         self.determineCurrentLocation()
-        let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.searchBar.placeholder = "Enter a task name"
-        self.tabBarController?.navigationItem.searchController = searchController
-        searchController.searchBar.scopeButtonTitles = ["All", "Current", "Completed"]
-        searchController.searchBar.showsScopeBar = true
-        self.tabBarController?.title = "Home"
+        self.navigationItem.hidesSearchBarWhenScrolling = false
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -70,11 +67,40 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    
+        self.navigationItem.hidesSearchBarWhenScrolling = true
+        
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 2
+        if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0 {
+            if filteredCurrentTasks.count > 0 || filteredCompletedTasks.count > 0 {
+                if filteredCurrentTasks.count > 0 && filteredCompletedTasks.count > 0{
+                    return 2
+                } else {
+                    return 1
+                }
+            }
+            else {
+                return 0
+                }
+        } else {
+            if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
+                if filteredCurrentTasks.count > 0 {
+                    return 1
+                }
+                else {
+                    return 0
+                }
+            }
+            else {
+                if filteredCompletedTasks.count > 0 {
+                    return 1
+                }
+                else {
+                    return 0
+                }
+            }
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -101,47 +127,90 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // Configure and return a task cell
-        if indexPath.section == SECTION_CURRENT_TASK {
-            if self.currentTasks.count == 0 {
-                let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
-                var content = taskCell.defaultContentConfiguration()
-                content.text = "No current tasks, tap the + icon to add a task"
-                taskCell.contentConfiguration = content
-                taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
-                return taskCell
-            } else {
-                
-                let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
-                var content = taskCell.defaultContentConfiguration()
-                if filteredCurrentTasks.count > 0 {
-                    let task = filteredCurrentTasks[indexPath.row]
-                    content.text = task.taskTitle
-                    content.secondaryText = task.taskDescription
+        if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0  {
+            if indexPath.section == SECTION_CURRENT_TASK {
+                if self.currentTasks.count == 0 {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    content.text = "No current tasks, tap the + icon to add a task"
+                    taskCell.contentConfiguration = content
+                    taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
+                    return taskCell
+                } else {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    if filteredCurrentTasks.count > 0 {
+                        let task = filteredCurrentTasks[indexPath.row]
+                        content.text = task.taskTitle
+                        content.secondaryText = task.taskDescription
+                    }
+                    taskCell.contentConfiguration = content
+                    return taskCell
                 }
-                taskCell.contentConfiguration = content
-                return taskCell
+            }
+            else {
+                if self.completedTasks.count == 0 {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    content.text = "No completed tasks, swipe right on a task to complete a task"
+                    taskCell.contentConfiguration = content
+                    taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
+                    return taskCell
+                }
+                else {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    if filteredCompletedTasks.count > 0 {
+                        let task = filteredCompletedTasks[indexPath.row]
+                        content.text = task.taskTitle
+                        content.secondaryText = task.taskDescription
+                    }
+                    taskCell.contentConfiguration = content
+                    return taskCell
+                }
             }
         }
         else {
-            if self.completedTasks.count == 0 {
-                let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
-                var content = taskCell.defaultContentConfiguration()
-                content.text = "No completed tasks, swipe right on a task to complete a task"
-                taskCell.contentConfiguration = content
-                taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
-                return taskCell
+            if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
+                if self.currentTasks.count == 0 {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    content.text = "No current tasks, tap the + icon to add a task"
+                    taskCell.contentConfiguration = content
+                    taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
+                    return taskCell
+                } else {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    if filteredCurrentTasks.count > 0 {
+                        let task = filteredCurrentTasks[indexPath.row]
+                        content.text = task.taskTitle
+                        content.secondaryText = task.taskDescription
+                    }
+                    taskCell.contentConfiguration = content
+                    return taskCell
+                }
             }
             else {
-                let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
-                var content = taskCell.defaultContentConfiguration()
-                if filteredCompletedTasks.count > 0 {
-                    let task = filteredCompletedTasks[indexPath.row]
-                    content.text = task.taskTitle
-                    content.secondaryText = task.taskDescription
+                if self.completedTasks.count == 0 {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    content.text = "No completed tasks, swipe right on a task to complete a task"
+                    taskCell.contentConfiguration = content
+                    taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
+                    return taskCell
                 }
-                taskCell.contentConfiguration = content
-                return taskCell
+                else {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    if filteredCompletedTasks.count > 0 {
+                        let task = filteredCompletedTasks[indexPath.row]
+                        content.text = task.taskTitle
+                        content.secondaryText = task.taskDescription
+                    }
+                    taskCell.contentConfiguration = content
+                    return taskCell
+                }
             }
         }
     }
@@ -170,17 +239,30 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     }
 
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if indexPath.section == SECTION_CURRENT_TASK && filteredCurrentTasks.count > 0 {
-            let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
-                let task = self.filteredCurrentTasks[indexPath.row]
-                self.databaseController?.deleteTask(task: task, taskType: "current")
-                completionHandler(true)
+        if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0  {
+            if indexPath.section == SECTION_CURRENT_TASK && filteredCurrentTasks.count > 0 {
+                let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+                    let task = self.filteredCurrentTasks[indexPath.row]
+                    self.databaseController?.deleteTask(task: task, taskType: "current")
+                    completionHandler(true)
+                }
+                action.backgroundColor = .systemRed
+                return UISwipeActionsConfiguration(actions: [action])
             }
-            action.backgroundColor = .systemRed
-            return UISwipeActionsConfiguration(actions: [action])
         }
+        else if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
+                if filteredCurrentTasks.count > 0 {
+                    let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+                        let task = self.filteredCurrentTasks[indexPath.row]
+                        self.databaseController?.deleteTask(task: task, taskType: "current")
+                        completionHandler(true)
+                    }
+                    action.backgroundColor = .systemRed
+                    return UISwipeActionsConfiguration(actions: [action])
+                }
+            }
         else {
-            if indexPath.section == SECTION_COMPLETED_TASK && filteredCompletedTasks.count > 0{
+            if filteredCompletedTasks.count > 0 {
                 let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
                     let task = self.filteredCompletedTasks[indexPath.row]
                     self.databaseController?.deleteTask(task: task, taskType: "completed")
@@ -198,7 +280,17 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                                 section: Int) -> String? {
         switch section {
         case 0:
-            return "Current Tasks:" + String(self.filteredCurrentTasks.count)
+            if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0  {
+                return "Current Tasks:" + String(self.filteredCurrentTasks.count)
+            }
+            else {
+                if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
+                    return "Current Tasks:" + String(self.filteredCurrentTasks.count)
+                }
+                else {
+                    return "Completed Tasks:" + String(self.filteredCompletedTasks.count)
+                }
+            }
         case 1:
             return "Completed Tasks:" + String(self.filteredCompletedTasks.count)
         default:
@@ -225,9 +317,11 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         case 1:
             filteredCurrentTasks = currentTasks.filter({ (task: ToDoTask) -> Bool in
                 return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
+            filteredCompletedTasks = []
         case 2:
             filteredCompletedTasks = completedTasks.filter({ (task: ToDoTask) -> Bool in
                 return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
+            filteredCurrentTasks = []
         default:
             return
         }
@@ -292,12 +386,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                     let isIndexValid = filteredCurrentTasks.indices.contains(tapIndexPath.row)
                     if isIndexValid == true {
                         self.task = filteredCurrentTasks[tapIndexPath.row]
-                        if self.task?.id != self.databaseController?.currentTask?.id {
-                            performSegue(withIdentifier: "previewTaskSegue", sender: self)
-                        }
-                        else {
-                            self.tabBarController?.selectedIndex = 1
-                        }
+                        performSegue(withIdentifier: "previewTaskSegue", sender: self)
                         
                     }
                 case 1:
@@ -319,24 +408,28 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if self.task != self.databaseController?.currentTask {
-            if segue.identifier == "previewTaskSegue"{
-                let destination = segue.destination as! PreviewTaskViewController
-                destination.task = self.task
-                destination.delegate = self
-                if self.tappedTask == 1 {
-                    destination.buttonType = "complete"
-                }
-                else {
+        if segue.identifier == "previewTaskSegue"{
+            let destination = segue.destination as! PreviewTaskViewController
+            destination.task = self.task
+            destination.delegate = self
+            if self.tappedTask == 1 {
+                destination.buttonType = "complete"
+            }
+            else {
+                if self.task != databaseController?.currentTask {
                     destination.buttonType = "start"
                 }
-                if task?.latitude != nil && task?.longitude != nil {
-                    destination.coordinate = CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!)
-                    
+                else {
+                    destination.buttonType = "current"
                 }
+            }
+            if task?.latitude != nil && task?.longitude != nil {
+                destination.coordinate = CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!)
+                
             }
         }
     }
+
 
 
 

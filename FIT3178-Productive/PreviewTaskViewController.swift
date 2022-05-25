@@ -46,30 +46,12 @@ class PreviewTaskViewController: UIViewController{
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         databaseController = appDelegate?.databaseController
         super.viewDidLoad()
-        if self.databaseController?.currentTask != nil {
-            self.task = self.databaseController?.currentTask
-            self.buttonType = "current"
-            self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
-        }
- 
+
         self.realTaskTitleLabel.text = self.task?.taskTitle
         self.realTaskDescriptionLabel.text = self.task?.taskDescription
         self.seconds = task?.seconds
         self.minutes = task?.minutes
         self.hours = task?.hours
-        if self.buttonType == nil && self.databaseController?.currentTask == nil {
-            self.completeAddButtonOutlet.isHidden = true
-            self.stackViewOutlet.isHidden = true
-            self.realTaskTitleLabel.isHidden = true
-            self.realTaskDescriptionLabel.isHidden = true
-            self.completeAddButtonOutlet.isHidden = true
-            self.showLocationButton.isHidden = true
-            self.taskDescriptionLabel.isHidden = true
-            self.timeLabel.isHidden = true
-            self.taskNameLabel.text = "No current task, please add a task to start"
-            self.navigationController?.navigationItem.rightBarButtonItem = nil
-            self.tabBarController?.navigationItem.setHidesBackButton(true, animated: true)
-        }
 
         if self.buttonType == "complete" {
             self.stackViewOutlet.isHidden = true
@@ -203,6 +185,8 @@ class PreviewTaskViewController: UIViewController{
                 taskType = "current"
             case "add":
                 taskType = "allTasks"
+            case "start":
+                taskType = "current"
             default:
                 return
             }

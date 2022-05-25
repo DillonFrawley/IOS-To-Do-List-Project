@@ -83,7 +83,7 @@
                     <connections>
                         <outlet property="emailTextField" destination="pMa-FY-bEa" id="51B-KF-lZY"/>
                         <outlet property="passwordTextField" destination="UhF-5j-gIg" id="MPn-ec-uVl"/>
-                        <segue destination="v45-B4-avA" kind="show" identifier="authSegue" id="dXD-i1-6yp"/>
+                        <segue destination="def-j2-WEV" kind="show" identifier="authSegue" id="a5U-3G-JuO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NfB-ma-yYp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -166,7 +166,11 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Home" image="homekit" catalog="system" id="KlS-SO-ht2"/>
                     <navigationItem key="navigationItem" title="Home" id="Reb-wm-1gO">
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="L1g-0X-bVI"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="L1g-0X-bVI">
+                            <connections>
+                                <segue destination="rty-TX-fVm" kind="show" id="Mg1-0L-ZDQ"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="datePickerOutlet" destination="Xr0-Ed-lvs" id="QtW-Oq-ie4"/>
@@ -180,7 +184,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2542.0289855072465" y="79.6875"/>
+            <point key="canvasLocation" x="1674" y="80"/>
         </scene>
         <!--All Tasks-->
         <scene sceneID="xuY-SG-XXr">
@@ -254,7 +258,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2545" y="811"/>
+            <point key="canvasLocation" x="1674" y="800"/>
         </scene>
         <!--Create Task-->
         <scene sceneID="3F2-n6-j9K">
@@ -357,7 +361,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3813.04347826087" y="799.55357142857144"/>
+            <point key="canvasLocation" x="2693" y="800"/>
         </scene>
         <!--Map-->
         <scene sceneID="G5b-v8-fJV">
@@ -392,7 +396,7 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4828.985507246377" y="79.6875"/>
+            <point key="canvasLocation" x="3652" y="80"/>
         </scene>
         <!--Task Preview-->
         <scene sceneID="lOk-DW-Izc">
@@ -541,7 +545,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3547.826086956522" y="79.6875"/>
+            <point key="canvasLocation" x="2693" y="80"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="JlF-fB-PIA">
@@ -564,36 +568,10 @@
             </objects>
             <point key="canvasLocation" x="-258" y="80"/>
         </scene>
-        <!--Home-->
-        <scene sceneID="fR1-v1-EQ6">
-            <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="v45-B4-avA" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Home" id="uAW-BN-9qg">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Kus-ZL-dyk">
-                            <connections>
-                                <segue destination="rty-TX-fVm" kind="show" identifier="allTasksSegue" id="ldh-td-nS3"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YsR-Gt-pJz">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="def-j2-WEV" kind="relationship" relationship="viewControllers" id="OUK-O1-xL3"/>
-                        <segue destination="JaT-p4-Sps" kind="relationship" relationship="viewControllers" id="sie-4e-lFC"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pEI-x8-m0C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1631.8840579710147" y="79.6875"/>
-        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="9Em-fe-SYI"/>
-        <segue reference="FGG-hF-qzp"/>
+        <segue reference="Ehs-84-mhp"/>
+        <segue reference="DWb-rG-Isu"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="homekit" catalog="system" width="128" height="106"/>

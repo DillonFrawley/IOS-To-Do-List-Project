@@ -42,6 +42,8 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -215,11 +217,6 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
             }
         }
         
-        
-    }
-
-    @IBAction func searchButtonAction(_ sender: Any) {
-        self.tableView.tableHeaderView?.isHidden = false
         
     }
     
