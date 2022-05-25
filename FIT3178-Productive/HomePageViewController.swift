@@ -137,61 +137,89 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0  {
             if indexPath.section == 0 {
                 if self.activeTasks.count == 0 {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ACTIVE_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
-                    content.text = "No active tasks"
-                    taskCell.contentConfiguration = content
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
+                    taskCell.taskTitleOutlet.text = "No active tasks"
+                    taskCell.imageViewOutlet.isHidden = true
+                    taskCell.taskDescriptionOutlet.isHidden = true
+                    taskCell.timeLabelOutlet.isHidden = true
                     taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
                     return taskCell
                 } else {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ACTIVE_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
                     if filteredActiveTasks.count > 0 {
                         let task = filteredActiveTasks[indexPath.row]
-                        content.text = task.taskTitle
-                        content.secondaryText = task.taskDescription
+                        taskCell.imageViewOutlet = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        
+                        taskCell.taskTitleOutlet = task.taskTitle
+                        taskCell.taskDescriptionOutlet = task.taskDescription
+                        if task.hours! == 0 {
+                            if task.minutes! == 0 {
+                                taskCell.timeLabelOutlet.text = String(self.seconds!) + "s"
+                            }
+                            else {
+                                taskCell.timeLabelOutlet.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                            }
+                        }
+                        else {
+                            taskCell.timeLabelOutlet.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                        }
                     }
                     else {
-                        content.text = "No search results found"
+                        taskCell.taskTitleOutlet.text = "No search results found"
+                        taskCell.imageViewOutlet.isHidden = true
+                        taskCell.taskDescriptionOutlet.isHidden = true
+                        taskCell.timeLabelOutlet.isHidden = true
                     }
-                    taskCell.contentConfiguration = content
                     return taskCell
                 }
             }
             else if indexPath.section == 1 {
                 if self.currentTasks.count == 0 {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
-                    content.text = "No current tasks, tap the + icon to add a task"
-                    taskCell.contentConfiguration = content
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
+                    taskCell.taskTitleOutlet.text = "No current tasks, tap the + to add a task"
+                    taskCell.imageViewOutlet.isHidden = true
+                    taskCell.taskDescriptionOutlet.isHidden = true
                     taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
                     return taskCell
                 } else {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
                     if filteredCurrentTasks.count > 0 {
                         let task = filteredCurrentTasks[indexPath.row]
-                        content.text = task.taskTitle
-                        content.secondaryText = task.taskDescription
+                        taskCell.imageViewOutlet = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        taskCell.taskTitleOutlet = task.taskTitle
+                        taskCell.taskDescriptionOutlet = task.taskDescription
+                        if task.hours! == 0 {
+                            if task.minutes! == 0 {
+                                taskCell.timeLabelOutlet.text = String(self.seconds!) + "s"
+                            }
+                            else {
+                                taskCell.timeLabelOutlet.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                            }
+                        }
+                        else {
+                            taskCell.timeLabelOutlet.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                        }
+                } else {
+                    taskCell.taskTitleOutlet.text = "No search results found"
+                    taskCell.imageViewOutlet.isHidden = true
+                    taskCell.taskDescriptionOutlet.isHidden = true
+                    taskCell.timeLabelOutlet.isHidden = true
                     }
-                    else {
-                        content.text = "No search results found"
-                    }
-                    taskCell.contentConfiguration = content
-                    return taskCell
+                return taskCell
                 }
             }
             else {
                 if self.completedTasks.count == 0 {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
-                    content.text = "No completed tasks, swipe right on a task to complete a task"
-                    taskCell.contentConfiguration = content
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
+                    taskCell.taskTitleOutlet.text = "No completed tasks, swipe right on a task to complete a task"
+                    taskCell.imageViewOutlet.isHidden = true
+                    taskCell.taskDescriptionOutlet.isHidden = true
                     taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
                     return taskCell
+                    
                 }
                 else {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath)
                     var content = taskCell.defaultContentConfiguration()
                     if filteredCompletedTasks.count > 0 {
                         let task = filteredCompletedTasks[indexPath.row]
@@ -209,70 +237,114 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         else {
             if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
                 if self.activeTasks.count == 0 {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ACTIVE_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
-                    content.text = "No active tasks"
-                    taskCell.contentConfiguration = content
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
+                    taskCell.taskTitleOutlet.text = "No active tasks"
+                    taskCell.imageViewOutlet.isHidden = true
+                    taskCell.taskDescriptionOutlet.isHidden = true
+                    taskCell.timeLabelOutlet.isHidden = true
                     taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
                     return taskCell
                 } else {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ACTIVE_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
                     if filteredActiveTasks.count > 0 {
                         let task = filteredActiveTasks[indexPath.row]
-                        content.text = task.taskTitle
-                        content.secondaryText = task.taskDescription
+                        taskCell.imageViewOutlet = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        
+                        taskCell.taskTitleOutlet = task.taskTitle
+                        taskCell.taskDescriptionOutlet = task.taskDescription
+                        if task.hours! == 0 {
+                            if task.minutes! == 0 {
+                                taskCell.timeLabelOutlet.text = String(self.seconds!) + "s"
+                            }
+                            else {
+                                taskCell.timeLabelOutlet.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                            }
+                        }
+                        else {
+                            taskCell.timeLabelOutlet.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                        }
                     }
                     else {
-                        content.text = "No search results found"
+                        taskCell.taskTitleOutlet.text = "No search results found"
+                        taskCell.imageViewOutlet.isHidden = true
+                        taskCell.taskDescriptionOutlet.isHidden = true
+                        taskCell.timeLabelOutlet.isHidden = true
                     }
-                    taskCell.contentConfiguration = content
                     return taskCell
                 }
             }
             else if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 2 {
                 if self.currentTasks.count == 0 {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
-                    content.text = "No current tasks, tap the + icon to add a task"
-                    taskCell.contentConfiguration = content
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
+                    taskCell.taskTitleOutlet.text = "No current tasks, tap the + to add a task"
+                    taskCell.imageViewOutlet.isHidden = true
+                    taskCell.taskDescriptionOutlet.isHidden = true
                     taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
                     return taskCell
                 } else {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
-                    if filteredCurrentTasks.count > 0 {
-                        let task = filteredCurrentTasks[indexPath.row]
-                        content.text = task.taskTitle
-                        content.secondaryText = task.taskDescription
-                    } else {
-                        content.text = "No search results found"
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
+                    if filteredCompletedTasks.count > 0 {
+                        let task = filteredCompletedTasks[indexPath.row]
+                        taskCell.imageViewOutlet = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        
+                        taskCell.taskTitleOutlet = task.taskTitle
+                        taskCell.taskDescriptionOutlet = task.taskDescription
+                        if task.hours! == 0 {
+                            if task.minutes! == 0 {
+                                taskCell.timeLabelOutlet.text = String(self.seconds!) + "s"
+                            }
+                            else {
+                                taskCell.timeLabelOutlet.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                            }
+                        }
+                        else {
+                            taskCell.timeLabelOutlet.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                        }
                     }
-                    taskCell.contentConfiguration = content
+                    else {
+                        taskCell.taskTitleOutlet.text = "No search results found"
+                        taskCell.imageViewOutlet.isHidden = true
+                        taskCell.taskDescriptionOutlet.isHidden = true
+                        taskCell.timeLabelOutlet.isHidden = true
+                    }
                     return taskCell
                 }
             }
             else {
                 if self.completedTasks.count == 0 {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
-                    content.text = "No completed tasks, swipe right on a task to complete a task"
-                    taskCell.contentConfiguration = content
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
+                    taskCell.taskTitleOutlet.text = "No completed tasks, swipe right on a task to complete a task"
+                    taskCell.imageViewOutlet.isHidden = true
+                    taskCell.taskDescriptionOutlet.isHidden = true
                     taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
                     return taskCell
                 }
                 else {
-                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_COMPLETED_TASK, for: indexPath)
-                    var content = taskCell.defaultContentConfiguration()
-                    if filteredCompletedTasks.count > 0 {
-                        let task = filteredCompletedTasks[indexPath.row]
-                        content.text = task.taskTitle
-                        content.secondaryText = task.taskDescription
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
+                    if filteredActiveTasks.count > 0 {
+                        let task = filteredActiveTasks[indexPath.row]
+                        taskCell.imageViewOutlet = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        
+                        taskCell.taskTitleOutlet = task.taskTitle
+                        taskCell.taskDescriptionOutlet = task.taskDescription
+                        if task.hours! == 0 {
+                            if task.minutes! == 0 {
+                                taskCell.timeLabelOutlet.text = String(self.seconds!) + "s"
+                            }
+                            else {
+                                taskCell.timeLabelOutlet.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                            }
+                        }
+                        else {
+                            taskCell.timeLabelOutlet.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                        }
                     }
                     else {
-                        content.text = "No search results found"
+                        taskCell.taskTitleOutlet.text = "No search results found"
+                        taskCell.imageViewOutlet.isHidden = true
+                        taskCell.taskDescriptionOutlet.isHidden = true
+                        taskCell.timeLabelOutlet.isHidden = true
                     }
-                    taskCell.contentConfiguration = content
                     return taskCell
                 }
             }
