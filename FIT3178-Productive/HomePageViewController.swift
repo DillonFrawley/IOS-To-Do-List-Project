@@ -148,20 +148,20 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                     let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
                     if filteredActiveTasks.count > 0 {
                         let task = filteredActiveTasks[indexPath.row]
-                        taskCell.imageViewOutlet = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        taskCell.imageViewOutlet.image = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
                         
-                        taskCell.taskTitleOutlet = task.taskTitle
-                        taskCell.taskDescriptionOutlet = task.taskDescription
+                        taskCell.taskTitleOutlet.text = task.taskTitle
+                        taskCell.taskDescriptionOutlet.text = task.taskDescription
                         if task.hours! == 0 {
                             if task.minutes! == 0 {
-                                taskCell.timeLabelOutlet.text = String(self.seconds!) + "s"
+                                taskCell.timeLabelOutlet.text = String(task.seconds!) + "s"
                             }
                             else {
-                                taskCell.timeLabelOutlet.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                                taskCell.timeLabelOutlet.text = String(task.minutes!) + "m :" + String(task.seconds!) + "s"
                             }
                         }
                         else {
-                            taskCell.timeLabelOutlet.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                            taskCell.timeLabelOutlet.text = String(task.hours!) + "h :" + String(task.minutes!) + "m :" + String(task.seconds!) + "s"
                         }
                     }
                     else {
@@ -185,19 +185,19 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                     let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
                     if filteredCurrentTasks.count > 0 {
                         let task = filteredCurrentTasks[indexPath.row]
-                        taskCell.imageViewOutlet = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
-                        taskCell.taskTitleOutlet = task.taskTitle
-                        taskCell.taskDescriptionOutlet = task.taskDescription
+                        taskCell.imageViewOutlet.image = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        taskCell.taskTitleOutlet.text = task.taskTitle
+                        taskCell.taskDescriptionOutlet.text = task.taskDescription
                         if task.hours! == 0 {
                             if task.minutes! == 0 {
-                                taskCell.timeLabelOutlet.text = String(self.seconds!) + "s"
+                                taskCell.timeLabelOutlet.text = String(task.seconds!) + "s"
                             }
                             else {
-                                taskCell.timeLabelOutlet.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                                taskCell.timeLabelOutlet.text = String(task.minutes!) + "m :" + String(task.seconds!) + "s"
                             }
                         }
                         else {
-                            taskCell.timeLabelOutlet.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                            taskCell.timeLabelOutlet.text = String(task.hours!) + "h :" + String(task.minutes!) + "m :" + String(task.seconds!) + "s"
                         }
                 } else {
                     taskCell.taskTitleOutlet.text = "No search results found"
@@ -248,20 +248,20 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                     let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
                     if filteredActiveTasks.count > 0 {
                         let task = filteredActiveTasks[indexPath.row]
-                        taskCell.imageViewOutlet = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        taskCell.imageViewOutlet.image = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
                         
-                        taskCell.taskTitleOutlet = task.taskTitle
-                        taskCell.taskDescriptionOutlet = task.taskDescription
+                        taskCell.taskTitleOutlet.text = task.taskTitle
+                        taskCell.taskDescriptionOutlet.text = task.taskDescription
                         if task.hours! == 0 {
                             if task.minutes! == 0 {
-                                taskCell.timeLabelOutlet.text = String(self.seconds!) + "s"
+                                taskCell.timeLabelOutlet.text = String(task.seconds!) + "s"
                             }
                             else {
-                                taskCell.timeLabelOutlet.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                                taskCell.timeLabelOutlet.text = String(task.minutes!) + "m :" + String(task.seconds!) + "s"
                             }
                         }
                         else {
-                            taskCell.timeLabelOutlet.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                            taskCell.timeLabelOutlet.text = String(task.hours!) + "h :" + String(task.minutes!) + "m :" + String(task.seconds!) + "s"
                         }
                     }
                     else {
@@ -285,20 +285,20 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                     let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
                     if filteredCompletedTasks.count > 0 {
                         let task = filteredCompletedTasks[indexPath.row]
-                        taskCell.imageViewOutlet = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        taskCell.imageViewOutlet.image = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
                         
-                        taskCell.taskTitleOutlet = task.taskTitle
-                        taskCell.taskDescriptionOutlet = task.taskDescription
+                        taskCell.taskTitleOutlet.text = task.taskTitle
+                        taskCell.taskDescriptionOutlet.text = task.taskDescription
                         if task.hours! == 0 {
                             if task.minutes! == 0 {
-                                taskCell.timeLabelOutlet.text = String(self.seconds!) + "s"
+                                taskCell.timeLabelOutlet.text = String(task.seconds!) + "s"
                             }
                             else {
-                                taskCell.timeLabelOutlet.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                                taskCell.timeLabelOutlet.text = String(task.minutes!) + "m :" + String(task.seconds!) + "s"
                             }
                         }
                         else {
-                            taskCell.timeLabelOutlet.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                            taskCell.timeLabelOutlet.text = String(task.hours!) + "h :" + String(task.minutes!) + "m :" + String(task.seconds!) + "s"
                         }
                     }
                     else {
@@ -323,20 +323,20 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                     let taskCell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! ToDoTaskCell
                     if filteredActiveTasks.count > 0 {
                         let task = filteredActiveTasks[indexPath.row]
-                        taskCell.imageViewOutlet = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
+                        taskCell.imageViewOutlet.image = UIImage(systemName: "arrow.triangle.2.circlepath.circle.fill")
                         
-                        taskCell.taskTitleOutlet = task.taskTitle
-                        taskCell.taskDescriptionOutlet = task.taskDescription
+                        taskCell.taskTitleOutlet.text = task.taskTitle
+                        taskCell.taskDescriptionOutlet.text = task.taskDescription
                         if task.hours! == 0 {
                             if task.minutes! == 0 {
-                                taskCell.timeLabelOutlet.text = String(self.seconds!) + "s"
+                                taskCell.timeLabelOutlet.text = String(task.seconds!) + "s"
                             }
                             else {
-                                taskCell.timeLabelOutlet.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                                taskCell.timeLabelOutlet.text = String(task.minutes!) + "m :" + String(task.seconds!) + "s"
                             }
                         }
                         else {
-                            taskCell.timeLabelOutlet.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                            taskCell.timeLabelOutlet.text = String(task.hours!) + "h :" + String(task.minutes!) + "m :" + String(task.seconds!) + "s"
                         }
                     }
                     else {
