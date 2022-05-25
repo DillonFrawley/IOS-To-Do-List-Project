@@ -17,6 +17,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var allTaskList: [ToDoTask]
     var currentTasks: [ToDoTask]
     var completedTasks: [ToDoTask]
+    var activeTasks: [ToDoTask]
     
     lazy var authController: Auth = {
         return Auth.auth()
@@ -27,13 +28,13 @@ class FirebaseController: NSObject, DatabaseProtocol {
     var allTasksRef: CollectionReference?
     var currentTaskRef: CollectionReference?
     var completedTaskRef: CollectionReference?
+    var activeTaskRef: CollectionReference?
     var taskRef: CollectionReference?
     var currentUser: FirebaseAuth.User?
     var currentDate: String?
     var userID: String?
     
     var currentLocation: CLLocationCoordinate2D?
-    var currentTask: ToDoTask?
     
     
     override init() {
@@ -42,6 +43,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         allTaskList = [ToDoTask]()
         currentTasks = [ToDoTask]()
         completedTasks = [ToDoTask]()
+        activeTasks = [ToDoTask]()
         if self.currentDate == nil {
             let date = Date()
             let dateFormatter = DateFormatter()
@@ -65,7 +67,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     func addListener(listener: DatabaseListener) {
         listeners.addDelegate(listener)
         if listener.listenerType == ListenerType.currentAndCompletedTasks{
-            listener.onTaskChange(change: .update, currentTasks: self.currentTasks, completedTasks: self.completedTasks)
+            listener.onTaskChange(change: .update, currentTasks: self.currentTasks, completedTasks: self.completedTasks, activeTasks: self.activeTasks)
         }
         else if listener.listenerType == .allTasks {
             listener.onAllTaskChange(change: .update, allTasks: allTaskList)
@@ -117,6 +119,15 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 print("Failed to serialize task")
             }
         }
+        else if taskType == "active" {
+            do {
+                if let taskRef = try self.activeTaskRef?.addDocument(from: task) {
+                    task.id = taskRef.documentID
+                }
+            } catch {
+                print("Failed to serialize task")
+            }
+        }
     }
     
     func updateTask(taskId: String, taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?, seconds: Int, minutes: Int, hours: Int) {
@@ -142,6 +153,17 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 "hours": hours
                 ])
         }
+        else if taskType == "active" {
+            self.activeTaskRef?.document(taskId).updateData([
+                "taskTitle": taskTitle,
+                "taskDescription": taskDescription,
+                "longitude": coordinate?.longitude,
+                "latitude" : coordinate?.latitude,
+                "seconds": seconds,
+                "minutes": minutes,
+                "hours": hours
+                ])
+        }
     }
     
     func deleteTask(task: ToDoTask, taskType: String) {
@@ -158,6 +180,11 @@ class FirebaseController: NSObject, DatabaseProtocol {
         else if taskType == "completed" {
             if let taskID = task.id {
                 self.completedTaskRef?.document(taskID).delete()
+            }
+        }
+        else if taskType == "active" {
+            if let taskID = task.id {
+                self.activeTaskRef?.document(taskID).delete()
             }
         }
         
@@ -214,9 +241,11 @@ class FirebaseController: NSObject, DatabaseProtocol {
     func setupTaskListener() {
         currentTasks = [ToDoTask]()
         completedTasks = [ToDoTask]()
+        activeTasks = [ToDoTask]()
         self.dateRef = self.usersRef?.document((self.userID)!).collection("SelectedDate")
         self.currentTaskRef = self.dateRef?.document((self.currentDate)!).collection("currentTasks")
         self.completedTaskRef = self.dateRef?.document((self.currentDate)!).collection("completedTasks")
+        self.activeTaskRef = self.dateRef?.document((self.currentDate)!).collection("activeTasks")
         
         currentTaskRef?.addSnapshotListener() { (querySnapshot, error) in
             guard let querySnapshot = querySnapshot else {
@@ -231,6 +260,13 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 return
             }
             self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "completed")
+        }
+        completedTaskRef?.addSnapshotListener() { (querySnapshot, error) in
+            guard let querySnapshot = querySnapshot else {
+                print("Failed to fetch documents with error: \(String(describing: error))")
+                return
+            }
+            self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "active")
         }
     }
 
@@ -291,10 +327,37 @@ class FirebaseController: NSObject, DatabaseProtocol {
                     }
                 }
         }
+        else if taskType == "active" {
+            snapshot.documentChanges.forEach { (change) in
+                var parsedTask: ToDoTask?
+        
+                do {
+                    parsedTask = try change.document.data(as: ToDoTask.self)
+                } catch {
+                    print("Unable to decode task")
+                    return
+                }
+                
+                guard let task = parsedTask else {
+                    print("Document doesn't exist")
+                    return
+                }
+                
+                if change.type == .added {
+                    activeTasks.insert(task, at: Int(change.newIndex))
+                }
+                else if change.type == .modified {
+                    activeTasks[Int(change.oldIndex)] = task
+                }
+                else if change.type == .removed {
+                    activeTasks.remove(at: Int(change.oldIndex))
+                    }
+                }
+        }
         // need to invoke listener to make change appear
         listeners.invoke { (listener) in
             if listener.listenerType == ListenerType.currentAndCompletedTasks{
-                listener.onTaskChange(change: .update, currentTasks: self.currentTasks, completedTasks: self.completedTasks) 
+                listener.onTaskChange(change: .update, currentTasks: self.currentTasks, completedTasks: self.completedTasks, activeTasks: self.activeTasks)
             }
         }
     }

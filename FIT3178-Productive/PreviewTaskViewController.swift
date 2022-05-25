@@ -11,14 +11,9 @@ import FirebaseFirestoreSwift
 import CoreLocation
 import AVKit
 
-protocol previewTaskControllerDelegate: AnyObject {
-    func setCurrentTask(task: ToDoTask)
-}
-
 class PreviewTaskViewController: UIViewController{
     
     weak var databaseController: DatabaseProtocol?
-    weak var delegate: previewTaskControllerDelegate?
     var coordinate: CLLocationCoordinate2D?
     var buttonType: String?
     var task: ToDoTask?
@@ -60,7 +55,7 @@ class PreviewTaskViewController: UIViewController{
             self.timeLabel.text = "Time required: " + self.timeLabel.text!
             self.navigationController?.navigationItem.rightBarButtonItem = nil
         }
-         else if self.buttonType == "current" {
+         else if self.buttonType == "active" {
             self.completeAddButtonOutlet.setTitle("Complete task", for: .normal)
              if self.hours! == 0 {
                  if self.minutes! == 0 {
@@ -90,7 +85,7 @@ class PreviewTaskViewController: UIViewController{
             }
             self.timeLabel.text = "Time required: " + self.timeLabel.text!
         }
-        else if self.buttonType == "start" {
+        else if self.buttonType == "current" {
             self.completeAddButtonOutlet.setTitle("Start this task", for: .normal)
             self.stackViewOutlet.isHidden = true
             if self.hours! == 0 {
@@ -181,11 +176,11 @@ class PreviewTaskViewController: UIViewController{
             }
             var taskType: String
             switch buttonType {
-            case "current":
-                taskType = "current"
+            case "active":
+                taskType = "active"
             case "add":
                 taskType = "allTasks"
-            case "start":
+            case "current":
                 taskType = "current"
             default:
                 return
@@ -230,19 +225,20 @@ class PreviewTaskViewController: UIViewController{
     }
     
     @IBAction func completeaddTaskButton(_ sender: Any) {
-        if self.buttonType == "start" {
-            self.delegate!.setCurrentTask(task: self.task!)
+        if self.buttonType == "current" {
+            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "active", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
+            self.databaseController?.deleteTask(task: task!, taskType: "current")
             navigationController?.popViewController(animated: true)
         }
         else if self.buttonType == "add" {
             self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
             navigationController?.popViewController(animated: true)
         }
-        else if self.buttonType == "current" {
+        else if self.buttonType == "active" {
             self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "completed", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
-            self.databaseController?.deleteTask(task: task!, taskType: "current")
-            self.databaseController?.currentTask = nil
-            self.tabBarController?.selectedIndex = 0
+            self.databaseController?.deleteTask(task: task!, taskType: "active")
+            navigationController?.popViewController(animated: true)
+
         }
         
         

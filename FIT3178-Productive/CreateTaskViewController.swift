@@ -12,9 +12,8 @@ import CoreLocation
 
 
 
-class CreateTaskViewController: UIViewController, DatabaseListener {
+class CreateTaskViewController: UIViewController {
 
-    var listenerType = ListenerType.allTasks
     weak var databaseController: DatabaseProtocol?
     var allTasks:[ToDoTask] = []
     var seconds: Int? = 0
@@ -69,38 +68,12 @@ class CreateTaskViewController: UIViewController, DatabaseListener {
         // Do any additional setup after loading the view.
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        databaseController?.addListener(listener: self)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        databaseController?.removeListener(listener: self)
-    }
-    
     func displayMessage(title: String, message: String) -> () {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         alertController.addAction(UIAlertAction(title: "Dismiss", style: .default,handler: nil))
         self.present(alertController, animated: true, completion: nil)
     }
-    
-    
-    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
-        //
-    }
-    
-    
-    func onAuthChange(change: DatabaseChange, currentUser: User?) {
-        //
-    }
-    
-    
-    func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
-        self.allTasks = allTasks
-    }
-    
     
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

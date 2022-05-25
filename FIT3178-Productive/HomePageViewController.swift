@@ -15,15 +15,16 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         
     var listenerType = ListenerType.currentAndCompletedTasks
     weak var databaseController: DatabaseProtocol?
+    let CELL_ACTIVE_TASK = "activeTaskCell"
     let CELL_CURRENT_TASK = "currentTaskCell"
     let CELL_COMPLETED_TASK = "completedTaskCell"
     
-    var SECTION_CURRENT_TASK = 0
-    var SECTION_COMPLETED_TASK = 1
     var currentTasks: [ToDoTask] = []
     var completedTasks: [ToDoTask] = []
+    var activeTasks: [ToDoTask] = []
     var filteredCurrentTasks: [ToDoTask] = []
     var filteredCompletedTasks: [ToDoTask] = []
+    var filteredActiveTasks: [ToDoTask] = []
     var currentDate: String?
     var task: ToDoTask?
     var tappedTask: Int?
@@ -38,16 +39,16 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         self.datePickerOutlet.contentHorizontalAlignment = .center
         self.tableView.allowsSelection = false
         self.title = "Home"
-        self.navigationItem.setHidesBackButton(true, animated: true)
         filteredCurrentTasks = currentTasks
         filteredCompletedTasks = completedTasks
+        filteredActiveTasks = activeTasks
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = "Enter a task name"
         self.navigationItem.searchController = searchController
-        searchController.searchBar.scopeButtonTitles = ["All", "Current", "Completed"]
+        searchController.searchBar.scopeButtonTitles = ["All", "Active", "Current", "Completed"]
         searchController.searchBar.showsScopeBar = true
     }
     
@@ -73,33 +74,9 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0 {
-            if filteredCurrentTasks.count > 0 || filteredCompletedTasks.count > 0 {
-                if filteredCurrentTasks.count > 0 && filteredCompletedTasks.count > 0{
-                    return 2
-                } else {
-                    return 1
-                }
-            }
-            else {
-                return 0
-                }
+            return 3
         } else {
-            if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
-                if filteredCurrentTasks.count > 0 {
-                    return 1
-                }
-                else {
-                    return 0
-                }
-            }
-            else {
-                if filteredCompletedTasks.count > 0 {
-                    return 1
-                }
-                else {
-                    return 0
-                }
-            }
+            return 1
         }
     }
 
@@ -107,28 +84,81 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         // #warning Incomplete implementation, return the number of rows
         switch section {
         case 0:
-            if filteredCurrentTasks.count == 0 {
-                return 1
+            if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0 || self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
+                if filteredActiveTasks.count > 0 {
+                    return filteredActiveTasks.count
+                }
+                else {
+                    return 1
+                }
+                    
             }
             else {
-                return filteredCurrentTasks.count
+                if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 2 {
+                    if filteredCurrentTasks.count > 0 {
+                        return filteredCurrentTasks.count
+                    }
+                    else {
+                        return 1
+                    }
+                    
+                }
+                else {
+                    if filteredCompletedTasks.count > 0 {
+                        return filteredCompletedTasks.count
+                    }
+                    else {
+                        return 1
+                    }
+                }
             }
         case 1:
-            if filteredCompletedTasks.count == 0 {
-                return 1
+            if filteredCurrentTasks.count > 0 {
+                return filteredCurrentTasks.count
             }
             else {
+                return 1
+            }
+        case 2:
+            if filteredCompletedTasks.count > 0 {
                 return filteredCompletedTasks.count
+            }
+            else {
+                return 1
             }
         default:
             return 0
         }
+
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0  {
-            if indexPath.section == SECTION_CURRENT_TASK {
+            if indexPath.section == 0 {
+                if self.activeTasks.count == 0 {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ACTIVE_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    content.text = "No active tasks"
+                    taskCell.contentConfiguration = content
+                    taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
+                    return taskCell
+                } else {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ACTIVE_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    if filteredActiveTasks.count > 0 {
+                        let task = filteredActiveTasks[indexPath.row]
+                        content.text = task.taskTitle
+                        content.secondaryText = task.taskDescription
+                    }
+                    else {
+                        content.text = "No search results found"
+                    }
+                    taskCell.contentConfiguration = content
+                    return taskCell
+                }
+            }
+            else if indexPath.section == 1 {
                 if self.currentTasks.count == 0 {
                     let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
                     var content = taskCell.defaultContentConfiguration()
@@ -143,6 +173,9 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                         let task = filteredCurrentTasks[indexPath.row]
                         content.text = task.taskTitle
                         content.secondaryText = task.taskDescription
+                    }
+                    else {
+                        content.text = "No search results found"
                     }
                     taskCell.contentConfiguration = content
                     return taskCell
@@ -164,6 +197,9 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                         let task = filteredCompletedTasks[indexPath.row]
                         content.text = task.taskTitle
                         content.secondaryText = task.taskDescription
+                    }
+                    else {
+                        content.text = "No search results found"
                     }
                     taskCell.contentConfiguration = content
                     return taskCell
@@ -172,6 +208,29 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         }
         else {
             if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
+                if self.activeTasks.count == 0 {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ACTIVE_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    content.text = "No active tasks"
+                    taskCell.contentConfiguration = content
+                    taskCell.selectionStyle = UITableViewCell.SelectionStyle.none
+                    return taskCell
+                } else {
+                    let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_ACTIVE_TASK, for: indexPath)
+                    var content = taskCell.defaultContentConfiguration()
+                    if filteredActiveTasks.count > 0 {
+                        let task = filteredActiveTasks[indexPath.row]
+                        content.text = task.taskTitle
+                        content.secondaryText = task.taskDescription
+                    }
+                    else {
+                        content.text = "No search results found"
+                    }
+                    taskCell.contentConfiguration = content
+                    return taskCell
+                }
+            }
+            else if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 2 {
                 if self.currentTasks.count == 0 {
                     let taskCell = tableView.dequeueReusableCell(withIdentifier: CELL_CURRENT_TASK, for: indexPath)
                     var content = taskCell.defaultContentConfiguration()
@@ -186,6 +245,8 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                         let task = filteredCurrentTasks[indexPath.row]
                         content.text = task.taskTitle
                         content.secondaryText = task.taskDescription
+                    } else {
+                        content.text = "No search results found"
                     }
                     taskCell.contentConfiguration = content
                     return taskCell
@@ -208,6 +269,9 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                         content.text = task.taskTitle
                         content.secondaryText = task.taskDescription
                     }
+                    else {
+                        content.text = "No search results found"
+                    }
                     taskCell.contentConfiguration = content
                     return taskCell
                 }
@@ -215,18 +279,44 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         }
     }
     
-
-    
-    // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == SECTION_CURRENT_TASK && filteredCurrentTasks.count > 0 {
-            return true
+        if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0 {
+            if indexPath.section == 0 && filteredActiveTasks.count > 0 {
+                return true
+            }
+            else if indexPath.section == 1 && filteredCurrentTasks.count > 0 {
+                return true
+            }
+            else if indexPath.section == 2 && filteredCompletedTasks.count > 0 {
+                return true
+            }
+            else {
+                return false
+            }
         }
-        if indexPath.section == SECTION_COMPLETED_TASK && filteredCompletedTasks.count > 0 {
-            return true
+        else if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
+            if filteredActiveTasks.count > 0 {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+        else if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 2 {
+            if filteredCurrentTasks.count > 0 {
+                return true
+            }
+            else {
+                return false
+            }
         }
         else {
-            return false
+            if filteredCompletedTasks.count > 0 {
+                return true
+            }
+            else {
+                return false
+            }
         }
     }
     
@@ -240,7 +330,47 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
 
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0  {
-            if indexPath.section == SECTION_CURRENT_TASK && filteredCurrentTasks.count > 0 {
+            if indexPath.section == 0 && filteredActiveTasks.count > 0 {
+                let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+                    let task = self.filteredActiveTasks[indexPath.row]
+                    self.databaseController?.deleteTask(task: task, taskType: "active")
+                    completionHandler(true)
+                }
+                action.backgroundColor = .systemRed
+                return UISwipeActionsConfiguration(actions: [action])
+            }
+            else if indexPath.section == 1 && filteredCurrentTasks.count > 0 {
+                let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+                    let task = self.filteredCurrentTasks[indexPath.row]
+                    self.databaseController?.deleteTask(task: task, taskType: "current")
+                    completionHandler(true)
+                }
+                action.backgroundColor = .systemRed
+                return UISwipeActionsConfiguration(actions: [action])
+            }
+            else if indexPath.section == 2 && filteredCompletedTasks.count > 0 {
+                let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+                    let task = self.filteredCompletedTasks[indexPath.row]
+                    self.databaseController?.deleteTask(task: task, taskType: "completed")
+                    completionHandler(true)
+                }
+                action.backgroundColor = .systemRed
+                return UISwipeActionsConfiguration(actions: [action])
+            }
+        }
+        else if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
+                if filteredActiveTasks.count > 0 {
+                    let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
+                        let task = self.filteredActiveTasks[indexPath.row]
+                        self.databaseController?.deleteTask(task: task, taskType: "active")
+                        completionHandler(true)
+                    }
+                    action.backgroundColor = .systemRed
+                    return UISwipeActionsConfiguration(actions: [action])
+                }
+            }
+        else if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 2{
+            if filteredCurrentTasks.count > 0 {
                 let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
                     let task = self.filteredCurrentTasks[indexPath.row]
                     self.databaseController?.deleteTask(task: task, taskType: "current")
@@ -250,17 +380,6 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                 return UISwipeActionsConfiguration(actions: [action])
             }
         }
-        else if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
-                if filteredCurrentTasks.count > 0 {
-                    let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
-                        let task = self.filteredCurrentTasks[indexPath.row]
-                        self.databaseController?.deleteTask(task: task, taskType: "current")
-                        completionHandler(true)
-                    }
-                    action.backgroundColor = .systemRed
-                    return UISwipeActionsConfiguration(actions: [action])
-                }
-            }
         else {
             if filteredCompletedTasks.count > 0 {
                 let action = UIContextualAction(style: .normal, title: "Delete") { (action, view, completionHandler) in
@@ -280,11 +399,12 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                                 section: Int) -> String? {
         switch section {
         case 0:
-            if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0  {
-                return "Current Tasks:" + String(self.filteredCurrentTasks.count)
+            if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 0 || self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
+                    return "Active Tasks:" + String(self.filteredActiveTasks.count)
+
             }
             else {
-                if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 1 {
+                if self.navigationItem.searchController?.searchBar.selectedScopeButtonIndex == 2 {
                     return "Current Tasks:" + String(self.filteredCurrentTasks.count)
                 }
                 else {
@@ -292,6 +412,8 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                 }
             }
         case 1:
+            return "Current Tasks:" + String(self.filteredCurrentTasks.count)
+        case 2:
             return "Completed Tasks:" + String(self.filteredCompletedTasks.count)
         default:
             return ""
@@ -302,6 +424,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text?.lowercased(), searchText.trimmingCharacters(in: .whitespaces).isEmpty == false else {
+                filteredActiveTasks = activeTasks
                 filteredCurrentTasks = currentTasks
                 filteredCompletedTasks = completedTasks
                 tableView.reloadData()
@@ -310,29 +433,40 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         let searchIndex = searchController.searchBar.selectedScopeButtonIndex
         switch searchIndex{
         case 0:
+            filteredActiveTasks = activeTasks.filter({ (task: ToDoTask) -> Bool in
+                return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
             filteredCurrentTasks = currentTasks.filter({ (task: ToDoTask) -> Bool in
                 return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
             filteredCompletedTasks = completedTasks.filter({ (task: ToDoTask) -> Bool in
                 return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
         case 1:
+            filteredActiveTasks = activeTasks.filter({ (task: ToDoTask) -> Bool in
+                return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
+            filteredCurrentTasks = []
+            filteredCompletedTasks = []
+        case 2:
+            filteredActiveTasks = []
             filteredCurrentTasks = currentTasks.filter({ (task: ToDoTask) -> Bool in
                 return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
             filteredCompletedTasks = []
-        case 2:
+        case 3:
+            filteredActiveTasks = []
+            filteredCurrentTasks = []
             filteredCompletedTasks = completedTasks.filter({ (task: ToDoTask) -> Bool in
                 return (task.taskTitle?.lowercased().contains(searchText) ?? false) })
-            filteredCurrentTasks = []
         default:
             return
         }
         tableView.reloadData()
         }
     
-    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
+    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], activeTasks: [ToDoTask]) {
+        self.activeTasks = activeTasks
         self.currentTasks = currentTasks
         self.completedTasks = completedTasks
         filteredCurrentTasks = currentTasks
         filteredCompletedTasks = completedTasks
+        filteredActiveTasks = activeTasks
         tableView.reloadData()
     }
     
@@ -383,14 +517,22 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                 switch tapIndexPath.section {
                 case 0:
                     self.tappedTask = 0
+                    let isIndexValid = filteredActiveTasks.indices.contains(tapIndexPath.row)
+                    if isIndexValid == true {
+                        self.task = filteredActiveTasks[tapIndexPath.row]
+                        performSegue(withIdentifier: "previewTaskSegue", sender: self)
+                        
+                    }
+                case 1:
+                    self.tappedTask = 1
                     let isIndexValid = filteredCurrentTasks.indices.contains(tapIndexPath.row)
                     if isIndexValid == true {
                         self.task = filteredCurrentTasks[tapIndexPath.row]
                         performSegue(withIdentifier: "previewTaskSegue", sender: self)
                         
                     }
-                case 1:
-                    self.tappedTask = 1
+                case 2:
+                    self.tappedTask = 2
                     let isIndexValid = filteredCompletedTasks.indices.contains(tapIndexPath.row)
                     if isIndexValid == true {
                         self.task = filteredCompletedTasks[tapIndexPath.row]
@@ -411,33 +553,18 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         if segue.identifier == "previewTaskSegue"{
             let destination = segue.destination as! PreviewTaskViewController
             destination.task = self.task
-            destination.delegate = self
-            if self.tappedTask == 1 {
-                destination.buttonType = "complete"
+            if self.tappedTask == 0 {
+                destination.buttonType = "active"
             }
-            else {
-                if self.task != databaseController?.currentTask {
-                    destination.buttonType = "start"
-                }
-                else {
-                    destination.buttonType = "current"
-                }
+            else if self.tappedTask == 1 {
+                destination.buttonType = "current"
+            } else {
+                destination.buttonType = "complete"
             }
             if task?.latitude != nil && task?.longitude != nil {
                 destination.coordinate = CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!)
-                
             }
         }
     }
 
-
-
-
-}
-
-extension HomePageViewController: previewTaskControllerDelegate {
-    func setCurrentTask(task: ToDoTask) {
-        self.databaseController?.currentTask = task
-        self.tabBarController?.viewDidLoad()
-    }
 }

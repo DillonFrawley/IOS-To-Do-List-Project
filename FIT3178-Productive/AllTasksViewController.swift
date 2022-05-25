@@ -169,7 +169,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
 
     
     
-    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask]) {
+    func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], activeTasks: [ToDoTask]) {
         //
     }
     
