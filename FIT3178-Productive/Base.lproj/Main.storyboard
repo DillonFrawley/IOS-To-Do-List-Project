@@ -106,7 +106,7 @@
                             </connections>
                         </datePicker>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TaskCell" editingAccessoryType="checkmark" id="XTa-TC-FV0" customClass="ToDoTaskCell" customModule="FIT3178_Productive" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TaskCell" editingAccessoryType="checkmark" id="XTa-TC-FV0" customClass="TaskCell" customModule="FIT3178_Productive" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="88.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XTa-TC-FV0" id="TEf-18-slD">
@@ -156,9 +156,10 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="imageViewOutlet" destination="2ZM-17-Xmq" id="0HX-XR-omc"/>
-                                    <outlet property="taskDescriptionOutlet" destination="fVh-bR-TZE" id="ItS-zf-bxV"/>
-                                    <outlet property="taskTitleOutlet" destination="qmV-Bq-ikt" id="QAZ-jc-oUn"/>
+                                    <outlet property="imageViewOutlet" destination="TEf-18-slD" id="HTE-zh-7aW"/>
+                                    <outlet property="taskDescriptionOutlet" destination="fVh-bR-TZE" id="Etb-vm-lvZ"/>
+                                    <outlet property="taskTitleOutlet" destination="qmV-Bq-ikt" id="G5i-g2-kCa"/>
+                                    <outlet property="timeLabelOutler" destination="FHd-OQ-8sW" id="xx2-a8-KEr"/>
                                     <outlet property="timeLabelOutlet" destination="FHd-OQ-8sW" id="RLe-Yz-uBQ"/>
                                 </connections>
                             </tableViewCell>

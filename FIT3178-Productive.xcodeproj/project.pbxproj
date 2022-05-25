@@ -22,13 +22,13 @@
 		F51A63902812B71200023BDC /* MulticastDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A638F2812B71200023BDC /* MulticastDelegate.swift */; };
 		F51A63922812D19F00023BDC /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A63912812D19F00023BDC /* CreateTaskViewController.swift */; };
 		F51A63942816BC8500023BDC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F51A63932816BC8500023BDC /* GoogleService-Info.plist */; };
+		F52C0E60283E4878006D35C9 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52C0E5F283E4878006D35C9 /* TaskCell.swift */; };
 		F53921FD2816E5F700300D7C /* LogInSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */; };
 		F53AE2BD281FF923009D5E4E /* AllTasksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */; };
 		F53AE2BF28224DBC009D5E4E /* PreviewTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */; };
 		F53AE2C1282ABEE5009D5E4E /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AE2C0282ABEE5009D5E4E /* MapViewController.swift */; };
 		F53AE2C3282ABFCB009D5E4E /* MapResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AE2C2282ABFCB009D5E4E /* MapResultViewController.swift */; };
 		F56520152816CDD400D7D4FA /* ToDoTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56520142816CDD300D7D4FA /* ToDoTask.swift */; };
-		F5D2066D283E30E9002EC050 /* ToDoTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2066C283E30E9002EC050 /* ToDoTaskCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,13 +46,13 @@
 		F51A638F2812B71200023BDC /* MulticastDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MulticastDelegate.swift; sourceTree = "<group>"; };
 		F51A63912812D19F00023BDC /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
 		F51A63932816BC8500023BDC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F52C0E5F283E4878006D35C9 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInSignUpViewController.swift; sourceTree = "<group>"; };
 		F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTasksViewController.swift; sourceTree = "<group>"; };
 		F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewTaskViewController.swift; sourceTree = "<group>"; };
 		F53AE2C0282ABEE5009D5E4E /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		F53AE2C2282ABFCB009D5E4E /* MapResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapResultViewController.swift; sourceTree = "<group>"; };
 		F56520142816CDD300D7D4FA /* ToDoTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTask.swift; sourceTree = "<group>"; };
-		F5D2066C283E30E9002EC050 /* ToDoTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTaskCell.swift; sourceTree = "<group>"; };
 		F7FF468D0DDCA7FB9D05CD49 /* Pods-FIT3178-Productive.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FIT3178-Productive.debug.xcconfig"; path = "Target Support Files/Pods-FIT3178-Productive/Pods-FIT3178-Productive.debug.xcconfig"; sourceTree = "<group>"; };
 		F8D2C5C6E4A370F362D9D339 /* Pods-FIT3178-Productive.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FIT3178-Productive.release.xcconfig"; path = "Target Support Files/Pods-FIT3178-Productive/Pods-FIT3178-Productive.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -117,7 +117,7 @@
 				F51A63932816BC8500023BDC /* GoogleService-Info.plist */,
 				F51A63912812D19F00023BDC /* CreateTaskViewController.swift */,
 				F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */,
-				F5D2066C283E30E9002EC050 /* ToDoTaskCell.swift */,
+				F52C0E5F283E4878006D35C9 /* TaskCell.swift */,
 				F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */,
 				F5036B51282BBF9500FDBCD6 /* GooglePlacesManager.swift */,
 				F56520142816CDD300D7D4FA /* ToDoTask.swift */,
@@ -260,6 +260,7 @@
 				F51A63902812B71200023BDC /* MulticastDelegate.swift in Sources */,
 				F56520152816CDD400D7D4FA /* ToDoTask.swift in Sources */,
 				F51A638E2812B6B700023BDC /* DatabaseProtocol.swift in Sources */,
+				F52C0E60283E4878006D35C9 /* TaskCell.swift in Sources */,
 				F53AE2C3282ABFCB009D5E4E /* MapResultViewController.swift in Sources */,
 				F51A637F2812A88100023BDC /* HomePageViewController.swift in Sources */,
 				F51A634B280AF69B00023BDC /* AppDelegate.swift in Sources */,
@@ -269,7 +270,6 @@
 				F5036B52282BBF9500FDBCD6 /* GooglePlacesManager.swift in Sources */,
 				F51A63922812D19F00023BDC /* CreateTaskViewController.swift in Sources */,
 				F53AE2BF28224DBC009D5E4E /* PreviewTaskViewController.swift in Sources */,
-				F5D2066D283E30E9002EC050 /* ToDoTaskCell.swift in Sources */,
 				F53921FD2816E5F700300D7C /* LogInSignUpViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -348,6 +348,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -404,6 +405,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_PREPROCESS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -430,6 +432,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_PREPROCESS = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -458,6 +461,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_PREPROCESS = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
