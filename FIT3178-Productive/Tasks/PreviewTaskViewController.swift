@@ -221,13 +221,14 @@ class PreviewTaskViewController: UIViewController{
         let myInt = Int(timeInterval)
         
         self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
-        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.seconds)!, minutes: (self.minutes)!, hours: (self.hours)!, startTime: myInt, elapsedTime: (self.task?.elapsedTime)!)
+        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.task?.seconds)!, minutes: (self.task?.minutes)!, hours: (self.task?.hours)!, startTime: myInt, elapsedTime: (self.elapsedTime)!)
     }
     
     @IBAction func handlePause(_ sender: Any) {
         self.timer.invalidate()
         self.task!.startTime = 0
-        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.seconds)!, minutes: (self.minutes)!, hours: (self.hours)!, startTime: (self.task?.startTime)!, elapsedTime: (self.elapsedTime)!)
+        self.elapsedTime! += (3600*((self.task!.hours ?? 0) - self.hours!)) + (60*((self.task!.minutes ?? 0) - self.minutes!)) + ((self.task!.seconds ?? 0) - self.seconds!)
+        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.task?.seconds)!, minutes: (self.task?.minutes)!, hours: (self.task?.hours)!, startTime: (self.task?.startTime)!, elapsedTime: (self.elapsedTime)!)
         
     }
     
@@ -285,7 +286,7 @@ class PreviewTaskViewController: UIViewController{
     
     override func viewWillDisappear(_ animated: Bool) {
         self.timer.invalidate()
-        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.seconds)!, minutes: (self.minutes)!, hours: (self.hours)!, startTime: (self.task?.startTime)!, elapsedTime: (self.task?.elapsedTime)!)
+//        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.seconds)!, minutes: (self.minutes)!, hours: (self.hours)!, startTime: (self.task?.startTime)!, elapsedTime: (self.task?.elapsedTime)!)
     }
 
     

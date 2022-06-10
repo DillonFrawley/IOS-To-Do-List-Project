@@ -55,15 +55,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         self.navigationItem.searchController = searchController
         searchController.searchBar.scopeButtonTitles = ["All", "Active", "Current", "Completed"]
         searchController.searchBar.showsScopeBar = true
-        // using current date and time as an example
-        let someDate = Date()
-
-        // convert Date to TimeInterval (typealias for Double)
-        let timeInterval = someDate.timeIntervalSince1970
-
-        // convert to Integer
-        self.myInt = Int(timeInterval)
-
+    
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +64,14 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         self.determineCurrentLocation()
         self.navigationItem.hidesSearchBarWhenScrolling = false
         self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
-        
+        // using current date and time as an example
+        let someDate = Date()
+
+        // convert Date to TimeInterval (typealias for Double)
+        let timeInterval = someDate.timeIntervalSince1970
+
+        // convert to Integer
+        self.myInt = Int(timeInterval)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -386,66 +385,30 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], activeTasks: [ToDoTask]) {
         self.activeTasks = activeTasks
-        self.currentTasks = currentTasks
-        self.completedTasks = completedTasks
-        filteredCurrentTasks = currentTasks
-        filteredCompletedTasks = completedTasks
         filteredActiveTasks = activeTasks
         for task in self.activeTasks {
+
             let timeDifference = self.myInt! - task.startTime!
             print(timeDifference)
             task.elapsedTime = timeDifference
             
-            var timedifferenceHours = 0
-            var timedifferenceMinutes = 0
-            var timedifferenceSeconds = 0
-            
-            if Int(timeDifference/3600) > 0 {
-                timedifferenceHours = Int(timeDifference/3600)
-                if Int((timeDifference - (timedifferenceHours*3600))/60) > 0 {
-                    timedifferenceMinutes = Int((timeDifference - (timedifferenceHours*3600))/60)
-                    if Int( timeDifference - (timedifferenceHours*3600) - (timedifferenceMinutes*60)) > 0 {
-                        timedifferenceSeconds = Int(timeDifference - (timedifferenceHours*3600) - (timedifferenceMinutes*60))
-                    }
-                }
-                else {
-                    if Int((timeDifference - (timedifferenceHours*3600))) > 0 {
-                        timedifferenceSeconds = Int((timeDifference - (timedifferenceHours*3600)))
-                    }
-                }
-            }
-            else {
-                if Int((timeDifference/60)) > 0 {
-                    timedifferenceMinutes = Int((timeDifference/60))
-                    if Int( timeDifference - (timedifferenceMinutes*60)) > 0 {
-                        timedifferenceSeconds = Int( timeDifference - (timedifferenceMinutes*60))
-                    }
-                }
-            }
-            
-            if timedifferenceHours > task.hours! {
-                task.hours = 0
-                task.minutes = 0
-                task.seconds = 0
-            }
-            else if timedifferenceHours <= task.hours! {
-                task.hours = task.hours! - timedifferenceHours
-                if timedifferenceMinutes > task.minutes! {
-                    task.minutes = 0
-                    task.seconds = 0
-                }
-                else if timedifferenceMinutes <= task.minutes! {
-                    task.minutes = task.minutes! - timedifferenceMinutes
-                    if timedifferenceSeconds > task.seconds! {
-                        task.seconds = 0
-                    }
-                    else {
-                        task.seconds = task.seconds! - timedifferenceSeconds
-                    }
-                }
-            }
+            let timedifferenceHours = timeDifference/3600
+            let timedifferenceMinutes = Int((timeDifference - (timedifferenceHours*3600))/60)
+            let timedifferenceSeconds = Int(timeDifference - (timedifferenceHours*3600) - (timedifferenceMinutes*60))
+            task.hours = task.hours! - timedifferenceHours
+            task.minutes = task.minutes! - timedifferenceMinutes
+            task.seconds = task.seconds! - timedifferenceSeconds
         }
-        
+        if self.currentTasks != currentTasks {
+            self.currentTasks = currentTasks
+            filteredCurrentTasks = currentTasks
+        }
+        if self.completedTasks != completedTasks {
+            self.completedTasks = completedTasks
+            filteredCompletedTasks = completedTasks
+        }
+    
+        UIView.setAnimationsEnabled(false)
         tableView.reloadData()
     }
     
@@ -528,9 +491,12 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     @objc func counter() {
         for task in activeTasks {
             if task.startTime != 0 {
-                if task.seconds == 0 {
-                    if task.minutes == 0 && task.seconds == 0 {
-                        if task.hours == 0 && task.minutes == 0 && task.seconds == 0 {
+                if task.seconds! <= 0 {
+                    task.seconds = 0
+                    if task.minutes! <= 0 && task.seconds! <= 0 {
+                        task.minutes = 0
+                        if task.hours! <= 0 && task.minutes! <= 0 && task.seconds! <= 0 {
+                            task.hours = 0
     //                        AudioServicesPlayAlertSound(self.systemSoundID)
                             //
                         }
@@ -551,20 +517,17 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                     task.seconds! -= 1
                     task.elapsedTime! += 1
                 }
-                self.databaseController?.updateTask(taskId: (task.id!),taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "active" , coordinate: CLLocationCoordinate2D(latitude: (task.latitude!), longitude: (task.longitude!)), seconds: (task.seconds!), minutes: (task.minutes!), hours: (task.hours!), startTime: (task.startTime!), elapsedTime: (task.elapsedTime!))
-                
             }
             UIView.setAnimationsEnabled(false)
             self.tableView.beginUpdates()
             self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: UITableView.RowAnimation.none)
             self.tableView.endUpdates()
-            
 
         }
         
     }
     
-
+//    self.databaseController?.updateTask(taskId: (task.id!),taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "active" , coordinate: CLLocationCoordinate2D(latitude: (task.latitude!), longitude: (task.longitude!)), seconds: (task.seconds!), minutes: (task.minutes!), hours: (task.hours!), startTime: (task.startTime!), elapsedTime: (task.elapsedTime!))
 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
