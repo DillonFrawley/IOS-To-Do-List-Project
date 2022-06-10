@@ -144,7 +144,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 "minutes": minutes,
                 "hours": hours,
                 "startTime": startTime,
-                "elasedTime": elapsedTime
+                "elapsedTime": elapsedTime
                 ])
             }
         else if taskType == "current" {
@@ -157,7 +157,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 "minutes": minutes,
                 "hours": hours,
                 "startTime": startTime,
-                "elasedTime": elapsedTime
+                "elapsedTime": elapsedTime
                 ])
         }
         else if taskType == "active" {
@@ -170,7 +170,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 "minutes": minutes,
                 "hours": hours,
                 "startTime": startTime,
-                "elasedTime": elapsedTime
+                "elapsedTime": elapsedTime
                 ])
         }
     }

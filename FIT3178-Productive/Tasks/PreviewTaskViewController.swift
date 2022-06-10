@@ -25,6 +25,8 @@ class PreviewTaskViewController: UIViewController{
     var editVC: CreateTaskViewController?
     var startCurrenttask: Bool?
     var elapsedTime: Int?
+    var myInt: Int?
+    var previewStartTime:Int?
 
     
     @IBOutlet weak var realTaskTitleLabel: UILabel!
@@ -45,10 +47,19 @@ class PreviewTaskViewController: UIViewController{
 
         self.realTaskTitleLabel.text = self.task?.taskTitle
         self.realTaskDescriptionLabel.text = self.task?.taskDescription
-        self.seconds = task?.seconds
-        self.minutes = task?.minutes
-        self.hours = task?.hours
-        self.elapsedTime = task?.elapsedTime
+        
+        self.hours = task!.hours!
+        self.minutes = task!.minutes!
+        self.seconds = task!.seconds!
+        self.elapsedTime = task!.elapsedTime!
+        let someDate = Date()
+        // convert Date to TimeInterval (typealias for Double)
+        let timeInterval = someDate.timeIntervalSince1970
+
+        // convert to Integer
+        self.previewStartTime = Int(timeInterval)
+        
+        
         
         if self.buttonType == "complete" {
             self.stackViewOutlet.isHidden = true
@@ -120,32 +131,68 @@ class PreviewTaskViewController: UIViewController{
         super.viewWillLayoutSubviews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if self.buttonType == "active" {
+            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
+            if self.task!.startTime != 0 {
+                let someDate = Date()
+                // convert Date to TimeInterval (typealias for Double)
+                let timeInterval = someDate.timeIntervalSince1970
+
+                // convert to Integer
+                self.myInt = Int(timeInterval)
+                let timeDifference = self.myInt! - self.task!.startTime!
+                self.task!.elapsedTime = timeDifference
+                
+                let timedifferenceHours = timeDifference/3600
+                let timedifferenceMinutes = (timeDifference - (timedifferenceHours*3600))/60
+                let timedifferenceSeconds = timeDifference - (timedifferenceHours*3600) - (timedifferenceMinutes*60)
+
+                self.hours = self.task!.hours! - timedifferenceHours
+                self.minutes = self.task!.minutes! - timedifferenceMinutes
+                self.seconds = self.task!.seconds! - timedifferenceSeconds
+            }
+            else {
+                self.timeLabel.text = "Paused"
+            }
+            
+
+        }
+        
+    }
+    
     @objc func counter() {
-        if seconds == 0 {
-            if self.minutes == 0 && self.seconds == 0 {
-                if self.hours == 0 && self.minutes == 0 && self.seconds == 0 {
-                    self.timer.invalidate()
-                    AudioServicesPlayAlertSound(self.systemSoundID)
+        if task?.startTime != 0 {
+            if self.seconds! <= 0 {
+                self.seconds = 0
+                if self.minutes! <= 0 && self.seconds! <= 0 {
+                    self.minutes = 0
+                    if self.hours! <= 0 && self.minutes! <= 0 && self.seconds! <= 0 {
+                        self.hours = 0
+    //                        AudioServicesPlayAlertSound(self.systemSoundID)
+                        //
+                    }
+                    else {
+                        self.hours! -= 1
+                        self.minutes! = 59
+                        self.seconds! = 59
+                        self.elapsedTime! += 1
+                    }
                 }
                 else {
-                    self.hours! -= 1
-                    self.minutes! = 59
+                    self.minutes! -= 1
                     self.seconds! = 59
                     self.elapsedTime! += 1
-                    
                 }
             }
             else {
-                self.minutes! -= 1
-                self.seconds! = 59
+                self.seconds! -= 1
                 self.elapsedTime! += 1
-            }
+                }
+            self.updateTimerOutlet()
         }
-        else {
-            self.seconds! -= 1
-            self.elapsedTime! += 1
-        }
-        self.updateTimerOutlet()
+        
     }
     
     func updateTimerOutlet() {
@@ -221,23 +268,15 @@ class PreviewTaskViewController: UIViewController{
         let myInt = Int(timeInterval)
         
         self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
+        self.updateTimerOutlet()
         self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.task?.seconds)!, minutes: (self.task?.minutes)!, hours: (self.task?.hours)!, startTime: myInt, elapsedTime: (self.elapsedTime)!)
     }
     
     @IBAction func handlePause(_ sender: Any) {
         self.timer.invalidate()
         self.task!.startTime = 0
-        self.elapsedTime! += (3600*((self.task!.hours ?? 0) - self.hours!)) + (60*((self.task!.minutes ?? 0) - self.minutes!)) + ((self.task!.seconds ?? 0) - self.seconds!)
-        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.task?.seconds)!, minutes: (self.task?.minutes)!, hours: (self.task?.hours)!, startTime: (self.task?.startTime)!, elapsedTime: (self.elapsedTime)!)
-        
-    }
-    
-    @IBAction func handleStop(_ sender: Any) {
-        self.timer.invalidate()
-        self.seconds = task?.seconds
-        self.minutes = task?.minutes
-        self.hours = task?.hours
-        self.updateTimerOutlet()
+        self.timeLabel.text = "Paused"
+        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.task?.seconds)!, minutes: (self.task?.minutes)!, hours: (self.task?.hours)!, startTime: 0, elapsedTime: (self.elapsedTime)!)
         
     }
     
@@ -275,12 +314,6 @@ class PreviewTaskViewController: UIViewController{
 
         }
         
-        
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        if self.buttonType == "active" {
-            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
-        }
         
     }
     

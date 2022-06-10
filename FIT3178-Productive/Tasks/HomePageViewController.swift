@@ -30,6 +30,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     var task: ToDoTask?
     var tappedTask: Int?
     var myInt: Int?
+    var activeTasksConstant: [ToDoTask] = []
     
     var timer: Timer = Timer()
     let systemSoundID: SystemSoundID = 1005
@@ -55,6 +56,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         self.navigationItem.searchController = searchController
         searchController.searchBar.scopeButtonTitles = ["All", "Active", "Current", "Completed"]
         searchController.searchBar.showsScopeBar = true
+        self.activeTasksConstant = activeTasks
     
     }
     
@@ -65,13 +67,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         self.navigationItem.hidesSearchBarWhenScrolling = false
         self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
         // using current date and time as an example
-        let someDate = Date()
 
-        // convert Date to TimeInterval (typealias for Double)
-        let timeInterval = someDate.timeIntervalSince1970
-
-        // convert to Integer
-        self.myInt = Int(timeInterval)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -174,22 +170,68 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
             taskCell.timeLabelOutlet.isHidden = false
             if filteredArray.count > 0 {
                 let task = filteredArray[indexPath.row]
+                var hours = task.hours!
+                var minutes = task.minutes!
+                var seconds = task.seconds!
+                if filteredArray == activeTasks {
+                    let someDate = Date()
+                    // convert Date to TimeInterval (typealias for Double)
+                    let timeInterval = someDate.timeIntervalSince1970
+                    // convert to Integer
+                    self.myInt = Int(timeInterval)
+                    if task.startTime != 0 {
+                        let timeDifference = self.myInt! - task.startTime!
+                        task.elapsedTime = timeDifference
+                        let timedifferenceHours = timeDifference/3600
+                        let timedifferenceMinutes = (timeDifference - (timedifferenceHours*3600))/60
+                        let timedifferenceSeconds = timeDifference - (timedifferenceHours*3600) - (timedifferenceMinutes*60)
+                        hours = task.hours! - timedifferenceHours
+                        minutes = task.minutes! - timedifferenceMinutes
+                        seconds = task.seconds! - timedifferenceSeconds
+                        if seconds <= 0 {
+                            if seconds <= 0 && minutes <= 0 {
+                                if hours <= 0 && minutes <= 0 && seconds <= 0 {
+                                    hours = 0
+                                    minutes = 0
+                                    seconds = 0
+                                }
+                                else {
+                                    hours -= 1
+                                    minutes = 59 + minutes
+                                    seconds = 59 + seconds
 
+                                }
+                            }
+                            else {
+                                minutes -= 1
+                                seconds = 59 + seconds
+
+                            }
+                        }
+                        else {
+                            seconds = 0
+                        }
+                    }
+                }
+                
                 taskCell.taskTitleOutlet.text = task.taskTitle
                 taskCell.taskDescriptionOutlet.text = task.taskDescription
-                if task.hours! == 0 {
-                    if task.minutes! == 0 {
-                        taskCell.timeLabelOutlet.text = String(task.seconds!) + "s"
-                        if task.seconds! == 0 && filteredArray == activeTasks {
+                if task.startTime! == 0 && filteredArray == activeTasks {
+                    taskCell.timeLabelOutlet.text = "Paused"
+                }
+                else if hours == 0 {
+                    if minutes == 0 {
+                        taskCell.timeLabelOutlet.text = String(seconds) + "s"
+                        if seconds == 0 && filteredArray == activeTasks {
                             taskCell.contentView.backgroundColor = UIColor.red
                         }
                     }
                     else {
-                        taskCell.timeLabelOutlet.text = String(task.minutes!) + "m :" + String(task.seconds!) + "s"
+                        taskCell.timeLabelOutlet.text = String(minutes) + "m :" + String(seconds) + "s"
                     }
                 }
                 else {
-                    taskCell.timeLabelOutlet.text = String(task.hours!) + "h :" + String(task.minutes!) + "m :" + String(task.seconds!) + "s"
+                    taskCell.timeLabelOutlet.text = String(hours) + "h :" + String(minutes) + "m :" + String(seconds) + "s"
                 }
             }
             else {
@@ -386,19 +428,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], activeTasks: [ToDoTask]) {
         self.activeTasks = activeTasks
         filteredActiveTasks = activeTasks
-        for task in self.activeTasks {
-
-            let timeDifference = self.myInt! - task.startTime!
-            print(timeDifference)
-            task.elapsedTime = timeDifference
-            
-            let timedifferenceHours = timeDifference/3600
-            let timedifferenceMinutes = Int((timeDifference - (timedifferenceHours*3600))/60)
-            let timedifferenceSeconds = Int(timeDifference - (timedifferenceHours*3600) - (timedifferenceMinutes*60))
-            task.hours = task.hours! - timedifferenceHours
-            task.minutes = task.minutes! - timedifferenceMinutes
-            task.seconds = task.seconds! - timedifferenceSeconds
-        }
+        activeTasksConstant = activeTasks
         if self.currentTasks != currentTasks {
             self.currentTasks = currentTasks
             filteredCurrentTasks = currentTasks
@@ -489,42 +519,36 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     }
     
     @objc func counter() {
-        for task in activeTasks {
-            if task.startTime != 0 {
-                if task.seconds! <= 0 {
-                    task.seconds = 0
-                    if task.minutes! <= 0 && task.seconds! <= 0 {
-                        task.minutes = 0
-                        if task.hours! <= 0 && task.minutes! <= 0 && task.seconds! <= 0 {
-                            task.hours = 0
-    //                        AudioServicesPlayAlertSound(self.systemSoundID)
-                            //
-                        }
-                        else {
-                            task.hours! -= 1
-                            task.minutes! = 59
-                            task.seconds! = 59
-                            task.elapsedTime! += 1
-                        }
-                    }
-                    else {
-                        task.minutes! -= 1
-                        task.seconds! = 59
-                        task.elapsedTime! += 1
-                    }
-                }
-                else {
-                    task.seconds! -= 1
-                    task.elapsedTime! += 1
-                }
-            }
-            UIView.setAnimationsEnabled(false)
-            self.tableView.beginUpdates()
-            self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: UITableView.RowAnimation.none)
-            self.tableView.endUpdates()
-
-        }
-        
+//        for task in activeTasks {
+//            if task.seconds! <= 0 {
+//                task.seconds! = 0
+//                if task.minutes! <= 0 {
+//                    task.minutes! = 0
+//                    if task.hours! <= 0 {
+//                            task.hours = 0
+//                        //
+//                    }
+//                    else {
+//                        task.hours! -= 1
+//                        task.minutes! = 59
+//                        task.seconds! = 59
+//                        task.elapsedTime! += 1
+//                    }
+//                }
+//                else {
+//                    task.minutes! -= 1
+//                    task.seconds! = 59
+//                    task.elapsedTime! += 1
+//                }
+//            }
+//            else {
+//                task.seconds! -= 1
+//                task.elapsedTime! += 1
+//                }
+        UIView.setAnimationsEnabled(false)
+        self.tableView.beginUpdates()
+        self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: UITableView.RowAnimation.none)
+        self.tableView.endUpdates()
     }
     
 //    self.databaseController?.updateTask(taskId: (task.id!),taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "active" , coordinate: CLLocationCoordinate2D(latitude: (task.latitude!), longitude: (task.longitude!)), seconds: (task.seconds!), minutes: (task.minutes!), hours: (task.hours!), startTime: (task.startTime!), elapsedTime: (task.elapsedTime!))

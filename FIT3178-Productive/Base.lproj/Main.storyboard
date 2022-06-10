@@ -451,7 +451,7 @@
                                 <rect key="frame" x="20" y="316.5" width="374" height="31"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="he4-z6-7ib">
-                                        <rect key="frame" x="0.0" y="0.0" width="118" height="31"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="182" height="31"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" image="play.fill" catalog="system"/>
                                         <connections>
@@ -459,21 +459,13 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nb1-0W-8aH">
-                                        <rect key="frame" x="128" y="0.0" width="118" height="31"/>
+                                        <rect key="frame" x="192" y="0.0" width="182" height="31"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled">
                                             <imageReference key="image" image="pause.fill" catalog="system" symbolScale="default"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="handlePause:" destination="JaT-p4-Sps" eventType="touchUpInside" id="Fmh-ML-rQw"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Foi-gN-Qhl">
-                                        <rect key="frame" x="256" y="0.0" width="118" height="31"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" image="stop.fill" catalog="system"/>
-                                        <connections>
-                                            <action selector="handleStop:" destination="JaT-p4-Sps" eventType="touchUpInside" id="SzC-vx-Atl"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -566,13 +558,12 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="9Em-fe-SYI"/>
-        <segue reference="DWb-rG-Isu"/>
+        <segue reference="FGG-hF-qzp"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="homekit" catalog="system" width="128" height="106"/>
         <image name="pause.fill" catalog="system" width="116" height="128"/>
         <image name="play.fill" catalog="system" width="116" height="128"/>
-        <image name="stop.fill" catalog="system" width="128" height="113"/>
         <image name="timer" catalog="system" width="128" height="121"/>
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
