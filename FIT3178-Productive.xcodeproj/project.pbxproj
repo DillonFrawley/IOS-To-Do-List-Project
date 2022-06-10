@@ -108,21 +108,13 @@
 		F51A6349280AF69B00023BDC /* FIT3178-Productive */ = {
 			isa = PBXGroup;
 			children = (
+				F5B70AB2285327A000BFDDD0 /* User */,
+				F5B70AB12853277F00BFDDD0 /* Database */,
+				F5B70AB02853276400BFDDD0 /* Maps */,
+				F5B70AAF2853273500BFDDD0 /* Tasks */,
 				F51A634A280AF69B00023BDC /* AppDelegate.swift */,
-				F51A638B2812B68100023BDC /* FirebaseController.swift */,
-				F51A638D2812B6B700023BDC /* DatabaseProtocol.swift */,
-				F53AE2C0282ABEE5009D5E4E /* MapViewController.swift */,
-				F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */,
-				F53AE2C2282ABFCB009D5E4E /* MapResultViewController.swift */,
-				F51A63932816BC8500023BDC /* GoogleService-Info.plist */,
-				F51A63912812D19F00023BDC /* CreateTaskViewController.swift */,
-				F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */,
 				F5B70AAD283E4C6000BFDDD0 /* ToDoTaskCell.swift */,
-				F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */,
-				F5036B51282BBF9500FDBCD6 /* GooglePlacesManager.swift */,
-				F56520142816CDD300D7D4FA /* ToDoTask.swift */,
 				F51A634C280AF69B00023BDC /* SceneDelegate.swift */,
-				F51A637E2812A88100023BDC /* HomePageViewController.swift */,
 				F51A638F2812B71200023BDC /* MulticastDelegate.swift */,
 				F51A6350280AF69B00023BDC /* Main.storyboard */,
 				F51A6353280AF69E00023BDC /* Assets.xcassets */,
@@ -130,6 +122,46 @@
 				F51A6358280AF69E00023BDC /* Info.plist */,
 			);
 			path = "FIT3178-Productive";
+			sourceTree = "<group>";
+		};
+		F5B70AAF2853273500BFDDD0 /* Tasks */ = {
+			isa = PBXGroup;
+			children = (
+				F51A63932816BC8500023BDC /* GoogleService-Info.plist */,
+				F53AE2BC281FF923009D5E4E /* AllTasksViewController.swift */,
+				F51A637E2812A88100023BDC /* HomePageViewController.swift */,
+				F51A63912812D19F00023BDC /* CreateTaskViewController.swift */,
+				F53AE2BE28224DBC009D5E4E /* PreviewTaskViewController.swift */,
+				F56520142816CDD300D7D4FA /* ToDoTask.swift */,
+			);
+			path = Tasks;
+			sourceTree = "<group>";
+		};
+		F5B70AB02853276400BFDDD0 /* Maps */ = {
+			isa = PBXGroup;
+			children = (
+				F53AE2C0282ABEE5009D5E4E /* MapViewController.swift */,
+				F5036B51282BBF9500FDBCD6 /* GooglePlacesManager.swift */,
+				F53AE2C2282ABFCB009D5E4E /* MapResultViewController.swift */,
+			);
+			path = Maps;
+			sourceTree = "<group>";
+		};
+		F5B70AB12853277F00BFDDD0 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				F51A638B2812B68100023BDC /* FirebaseController.swift */,
+				F51A638D2812B6B700023BDC /* DatabaseProtocol.swift */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
+		F5B70AB2285327A000BFDDD0 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				F53921FC2816E5F700300D7C /* LogInSignUpViewController.swift */,
+			);
+			path = User;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -176,7 +176,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
     func onAllTaskChange(change: DatabaseChange, allTasks: [ToDoTask]) {
         self.allTasks = allTasks
         self.selectedRows = []
-        for _ in 0 ... self.allTasks.count - 1 {
+        for _ in 0 ... self.allTasks.count {
             self.selectedRows?.append(0)
         }
         filteredTasks = allTasks
@@ -194,7 +194,7 @@ class AllTasksViewController: UITableViewController, DatabaseListener, UISearchR
                 for i in 0 ... self.selectedRows!.count - 1 {
                     if selectedRows![i] == 1 {
                         let task = self.filteredTasks[i]
-                        self.databaseController?.addTask(taskTitle: task.taskTitle!, taskDescription: task.taskDescription!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!), seconds: task.seconds!, minutes: task.minutes!, hours: task.hours!)
+                        self.databaseController?.addTask(taskTitle: task.taskTitle!, taskDescription: task.taskDescription!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task.latitude)!, longitude: (task.longitude)!), seconds: task.seconds!, minutes: task.minutes!, hours: task.hours!, startTime:  (task.startTime)!, elapsedTime: (task.elapsedTime)!)
                     }
                 }
                 self.navigationController?.popViewController(animated: true)

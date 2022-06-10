@@ -48,7 +48,7 @@ class CreateTaskViewController: UIViewController {
         guard let taskTitle = taskTitleTextField.text, let taskDescription = taskDescriptionTextField.text, taskTitle.trimmingCharacters(in: .whitespaces).isEmpty == false && taskDescription.trimmingCharacters(in: .whitespaces).isEmpty == false else {
             return
         }
-        self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
+        self.databaseController?.addTask(taskTitle: taskTitle, taskDescription: taskDescription, taskType: "allTasks", coordinate: CLLocationCoordinate2D(latitude: (self.latitude)!, longitude: (self.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!, startTime: 0, elapsedTime: 0)
         navigationController?.popViewController(animated: true)
     }
     @IBAction func locationButtonAction(_ sender: Any) {

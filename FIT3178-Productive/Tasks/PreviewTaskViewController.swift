@@ -24,6 +24,7 @@ class PreviewTaskViewController: UIViewController{
     let systemSoundID: SystemSoundID = 1005
     var editVC: CreateTaskViewController?
     var startCurrenttask: Bool?
+    var elapsedTime: Int?
 
     
     @IBOutlet weak var realTaskTitleLabel: UILabel!
@@ -47,7 +48,8 @@ class PreviewTaskViewController: UIViewController{
         self.seconds = task?.seconds
         self.minutes = task?.minutes
         self.hours = task?.hours
-
+        self.elapsedTime = task?.elapsedTime
+        
         if self.buttonType == "complete" {
             self.stackViewOutlet.isHidden = true
             self.completeAddButtonOutlet.isHidden = true
@@ -129,15 +131,19 @@ class PreviewTaskViewController: UIViewController{
                     self.hours! -= 1
                     self.minutes! = 59
                     self.seconds! = 59
+                    self.elapsedTime! += 1
+                    
                 }
             }
             else {
                 self.minutes! -= 1
                 self.seconds! = 59
+                self.elapsedTime! += 1
             }
         }
         else {
             self.seconds! -= 1
+            self.elapsedTime! += 1
         }
         self.updateTimerOutlet()
     }
@@ -205,12 +211,24 @@ class PreviewTaskViewController: UIViewController{
     }
     
     @IBAction func handlePlay(_ sender: Any) {
-        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
+        // using current date and time as an example
+        let someDate = Date()
+
+        // convert Date to TimeInterval (typealias for Double)
+        let timeInterval = someDate.timeIntervalSince1970
+
+        // convert to Integer
+        let myInt = Int(timeInterval)
         
+        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
+        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.seconds)!, minutes: (self.minutes)!, hours: (self.hours)!, startTime: myInt, elapsedTime: (self.task?.elapsedTime)!)
     }
     
     @IBAction func handlePause(_ sender: Any) {
         self.timer.invalidate()
+        self.task!.startTime = 0
+        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.seconds)!, minutes: (self.minutes)!, hours: (self.hours)!, startTime: (self.task?.startTime)!, elapsedTime: (self.elapsedTime)!)
+        
     }
     
     @IBAction func handleStop(_ sender: Any) {
@@ -231,7 +249,16 @@ class PreviewTaskViewController: UIViewController{
     
     @IBAction func completeaddTaskButton(_ sender: Any) {
         if self.buttonType == "current" {
-            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "active", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!, startTime: (task?.startTime)!, elapsedTime: (task?.elapsedTime)!)
+            // using current date and time as an example
+            let someDate = Date()
+
+            // convert Date to TimeInterval (typealias for Double)
+            let timeInterval = someDate.timeIntervalSince1970
+
+            // convert to Integer
+            let myInt = Int(timeInterval)
+            
+            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "active", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!, startTime: myInt, elapsedTime: 0)
             self.databaseController?.deleteTask(task: task!, taskType: "current")
             
             navigationController?.popViewController(animated: true)
@@ -247,6 +274,12 @@ class PreviewTaskViewController: UIViewController{
 
         }
         
+        
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        if self.buttonType == "active" {
+            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
+        }
         
     }
     

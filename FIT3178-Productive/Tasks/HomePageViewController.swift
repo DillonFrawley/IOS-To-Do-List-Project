@@ -29,6 +29,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     var currentDate: String?
     var task: ToDoTask?
     var tappedTask: Int?
+    var myInt: Int?
     
     var timer: Timer = Timer()
     let systemSoundID: SystemSoundID = 1005
@@ -54,6 +55,15 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         self.navigationItem.searchController = searchController
         searchController.searchBar.scopeButtonTitles = ["All", "Active", "Current", "Completed"]
         searchController.searchBar.showsScopeBar = true
+        // using current date and time as an example
+        let someDate = Date()
+
+        // convert Date to TimeInterval (typealias for Double)
+        let timeInterval = someDate.timeIntervalSince1970
+
+        // convert to Integer
+        self.myInt = Int(timeInterval)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -381,6 +391,61 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         filteredCurrentTasks = currentTasks
         filteredCompletedTasks = completedTasks
         filteredActiveTasks = activeTasks
+        for task in self.activeTasks {
+            let timeDifference = self.myInt! - task.startTime!
+            print(timeDifference)
+            task.elapsedTime = timeDifference
+            
+            var timedifferenceHours = 0
+            var timedifferenceMinutes = 0
+            var timedifferenceSeconds = 0
+            
+            if Int(timeDifference/3600) > 0 {
+                timedifferenceHours = Int(timeDifference/3600)
+                if Int((timeDifference - (timedifferenceHours*3600))/60) > 0 {
+                    timedifferenceMinutes = Int((timeDifference - (timedifferenceHours*3600))/60)
+                    if Int( timeDifference - (timedifferenceHours*3600) - (timedifferenceMinutes*60)) > 0 {
+                        timedifferenceSeconds = Int(timeDifference - (timedifferenceHours*3600) - (timedifferenceMinutes*60))
+                    }
+                }
+                else {
+                    if Int((timeDifference - (timedifferenceHours*3600))) > 0 {
+                        timedifferenceSeconds = Int((timeDifference - (timedifferenceHours*3600)))
+                    }
+                }
+            }
+            else {
+                if Int((timeDifference/60)) > 0 {
+                    timedifferenceMinutes = Int((timeDifference/60))
+                    if Int( timeDifference - (timedifferenceMinutes*60)) > 0 {
+                        timedifferenceSeconds = Int( timeDifference - (timedifferenceMinutes*60))
+                    }
+                }
+            }
+            
+            if timedifferenceHours > task.hours! {
+                task.hours = 0
+                task.minutes = 0
+                task.seconds = 0
+            }
+            else if timedifferenceHours <= task.hours! {
+                task.hours = task.hours! - timedifferenceHours
+                if timedifferenceMinutes > task.minutes! {
+                    task.minutes = 0
+                    task.seconds = 0
+                }
+                else if timedifferenceMinutes <= task.minutes! {
+                    task.minutes = task.minutes! - timedifferenceMinutes
+                    if timedifferenceSeconds > task.seconds! {
+                        task.seconds = 0
+                    }
+                    else {
+                        task.seconds = task.seconds! - timedifferenceSeconds
+                    }
+                }
+            }
+        }
+        
         tableView.reloadData()
     }
     
@@ -462,30 +527,38 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     
     @objc func counter() {
         for task in activeTasks {
-            if task.seconds == 0 {
-                if task.minutes == 0 && task.seconds == 0 {
-                    if task.hours == 0 && task.minutes == 0 && task.seconds == 0 {
-//                        AudioServicesPlayAlertSound(self.systemSoundID)
-                        //
+            if task.startTime != 0 {
+                if task.seconds == 0 {
+                    if task.minutes == 0 && task.seconds == 0 {
+                        if task.hours == 0 && task.minutes == 0 && task.seconds == 0 {
+    //                        AudioServicesPlayAlertSound(self.systemSoundID)
+                            //
+                        }
+                        else {
+                            task.hours! -= 1
+                            task.minutes! = 59
+                            task.seconds! = 59
+                            task.elapsedTime! += 1
+                        }
                     }
                     else {
-                        task.hours! -= 1
-                        task.minutes! = 59
+                        task.minutes! -= 1
                         task.seconds! = 59
+                        task.elapsedTime! += 1
                     }
                 }
                 else {
-                    task.minutes! -= 1
-                    task.seconds! = 59
+                    task.seconds! -= 1
+                    task.elapsedTime! += 1
                 }
-            }
-            else {
-                task.seconds! -= 1
+                self.databaseController?.updateTask(taskId: (task.id!),taskTitle: (task.taskTitle)!, taskDescription: (task.taskDescription)!, taskType: "active" , coordinate: CLLocationCoordinate2D(latitude: (task.latitude!), longitude: (task.longitude!)), seconds: (task.seconds!), minutes: (task.minutes!), hours: (task.hours!), startTime: (task.startTime!), elapsedTime: (task.elapsedTime!))
+                
             }
             UIView.setAnimationsEnabled(false)
             self.tableView.beginUpdates()
             self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: UITableView.RowAnimation.none)
             self.tableView.endUpdates()
+            
 
         }
         
