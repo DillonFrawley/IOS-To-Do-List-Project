@@ -25,7 +25,7 @@ class PreviewTaskViewController: UIViewController{
     var editVC: CreateTaskViewController?
     var startCurrenttask: Bool?
     var elapsedTime: Int?
-    var myInt: Int?
+    var currentTime: Int?
     
     @IBOutlet weak var realTaskTitleLabel: UILabel!
     @IBOutlet weak var realTaskDescriptionLabel: UILabel!
@@ -127,8 +127,8 @@ class PreviewTaskViewController: UIViewController{
             let timeInterval = someDate.timeIntervalSince1970
 
             // convert to Integer
-            self.myInt = Int(timeInterval)
-            var timeDifference = self.myInt! - self.task!.startTime!
+            self.currentTime = Int(timeInterval)
+            var timeDifference = self.currentTime! - self.task!.startTime!
             
             let timedifferenceHours = timeDifference/3600
             let timedifferenceMinutes = (timeDifference - (timedifferenceHours*3600))/60
@@ -237,14 +237,14 @@ class PreviewTaskViewController: UIViewController{
         let timeInterval = someDate.timeIntervalSince1970
 
         // convert to Integer
-        let myInt = Int(timeInterval)
+        let currentTime = Int(timeInterval)
         self.task?.hours = self.hours
         self.task?.minutes = self.minutes
         self.task?.seconds = self.seconds
-        self.task!.startTime = myInt
+        self.task!.startTime = currentTime
         
 
-        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.task!.seconds)!, minutes: (self.task!.minutes)!, hours: (self.task!.hours)!, startTime: myInt, elapsedTime: (self.elapsedTime)!)
+        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.task!.seconds)!, minutes: (self.task!.minutes)!, hours: (self.task!.hours)!, startTime: currentTime, elapsedTime: (self.elapsedTime)!)
         self.updateTimerOutlet()
         
         
@@ -276,9 +276,9 @@ class PreviewTaskViewController: UIViewController{
             let timeInterval = someDate.timeIntervalSince1970
 
             // convert to Integer
-            let myInt = Int(timeInterval)
+            let currentTime = Int(timeInterval)
             
-            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "active", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!, startTime: myInt, elapsedTime: 0)
+            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "active", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!, startTime: currentTime, elapsedTime: 0)
             self.databaseController?.deleteTask(task: task!, taskType: "current")
             
             navigationController?.popViewController(animated: true)

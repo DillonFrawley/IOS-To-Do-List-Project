@@ -29,10 +29,9 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     var currentDate: String?
     var task: ToDoTask?
     var tappedTask: Int?
-    var myInt: Int?
-    var activeTasksConstant: [ToDoTask] = []
+    var currentTime: Int?
     
-    var timer: Timer = Timer()
+    var timer: Timer?
     let systemSoundID: SystemSoundID = 1005
     
     var locationManager: CLLocationManager = CLLocationManager()
@@ -56,7 +55,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         self.navigationItem.searchController = searchController
         searchController.searchBar.scopeButtonTitles = ["All", "Active", "Current", "Completed"]
         searchController.searchBar.showsScopeBar = true
-        self.activeTasksConstant = activeTasks
+
     
     }
     
@@ -65,8 +64,9 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         databaseController?.addListener(listener: self)
         self.determineCurrentLocation()
         self.navigationItem.hidesSearchBarWhenScrolling = false
-        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
-        // using current date and time as an example
+        if activeTasks.count > 0 {
+            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
+        }
 
     }
     
@@ -74,7 +74,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         super.viewWillDisappear(animated)
         databaseController?.removeListener(listener: self)
         locationManager.stopUpdatingLocation()
-        timer.invalidate()
+        timer?.invalidate()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -178,9 +178,9 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                     // convert Date to TimeInterval (typealias for Double)
                     let timeInterval = someDate.timeIntervalSince1970
                     // convert to Integer
-                    self.myInt = Int(timeInterval)
+                    self.currentTime = Int(timeInterval)
                     if task.startTime != 0 {
-                        let timeDifference = self.myInt! - task.startTime!
+                        let timeDifference = self.currentTime! - task.startTime!
                         task.elapsedTime = timeDifference
                         let timedifferenceHours = timeDifference/3600
                         let timedifferenceMinutes = (timeDifference - (timedifferenceHours*3600))/60
@@ -216,6 +216,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                 
                 taskCell.taskTitleOutlet.text = task.taskTitle
                 taskCell.taskDescriptionOutlet.text = task.taskDescription
+                
                 if task.startTime! == 0 && filteredArray == activeTasks {
                     taskCell.timeLabelOutlet.text = "Paused"
                 }
@@ -428,7 +429,6 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     func onTaskChange(change: DatabaseChange, currentTasks: [ToDoTask], completedTasks: [ToDoTask], activeTasks: [ToDoTask]) {
         self.activeTasks = activeTasks
         filteredActiveTasks = activeTasks
-        activeTasksConstant = activeTasks
         if self.currentTasks != currentTasks {
             self.currentTasks = currentTasks
             filteredCurrentTasks = currentTasks
@@ -439,6 +439,9 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         }
     
         UIView.setAnimationsEnabled(false)
+        if activeTasks.count > 0 {
+            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
+        }
         tableView.reloadData()
     }
     
@@ -469,6 +472,9 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         }
     }
     @IBAction func datePickerChanged(_ sender: Any) {
+        if self.timer != nil {
+            self.timer?.invalidate()
+        }
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.short
         
@@ -476,6 +482,8 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
         self.currentDate = strDate.replacingOccurrences(of: "/", with: "-")
         self.databaseController?.currentDate = self.currentDate
         self.databaseController?.setupTaskListener()
+
+        
         
     }
     
@@ -519,32 +527,6 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
     }
     
     @objc func counter() {
-//        for task in activeTasks {
-//            if task.seconds! <= 0 {
-//                task.seconds! = 0
-//                if task.minutes! <= 0 {
-//                    task.minutes! = 0
-//                    if task.hours! <= 0 {
-//                            task.hours = 0
-//                        //
-//                    }
-//                    else {
-//                        task.hours! -= 1
-//                        task.minutes! = 59
-//                        task.seconds! = 59
-//                        task.elapsedTime! += 1
-//                    }
-//                }
-//                else {
-//                    task.minutes! -= 1
-//                    task.seconds! = 59
-//                    task.elapsedTime! += 1
-//                }
-//            }
-//            else {
-//                task.seconds! -= 1
-//                task.elapsedTime! += 1
-//                }
         UIView.setAnimationsEnabled(false)
         self.tableView.beginUpdates()
         self.tableView.reloadSections(NSIndexSet(index: 0) as IndexSet, with: UITableView.RowAnimation.none)

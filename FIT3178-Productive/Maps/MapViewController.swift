@@ -54,6 +54,7 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
         if self.segueParent != nil {
             if self.segueParent! == "preview" {
                 self.navigationItem.searchController = .none
+                self.navigationItem.rightBarButtonItems = [currentLocationButtonItem]
             }
 
         }
