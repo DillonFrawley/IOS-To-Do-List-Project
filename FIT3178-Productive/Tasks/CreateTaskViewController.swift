@@ -80,6 +80,10 @@ class CreateTaskViewController: UIViewController {
         if segue.identifier == "locationSegue"{
             let destination = segue.destination as! MapViewController
             destination.delegate = self
+            destination.segueParent = "create"
+            if self.longitude != nil && self.latitude != nil {
+                destination.coordinate = CLLocationCoordinate2D(latitude: self.latitude!, longitude: self.longitude!)
+            }
         }
     }
 

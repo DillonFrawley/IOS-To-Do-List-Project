@@ -209,7 +209,7 @@ class HomePageViewController: UITableViewController, DatabaseListener, CLLocatio
                             }
                         }
                         else {
-                            seconds = 0
+                            seconds -= 1
                         }
                     }
                 }

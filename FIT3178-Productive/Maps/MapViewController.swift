@@ -22,6 +22,7 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     weak var delegate: MapViewControllerDelegate?
     var presetLocationBool: Bool = false
     weak var databaseController: DatabaseProtocol?
+    var segueParent: String?
 
 
     @IBOutlet weak var saveButtonOutlet: UIBarButtonItem!
@@ -48,6 +49,14 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
         searchVC.searchBar.backgroundColor = .secondarySystemBackground
         searchVC.searchResultsUpdater = self
         navigationItem.searchController = searchVC
+        
+        
+        if self.segueParent != nil {
+            if self.segueParent! == "preview" {
+                self.navigationItem.searchController = .none
+            }
+
+        }
         
 
         // Do any additional setup after loading the view.
