@@ -19,6 +19,9 @@ class ToDoTask: NSObject, Codable {
     var seconds: Int?
     var minutes: Int?
     var hours: Int?
+    var startTime: Int?
+    var elapsedTime: Int?
+    
     
     enum CodingKeys : String, CodingKey {
         case id
@@ -29,6 +32,8 @@ class ToDoTask: NSObject, Codable {
         case seconds
         case minutes
         case hours
+        case startTime
+        case elapsedTime
     }
 
 }

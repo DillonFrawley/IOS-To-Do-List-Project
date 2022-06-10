@@ -51,7 +51,18 @@ class PreviewTaskViewController: UIViewController{
         if self.buttonType == "complete" {
             self.stackViewOutlet.isHidden = true
             self.completeAddButtonOutlet.isHidden = true
-            self.updateTimerOutlet()
+            if self.hours! == 0 {
+                if self.minutes! == 0 {
+                    self.timeLabel.text = String(self.seconds!) + "s"
+                }
+                else {
+                    self.timeLabel.text = String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+                }
+            }
+            else {
+                self.timeLabel.text = String(self.hours!) + "h :" + String(self.minutes!) + "m :" + String(self.seconds!) + "s"
+            }
+
             self.timeLabel.text = "Time required: " + self.timeLabel.text!
             self.navigationController?.navigationItem.rightBarButtonItem = nil
         }
@@ -107,19 +118,12 @@ class PreviewTaskViewController: UIViewController{
         super.viewWillLayoutSubviews()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.tabBarController?.title = "Preview Task"
-        self.tabBarController?.navigationItem.searchController = nil
-        self.tabBarController?.navigationItem.rightBarButtonItem = nil
-    }
-    
-    
     @objc func counter() {
         if seconds == 0 {
             if self.minutes == 0 && self.seconds == 0 {
                 if self.hours == 0 && self.minutes == 0 && self.seconds == 0 {
                     self.timer.invalidate()
-                    AudioServicesPlaySystemSound(self.systemSoundID)
+                    AudioServicesPlayAlertSound(self.systemSoundID)
                 }
                 else {
                     self.hours! -= 1
@@ -192,7 +196,7 @@ class PreviewTaskViewController: UIViewController{
             task?.seconds = editVC!.seconds!
             task?.minutes = editVC!.minutes!
             task?.hours = editVC!.hours!
-            self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: taskTitle, taskDescription: taskDescription, taskType: taskType, coordinate: CLLocationCoordinate2D(latitude: (editVC!.latitude)!, longitude: (editVC!.longitude)!), seconds: editVC!.seconds!, minutes: editVC!.minutes!, hours: editVC!.hours!)
+            self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: taskTitle, taskDescription: taskDescription, taskType: taskType, coordinate: CLLocationCoordinate2D(latitude: (editVC!.latitude)!, longitude: (editVC!.longitude)!), seconds: editVC!.seconds!, minutes: editVC!.minutes!, hours: editVC!.hours!, startTime: (self.task?.startTime)!, elapsedTime: (self.task?.elapsedTime)!)
             editVC!.view.removeFromSuperview()
             editVC!.removeFromParent()
             self.editButtonOutlet.title = "Edit"
@@ -202,6 +206,7 @@ class PreviewTaskViewController: UIViewController{
     
     @IBAction func handlePlay(_ sender: Any) {
         self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.counter), userInfo: nil, repeats: true)
+        
     }
     
     @IBAction func handlePause(_ sender: Any) {
@@ -226,22 +231,28 @@ class PreviewTaskViewController: UIViewController{
     
     @IBAction func completeaddTaskButton(_ sender: Any) {
         if self.buttonType == "current" {
-            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "active", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
+            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "active", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!, startTime: (task?.startTime)!, elapsedTime: (task?.elapsedTime)!)
             self.databaseController?.deleteTask(task: task!, taskType: "current")
+            
             navigationController?.popViewController(animated: true)
         }
         else if self.buttonType == "add" {
-            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
+            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "current", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!, startTime: (task?.startTime)!, elapsedTime: (task?.elapsedTime)!)
             navigationController?.popViewController(animated: true)
         }
         else if self.buttonType == "active" {
-            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "completed", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!)
+            self.databaseController?.addTask(taskTitle: (task!.taskTitle)!, taskDescription: (task!.taskDescription)!, taskType: "completed", coordinate: CLLocationCoordinate2D(latitude: (task!.latitude)!, longitude: (task!.longitude)!), seconds: self.seconds!, minutes: self.minutes!, hours: self.hours!, startTime: (task?.startTime)!, elapsedTime: (task?.elapsedTime)!)
             self.databaseController?.deleteTask(task: task!, taskType: "active")
             navigationController?.popViewController(animated: true)
 
         }
         
         
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.timer.invalidate()
+        self.databaseController?.updateTask(taskId: (self.task?.id)!,taskTitle: (self.task?.taskTitle)!, taskDescription: (self.task?.taskDescription)!, taskType: (self.buttonType)! , coordinate: CLLocationCoordinate2D(latitude: (self.task?.latitude)!, longitude: (self.task?.longitude)!), seconds: (self.seconds)!, minutes: (self.minutes)!, hours: (self.hours)!, startTime: (self.task?.startTime)!, elapsedTime: (self.task?.elapsedTime)!)
     }
 
     

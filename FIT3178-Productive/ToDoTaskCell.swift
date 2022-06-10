@@ -10,12 +10,12 @@ import UIKit
 class ToDoTaskCell: UITableViewCell {
 
 
-    @IBOutlet weak var imageViewOutlet: UIView!
     
     @IBOutlet weak var taskTitleOutlet: UILabel!
     
+    @IBOutlet weak var timeLabelOutlet: UILabel!
     @IBOutlet weak var taskDescriptionOutlet: UILabel!
-    @IBOutlet weak var timeLabelOutlet: UIView!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

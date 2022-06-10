@@ -83,7 +83,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
     }
 
     
-    func addTask(taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?, seconds: Int, minutes: Int, hours: Int) {
+    func addTask(taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?, seconds: Int, minutes: Int, hours: Int, startTime: Int, elapsedTime: Int) {
         let task = ToDoTask()
         task.taskTitle = taskTitle
         task.taskDescription = taskDescription
@@ -92,6 +92,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
         task.seconds = seconds
         task.minutes = minutes
         task.hours = hours
+        task.startTime = startTime
+        task.elapsedTime = elapsedTime
+        
         if taskType == "allTasks" {
             do {
                 if let taskRef = try self.allTasksRef?.addDocument(from: task) {
@@ -130,7 +133,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
         }
     }
     
-    func updateTask(taskId: String, taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?, seconds: Int, minutes: Int, hours: Int) {
+    func updateTask(taskId: String, taskTitle: String, taskDescription: String, taskType: String, coordinate: CLLocationCoordinate2D?, seconds: Int, minutes: Int, hours: Int, startTime: Int, elapsedTime: Int) {
         if taskType == "allTasks" {
             self.allTasksRef?.document(taskId).updateData([
                 "taskTitle": taskTitle,
@@ -139,7 +142,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 "latitude" : coordinate?.latitude,
                 "seconds": seconds,
                 "minutes": minutes,
-                "hours": hours
+                "hours": hours,
+                "startTime": startTime,
+                "elasedTime": elapsedTime
                 ])
             }
         else if taskType == "current" {
@@ -150,7 +155,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 "latitude" : coordinate?.latitude,
                 "seconds": seconds,
                 "minutes": minutes,
-                "hours": hours
+                "hours": hours,
+                "startTime": startTime,
+                "elasedTime": elapsedTime
                 ])
         }
         else if taskType == "active" {
@@ -161,7 +168,9 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 "latitude" : coordinate?.latitude,
                 "seconds": seconds,
                 "minutes": minutes,
-                "hours": hours
+                "hours": hours,
+                "startTime": startTime,
+                "elasedTime": elapsedTime
                 ])
         }
     }
@@ -261,7 +270,7 @@ class FirebaseController: NSObject, DatabaseProtocol {
             }
             self.parseTaskSnapshot(snapshot: querySnapshot, taskType: "completed")
         }
-        completedTaskRef?.addSnapshotListener() { (querySnapshot, error) in
+        activeTaskRef?.addSnapshotListener() { (querySnapshot, error) in
             guard let querySnapshot = querySnapshot else {
                 print("Failed to fetch documents with error: \(String(describing: error))")
                 return
@@ -370,11 +379,6 @@ class FirebaseController: NSObject, DatabaseProtocol {
                 currentUser = authDataResult.user
                 guard let userID = Auth.auth().currentUser?.uid else { return }
                 self.userID = userID
-//                if self.currentUser != nil {
-//                    allTaskList = [ToDoTask]()
-//                    currentTasks = [ToDoTask]()
-//                    completedTasks = [ToDoTask]()
-//                }
                 self.usersRef = self.database.collection("Users")
                 let _ = try await self.usersRef?.document((self.userID)!).setData(["name": (self.userID)!])
                 self.setupAllTasksListener()
