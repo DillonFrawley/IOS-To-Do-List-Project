@@ -20,7 +20,6 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     var locationManager: CLLocationManager = CLLocationManager()
     var coordinate: CLLocationCoordinate2D?
     weak var delegate: MapViewControllerDelegate?
-    var presetLocationBool: Bool = false
     weak var databaseController: DatabaseProtocol?
     var segueParent: String?
 
@@ -67,7 +66,6 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
         self.determineCurrentLocation()
         if self.coordinate != nil {
             self.didTapPlace(with: (self.coordinate)!)
-            self.presetLocationBool = true
         }
     }
     
@@ -116,7 +114,7 @@ class MapViewController: UIViewController, UISearchResultsUpdating, CLLocationMa
     
     
     @IBAction func handleLongPress(_ sender: Any) {
-        if presetLocationBool == false {
+        if segueParent == "create" {
             let annotations = mapView.annotations
             mapView.removeAnnotations(annotations)
             
